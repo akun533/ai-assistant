@@ -1,0 +1,53 @@
+{
+  "name": "@form-create/ai-assistant",
+  "version": "1.0.0",
+  "description": "FormCreate AI 表单助理，用于根据自然语言描述自动生成和修改 FormCreate 表单规则",
+  "main": "dist/service/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/service/index.ts",
+    "start:build": "tsc && node dist/service/index.js",
+    "lint": "eslint src --ext .ts,.js",
+    "lint:fix": "eslint src --ext .ts,.js --fix",
+    "format": "prettier --write src/**/*.{ts,js,json,md}",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "AI",
+    "designer",
+    "form-create",
+    "element-plus",
+    "ant-design-vue",
+    "vant",
+    "form",
+    "vue",
+    "lowcode"
+  ],
+  "author": "xaboy",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "fast-json-patch": "^3.1.1",
+    "jsondiffpatch": "^0.7.3",
+    "node-fetch": "^3.3.2",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
