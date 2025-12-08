@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import AiPanel from './components/AiPanel.vue'
+import AiPanel from './components/AiPanel.vue';
 
 export default {
   name: 'App',
   components: {
-    AiPanel
-  }
-}
+    AiPanel,
+  },
+};
 </script>
 
 <style>
