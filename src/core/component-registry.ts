@@ -6,6 +6,7 @@ import {
   elementUIComponents,
   vantComponents,
   vantVue2Components,
+  ta404uiComponents
 } from '../components/index.js';
 import usages from '../components/usages';
 
@@ -75,6 +76,11 @@ export class ComponentRegistry {
       this.registerComponent(component.type, component);
     });
     vantVue2Components.forEach((component: ComponentInfo) => {
+      this.registerComponent(component.type, component);
+    });
+
+    // 注册 ta404ui 组件
+    ta404uiComponents.forEach((component: ComponentInfo) => {
       this.registerComponent(component.type, component);
     });
   }

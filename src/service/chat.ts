@@ -74,11 +74,18 @@ export default class Chat {
   /**
    * 读取系统提示词
    */
-  private readSystemPrompt(): string {
+  private readSystemPrompt(version: { ui: string; vue: 'vue2' | 'vue3' }): string {
+    console.log('开始读取系统提示词文件...');
+    let promptFileName;
+    if (version.ui === 'ta404ui') {
+      promptFileName = 'YH_FORM_PROMPT.md';
+    } else {
+      promptFileName = 'SYSTEM_PROMPT.md';
+    }
     try {
       const __filename = fileURLToPath(import.meta.url);
       const __dirname = dirname(__filename);
-      const systemPromptPath = join(__dirname, 'SYSTEM_PROMPT.md');
+      const systemPromptPath = join(__dirname, promptFileName);
       const systemPrompt = readFileSync(systemPromptPath, 'utf-8');
       console.log('✅ 成功读取系统提示词文件');
       return systemPrompt;
@@ -107,9 +114,7 @@ ${vueVersion}
   /**
    * 生成组件列表部分
    */
-  private buildComponentList(
-    categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents']>,
-  ): string {
+  private buildComponentList(categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents']>): string {
     const sections = [
       {
         title: 'Field 表单组件',
@@ -126,9 +131,7 @@ ${vueVersion}
     ];
 
     const componentListParts = sections.map(section => {
-      const componentItems = section.category.components
-        .map(comp => `- ${comp.type}: ${comp.label}`)
-        .join('\n');
+      const componentItems = section.category.components.map(comp => `- ${comp.type}: ${comp.label}`).join('\n');
 
       return `## ${section.title} (${section.category.count}个)
 ${section.category.description}
@@ -158,12 +161,8 @@ ${JSON.stringify(formRule)}
   /**
    * 构建增强的系统提示词
    */
-  private buildEnhancedSystemPrompt(
-    sessionId: string,
-    version: { ui: string; vue: 'vue2' | 'vue3' },
-    formRule?: any,
-  ): string {
-    const systemPrompt = this.readSystemPrompt();
+  private buildEnhancedSystemPrompt(sessionId: string, version: { ui: string; vue: 'vue2' | 'vue3' }, formRule?: any): string {
+    const systemPrompt = this.readSystemPrompt(version);
     const sessionInfo = this.buildSessionInfo(sessionId, version.ui, version.vue);
     const components = this.componentRegistry.getComponents(version.ui, version.vue);
     const categorizedComponents = this.componentRegistry.categorizeComponents(components);
@@ -225,7 +224,7 @@ ${userRule}`;
     isFirst: boolean = false,
     isLast: boolean = false,
     model: string = 'deepseek-chat',
-    usage: any = null,
+    usage: any = null
   ): string {
     const chunk: OpenAIChatStreamChunk = {
       id: this.generateOpenAIId(),
@@ -303,11 +302,7 @@ ${userRule}`;
   /**
    * 处理工具调用
    */
-  private async handleToolCall(
-    toolName: string,
-    arguments_: any,
-    context: Record<string, any>,
-  ): Promise<any> {
+  private async handleToolCall(toolName: string, arguments_: any, context: Record<string, any>): Promise<any> {
     try {
       const handler = this.toolRegistry.getToolHandler(toolName);
       if (!handler) {
@@ -341,7 +336,7 @@ ${userRule}`;
     maxDepth: number = 1,
     context: Record<string, any>,
     sessionId?: string,
-    signal?: AbortSignal,
+    signal?: AbortSignal
   ): AsyncGenerator<string | { content: string; usage?: any }, void, unknown> {
     // 获取或创建 agent
     const agent = this.getAgent(agentType, apiKey, model);
@@ -418,7 +413,7 @@ ${userRule}`;
                   const toolResult = await this.handleToolCall(
                     toolCall.function.name,
                     { ...JSON.parse(toolCall.function.arguments), sessionId },
-                    context,
+                    context
                   );
                   const title = this.getToolTitle(toolCall.function.name);
                   if (title) {
@@ -431,9 +426,7 @@ ${userRule}`;
                     tool_call_id: toolCall.id,
                   });
                   if (toolResult.data[0]?.answer) {
-                    const chats = Array.isArray(toolResult.data[0]?.answer)
-                      ? toolResult.data[0]?.answer
-                      : [toolResult.data[0]?.answer];
+                    const chats = Array.isArray(toolResult.data[0]?.answer) ? toolResult.data[0]?.answer : [toolResult.data[0]?.answer];
                     for (const chat of chats) {
                       yield `\n${chat}\n`;
                     }
@@ -456,7 +449,7 @@ ${userRule}`;
                   maxDepth + 1,
                   context,
                   sessionId,
-                  signal,
+                  signal
                 );
               } else {
                 console.log(`达到最大递归深度 (${maxDepth})，停止递归`);
@@ -513,8 +506,7 @@ ${userRule}`;
                   }
 
                   if (deltaToolCall.function?.arguments) {
-                    toolCalls[deltaToolCall.index].function.arguments +=
-                      deltaToolCall.function.arguments;
+                    toolCalls[deltaToolCall.index].function.arguments += deltaToolCall.function.arguments;
                   }
                 }
               }
@@ -567,7 +559,7 @@ ${userRule}`;
   async *chatStream(
     request: ChatRequest,
     apiKey: string,
-    signal: AbortSignal,
+    signal: AbortSignal
   ): AsyncGenerator<
     | string
     | {
@@ -598,12 +590,7 @@ ${userRule}`;
         const version = this.getUiVersion(request.ui);
         console.log(version);
 
-        const enhancedSystemPrompt = this.buildEnhancedSystemPrompt(
-          currentSessionId,
-          version,
-          request.context.form?.rule,
-        );
-
+        const enhancedSystemPrompt = this.buildEnhancedSystemPrompt(currentSessionId, version, request.context.form?.rule);
         messages.unshift({
           role: 'system',
           content: enhancedSystemPrompt,
@@ -614,17 +601,7 @@ ${userRule}`;
       console.log('🔑 使用 API 密钥:', apiKey ? `${apiKey.substring(0, 10)}...` : '未提供');
 
       // 调用递归处理方法
-      yield* this.processChatStream(
-        messages,
-        apiKey,
-        request.model,
-        tools,
-        agentType,
-        1,
-        request.context,
-        currentSessionId,
-        signal,
-      );
+      yield* this.processChatStream(messages, apiKey, request.model, tools, agentType, 1, request.context, currentSessionId, signal);
 
       console.log('📋 会话结束 ID:', currentSessionId);
     } catch (error: any) {
@@ -650,8 +627,7 @@ ${userRule}`;
         } else if (status === 429) {
           errorMessage = `\n❌ API 请求频率限制 (429): 请稍后再试\n💡 提示: 可能需要等待一段时间后重试\n`;
         } else if (status === 400) {
-          const detailMessage =
-            responseData?.error?.message || responseData?.message || '请求参数错误';
+          const detailMessage = responseData?.error?.message || responseData?.message || '请求参数错误';
           errorMessage = `\n❌ API 请求错误 (400): ${detailMessage}\n💡 提示: 请检查请求参数是否正确\n`;
         } else if (status === 403) {
           errorMessage = `\n❌ API 访问被拒绝 (403): 可能是权限不足或账户问题\n💡 提示: 请检查账户状态和权限设置\n`;
@@ -662,8 +638,7 @@ ${userRule}`;
         } else if (status === 502 || status === 503 || status === 504) {
           errorMessage = `\n❌ 服务不可用 (${status}): 服务暂时不可用\n💡 提示: 请稍后重试\n`;
         } else {
-          const detailMessage =
-            responseData?.error?.message || responseData?.message || error.message;
+          const detailMessage = responseData?.error?.message || responseData?.message || error.message;
           errorMessage = `\n❌ API 错误 (${status}): ${detailMessage}\n💡 提示: 请检查网络连接和 API 配置\n`;
         }
 
