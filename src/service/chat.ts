@@ -553,6 +553,10 @@ ${userRule}`;
         ui: 'ant-design-vue',
         vue: 'vue2',
       },
+      'ta404ui@vue2': {
+        ui: 'ta404ui',
+        vue: 'vue2',
+      },
     } as { [key: string]: { ui: string; vue: 'vue2' | 'vue3' } };
     return alias[ui] || alias['element-plus'];
   }

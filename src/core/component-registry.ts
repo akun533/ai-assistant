@@ -203,6 +203,10 @@ export class ComponentRegistry {
       return vueVersion === 'vue2' ? 'element-ui' : 'element-plus';
     }
 
+    if (uiFramework === 'ta404ui') {
+      return 'ta404ui';
+    }
+
     if (uiFramework === 'element-ui') {
       return 'element-ui';
     }

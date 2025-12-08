@@ -3,17 +3,21 @@ export { DeepSeekAgent } from './deepseek.js';
 export { OtherAgent } from './other.js';
 export { QwenAgent } from './qwen.js';
 export { ZhipuAgent } from './zhipu.js';
+export { YinhaiAgent } from './yinhai.js';
 
 import { BaseAgent } from './base.js';
 import { DeepSeekAgent } from './deepseek.js';
 import { OtherAgent } from './other.js';
 import { QwenAgent } from './qwen.js';
 import { ZhipuAgent } from './zhipu.js';
+import { YinhaiAgent } from './yinhai.js';
 
-export type AgentType = 'deepseek' | 'zhipu' | 'qwen' | 'other';
+export type AgentType = 'yinhain' | 'deepseek' | 'zhipu' | 'qwen' | 'other';
 
 export function createAgent(type: AgentType, apiKey: string, model?: string): BaseAgent {
   switch (type) {
+    case 'yinhain':
+      return new YinhaiAgent(apiKey, model);
     case 'deepseek':
       return new DeepSeekAgent(apiKey, model);
     case 'zhipu':
