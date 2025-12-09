@@ -1,6 +1,8 @@
-# AI 助手 UI 组件库
+# @akun/ai-panel 组件
 
-这是一个基于 Vue 3 的 AI 助手 UI 组件库，包含聊天界面、Markdown 渲染器和相关工具函数。
+一个基于 Vue 3 的 AI 助手聊天面板组件，可以轻松集成到你的项目中。
+
+当前版本: v1.0.3
 
 ## 功能特性
 
@@ -11,73 +13,122 @@
 - 代码块一键复制功能
 - 流式数据处理，实时显示 AI 回复
 
-## 安装和使用
+## 安装
 
-1. 安装依赖：
+通过 npm 安装：
+
+```bash
+npm install @akun/ai-panel
+```
+
+通过 yarn 安装：
+
+```bash
+yarn add @akun/ai-panel
+```
+
+通过 pnpm 安装：
+
+```bash
+pnpm add @akun/ai-panel
+```
+
+## 使用方法
+
+### 基础使用
+
+```vue
+<template>
+  <div style="height: 600px;">
+    <AiPanel />
+  </div>
+</template>
+
+<script>
+import AiPanel from '@akun/ai-panel';
+
+export default {
+  components: {
+    AiPanel
+  }
+}
+</script>
+```
+
+### 配置 API 地址和 Token
+
+组件默认会读取环境变量中的配置：
+
+```bash
+VITE_AI_API_TOKEN=your_api_token_here
+VUE_APP_API_URL=your_api_url_here
+```
+
+你也可以通过 props 传递配置：
+
+```vue
+<template>
+  <div style="height: 600px;">
+    <AiPanel 
+      api="https://your-api-endpoint.com/chat"
+      :token="yourToken"
+    />
+  </div>
+</template>
+
+<script>
+import AiPanel from '@akun/ai-panel';
+
+export default {
+  components: {
+    AiPanel
+  },
+  data() {
+    return {
+      yourToken: 'Bearer your-token-here'
+    }
+  }
+}
+</script>
+```
+
+## 组件 Props
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| api | String | 从 `VUE_APP_API_URL` 环境变量读取或使用默认值 | AI API 的地址 |
+| token | String | 从 `VUE_APP_AI_API_TOKEN` 环境变量读取 | API 访问令牌 |
+
+## 构建
+
+如果你想自己构建这个组件：
+
+1. 克隆项目：
+```bash
+git clone [repository-url]
+```
+
+2. 安装依赖：
 ```bash
 npm install
 ```
 
-2. 启动开发服务器：
+3. 启动开发服务器：
 ```bash
 npm run dev
 ```
 
-3. 构建生产版本：
+4. 构建生产版本：
 ```bash
 npm run build
 ```
 
-4. 预览生产构建：
+5. 构建 npm 包：
 ```bash
-npm run serve
+npm run build:package
 ```
-
-## 项目结构
-
-```
-ai-assistant-ui/
-├── src/
-│   ├── components/          # Vue 组件
-│   │   ├── AiPanel.vue      # AI 聊天面板组件
-│   │   └── MarkdownRenderer.vue  # Markdown 渲染组件
-│   ├── utils/               # 工具函数
-│   │   ├── jsonDiff.js      # JSON 差异比较工具
-│   │   └── utils.js         # 通用工具函数
-│   ├── assets/              # 静态资源
-│   ├── App.vue              # 根组件
-│   └── main.js              # 应用入口文件
-├── index.html               # HTML 模板
-├── vite.config.js           # Vite 配置文件
-├── package.json             # 项目配置和依赖
-├── .env.example             # 环境变量示例文件
-├── .gitignore               # Git 忽略文件配置
-├── jsconfig.json            # JavaScript 配置文件
-├── LICENSE                  # 许可证文件
-└── README.md                # 项目说明文档
-```
-
-## 环境变量配置
-
-为了正常使用 AI API，需要配置以下环境变量：
-
-- `VITE_AI_API_TOKEN`: AI API 访问令牌
-
-在项目根目录创建 `.env` 文件并添加：
-```
-VITE_AI_API_TOKEN=your_api_token_here
-```
-
-或者复制示例配置文件：
-```bash
-cp .env.example .env
-```
-
-然后替换其中的 `your_api_token_here` 为实际的 API 令牌。
-
-## 自定义配置
-
-可以通过修改组件的样式来自定义外观，所有样式都使用 BEM 命名规范，便于维护和扩展。
 
 ## 浏览器兼容性
 
