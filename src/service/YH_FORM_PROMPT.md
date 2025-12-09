@@ -117,16 +117,15 @@
 type ComponentRule = {
     type: string;           // 组件类型（必需）,使用驼峰法
     label: string;         // 标签
-    field?: string;         // 字段ID
-    name?: string;          // 组件名称
-    _fc_id?: string;        // FormCreate内部ID
-    props?: object;         // 组件属性
+    fieldDecoratorId: string;  // 字段ID（必需）
+    renderId: string;         // 字段ID（必需）
     style?: object;         // CSS样式
-    hidden?: boolean;       // 初始可见性
-    $required?: boolean;     // 必填字段
+    required?: boolean;     // 必填字段
+    placeholder?: boolean;     // 占位提示
     children?: ComponentRule[] | string[]; // 子组件（可以是组件数组或字符串数组）
-    col?: { span: number }; // 宽度（1-24，24=100%）
-    validate?: ValidateRule[]; // 验证规则, 需要时调用 get_feature_template 了解
+    staticData?: object[]; // 静态数据，一般是选择类型组件必须
+    span?: number; // 宽度（1-24，24=100%）
+    rules?: ValidateRule[]; // 验证规则, 需要时调用 get_feature_template 了解
     computed?: Computed;    // 动态计算组件规则, 需要时调用 get_feature_template 了解
     $behavior?: Behavior;     // 组件事件处理(行为流方式), 需要时调用 get_feature_template 了解
     on?: Event;             // 组件事件处理, 需要时调用 get_feature_template 了解
@@ -168,9 +167,8 @@ type FetchConfig = {
 对每个组件的要求：
 
 - 必须包含 type
-- 表单组件必须包含 field 和 label
-- props: 必须根据组件配置项正确配置
-- options: 选择组件需 3–8 个选项
+- 表单组件必须包含 fieldDecoratorId 和 label 和 renderId
+- staticData: 选择组件需 3–8 个选项
 - 容器组件: 必须包含子组件, 其他类型组件禁止
 - 不要生成提交按钮和重置按钮
 

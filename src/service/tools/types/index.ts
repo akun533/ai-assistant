@@ -38,7 +38,7 @@ export interface ToolArgs {
   operationType?: 'create' | 'modify'| 'code' | 'other';
   context?: string;
   analysisDepth?: 'quick' | 'standard' | 'deep';
-  uiFramework?: 'element-plus' | 'element-ui' | 'ant-design-vue' | 'vant';
+  uiFramework?: 'element-plus' | 'element-ui' | 'ant-design-vue' | 'vant' | 'ta404-ui';
   vueVersion?: 'vue2' | 'vue3' | 'auto';
   componentType?: 'all' | 'field' | 'assist' | 'container';
   templateType?: 'basic' | 'layout' | 'validate' | 'complete';

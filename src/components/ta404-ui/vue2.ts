@@ -19,48 +19,7 @@ interface TaComponentGroup {
 }
 
 import taComponents from './form/fieldsConfig';
-
-
-/**
- * 根据组件类型获取默认属性配置
- * @param fieldType 组件字段类型
- * @returns 属性配置数组
- */
-const getDefaultPropsByFieldType = (fieldType: string): ComponentInfo['props'] => {
-  // 通用属性
-  const commonProps: ComponentInfo['props'] = [
-    {
-      name: 'disabled',
-      type: 'boolean',
-      description: '是否禁用输入框',
-      required: false,
-    },
-    {
-      name: 'placeholder',
-      type: 'string',
-      description: '输入框占位提示文字',
-      required: false,
-    },
-  ];
-
-  // 根据不同的组件类型返回相应的属性
-  switch (fieldType) {
-    case 'input':
-    case 'select':
-    case 'date':
-      return [
-        ...commonProps,
-        {
-          name: 'allowClear',
-          type: 'boolean',
-          description: '是否启用清除图标',
-          required: false,
-        },
-      ];
-    default:
-      return commonProps;
-  }
-};
+import { getDefaultPropsByFieldType } from './form/properties';
 
 /**
  * 解析组件事件配置
@@ -86,7 +45,6 @@ const getTaComponents = (): ComponentInfo[] => {
     group.list.map(item => {
       const eventsDefinitions = item.eventsDefinitions || {};
       const fieldType = group.type || 'other';
-
       return {
         type: item.type,
         label: item.label,
@@ -96,7 +54,7 @@ const getTaComponents = (): ComponentInfo[] => {
         examples: [
           JSON.parse(JSON.stringify(item)),
         ],
-        props: getDefaultPropsByFieldType(fieldType),
+        props: getDefaultPropsByFieldType(item.type),
         events: parseComponentEvents(eventsDefinitions),
       } satisfies ComponentInfo;
     }),

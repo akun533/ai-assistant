@@ -2,6 +2,7 @@ import { applyJSONPatch } from '../../../core/json-patch-validator.js';
 import { createResponse, removeRulePrefix } from '../../../utils';
 import { ToolArgs, ToolContext, ToolRegistration, ValidateDetails } from '../types';
 import featuresMap, { features } from './features';
+import yinhaiFeaturesMap from './yinhai-features';
 
 // 常量定义
 const DEFAULT_UI_FRAMEWORK = 'element-plus';
@@ -311,7 +312,7 @@ export const getFeatureTemplateTool: ToolRegistration = {
   definition: {
     name: 'get_feature_template',
     title: '查看框架功能信息',
-    description: `获取FormCreate功能说明，包括${features.map(feature => `${feature.label}`).join('、')}等功能的类型定义和使用示例`,
+    description: `获取表单功能说明，包括${features.map(feature => `${feature.label}`).join('、')}等功能的类型定义和使用示例`,
     inputSchema: {
       type: 'object',
       properties: {
@@ -330,7 +331,6 @@ export const getFeatureTemplateTool: ToolRegistration = {
   },
   handler: async (args: ToolArgs, request: ToolContext) => {
     const { uiFramework = DEFAULT_UI_FRAMEWORK } = args || {};
-
     return createResponse(formatFeatureTemplateResponse({
       uiFramework,
     }));
@@ -383,7 +383,6 @@ export const pushCurrentRuleTool: ToolRegistration = {
     if (!sessionId) {
       return createResponse('缺少必需的 sessionId 参数');
     }
-
     // 验证并改进规则
     const validateAndImproveResult = request.formGenerator.validateRule({ rule }, uiFramework, request.componentRegistry);
 
@@ -458,10 +457,17 @@ function createDetailedValidate(validateAndImproveResult: any, rule: any, uiFram
   return detailedValidate;
 }
 
-function formatFeatureTemplateResponse(data: any): string {
+function formatFeatureTemplateResponse(data: {uiFramework: string} ): string {
   let response = '';
-  Object.keys(featuresMap).forEach((type: string, index: number) => {
-    const featureData = featuresMap[type];
+  let featuresMapTemp
+  const { uiFramework } = data
+  if (uiFramework === 'ta404-ui') {
+    featuresMapTemp = yinhaiFeaturesMap
+  } else {
+    featuresMapTemp = featuresMap
+  }
+  Object.keys(featuresMapTemp).forEach((type: string, index: number) => {
+    const featureData = featuresMapTemp[type];
     if (featureData.business && process.env.FORM_CREATE_BUSINESS !== 'true') {
       return;
     }

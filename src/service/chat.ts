@@ -402,13 +402,13 @@ ${userRule}`;
                   const toolResult = await this.handleToolCall(
                     toolCall.function.name,
                     { ...JSON.parse(toolCall.function.arguments), sessionId },
-                    context,
+                    context
                   );
                   const title = this.getToolTitle(toolCall.function.name);
                   if (title) {
-                    yield `[FC_TOOL]{"title":"${title}","id":"${toolCall.id}","status":"end"}`;
+                    yield`[FC_TOOL]{"title":"${title}","id":"${toolCall.id}","status":"end"}`;
                   }
-                  console.log(`${toolResult.data[0].text.substring(0, 120)}...`);
+                  console.log(`${toolResult.data[0].text}...`);
                   conversationMessages.push({
                     role: 'tool',
                     content: toolResult.data[0].text || '执行完毕',
@@ -417,7 +417,7 @@ ${userRule}`;
                   if (toolResult.data[0]?.answer) {
                     const chats = Array.isArray(toolResult.data[0]?.answer) ? toolResult.data[0]?.answer : [toolResult.data[0]?.answer];
                     for (const chat of chats) {
-                      yield `\n${chat}\n`;
+                      yield`\n${chat}\n`;
                     }
                   }
                   if (toolResult.data[0]?.end) {
