@@ -119,8 +119,8 @@ export class ComponentRegistry {
       );
     }
 
-    // 如果还是没有找到，查找通用组件
-    if (!component) {
+    // 如果还是没有找到，且当前框架不是 ta404ui，则查找通用组件
+    if (!component && detectedFramework !== 'ta404ui') {
       component = components.find(
         comp => comp.uiFramework === 'common' && comp.vueVersion === 'common',
       );
@@ -132,10 +132,14 @@ export class ComponentRegistry {
   getComponents(uiFramework: string, vueVersion: 'vue2' | 'vue3' = 'vue3'): ComponentInfo[] {
     const allComponents: ComponentInfo[] = [];
     const detectedFramework = this.detectFramework(uiFramework, vueVersion);
+    
+    // 如果是 ta404ui 框架，则不包含公共组件
+    const shouldIncludeCommon = detectedFramework !== 'ta404ui';
+    
     for (const components of this.components.values()) {
       const frameworkComponents = components.filter(
         comp =>
-          (comp.uiFramework === detectedFramework || comp.uiFramework === 'common') &&
+          (comp.uiFramework === detectedFramework || (shouldIncludeCommon && comp.uiFramework === 'common')) &&
           (comp.vueVersion === vueVersion || comp.vueVersion === 'common'),
       );
       allComponents.push(...frameworkComponents);

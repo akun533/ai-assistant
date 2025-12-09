@@ -1,8 +1,6 @@
 import { ComponentInfo } from '../../core/component-registry.js';
-import { commonComponents } from '../common';
 
 export const antDesignVue2Components: ComponentInfo[] = [
-  ...commonComponents,
   {
     type: 'input',
     label: '输入框',

@@ -3,7 +3,6 @@ import { commonComponents } from '../common'
 
 
 export const elementPlusComponents: ComponentInfo[] = [
-  ...commonComponents,
   {
     type: 'input',
     label: '输入框',
