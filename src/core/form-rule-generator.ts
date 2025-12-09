@@ -143,38 +143,36 @@ export class FormRuleGenerator {
       rule: JSON.parse(JSON.stringify(rule.rule)), // 深拷贝
     };
 
-    const validateAndImproveField = (
-      field: FormField | string,
-      index: number,
-      path: string = '',
-    ) => {
+    const validateAndImproveField = (field: FormField | string, index: number, path: string = '') => {
       if (typeof field === 'string') {
         return;
       }
 
-      if (!field.props) {
-        field.props = {};
-      } else {
-        Object.keys(field.props).forEach(key => {
-          let flag = false;
-          if (key === 'formCreateChild' && typeof field.props?.[key] === 'string') {
-            field.children = [field.props[key]];
-            flag = true;
-          } else if (key.indexOf('formCreate') === 0 || key.indexOf('>') > 0) {
-            let path = key;
-            if (path.indexOf('formCreate') === 0) {
-              path = path.replace('formCreate', '');
-              path = path.replace(path[0], path[0].toLowerCase());
-            } else {
-              path = `props>${key}`;
+      if (uiFramework !== 'ta404-ui') {
+        if (!field.props) {
+          field.props = {};
+        } else {
+          Object.keys(field.props).forEach(key => {
+            let flag = false;
+            if (key === 'formCreateChild' && typeof field.props?.[key] === 'string') {
+              field.children = [field.props[key]];
+              flag = true;
+            } else if (key.indexOf('formCreate') === 0 || key.indexOf('>') > 0) {
+              let path = key;
+              if (path.indexOf('formCreate') === 0) {
+                path = path.replace('formCreate', '');
+                path = path.replace(path[0], path[0].toLowerCase());
+              } else {
+                path = `props>${key}`;
+              }
+              this.setValueByPath(field, path.replace('>', '.'), field.props?.[key]);
+              flag = true;
             }
-            this.setValueByPath(field, path.replace('>', '.'), field.props?.[key]);
-            flag = true;
-          }
-          if (flag) {
-            delete field.props?.[key];
-          }
-        });
+            if (flag) {
+              delete field.props?.[key];
+            }
+          });
+        }
       }
 
       // 使用 JSONPath 格式：$ 表示根节点，[] 表示数组索引
@@ -225,11 +223,7 @@ export class FormRuleGenerator {
       const childrenPath = component?.childrenPath || DEFAULT_CHILDREN_PATH;
 
       // 如果组件定义了 childrenPath 且不是默认的 children，需要迁移子组件
-      if (
-        childrenPath !== DEFAULT_CHILDREN_PATH &&
-        field.children &&
-        Array.isArray(field.children)
-      ) {
+      if (childrenPath !== DEFAULT_CHILDREN_PATH && field.children && Array.isArray(field.children)) {
         // 将 children 移动到正确的位置
         this.setValueByPath(field, childrenPath, field.children);
         delete field.children;
