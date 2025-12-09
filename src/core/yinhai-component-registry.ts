@@ -1,24 +1,14 @@
 import {
-  antDesignVue2Components,
-  antDesignVueComponents,
-  commonComponents,
-  elementPlusComponents,
-  elementUIComponents,
-  vantComponents,
-  vantVue2Components,
-  ta404uiComponents
+  ta404uiComponents,
 } from '../components/index.js';
 import usages from '../components/usages';
 
-export interface ComponentInfo {
+export interface YinhaiComponentInfo {
   type: string;
   label: string;
   uiFramework: string;
   vueVersion: 'vue2' | 'vue3' | 'common';
-  business?: true; // 是否是高级版组件
-  isAssist?: boolean; // 标识是否为辅助组件（不需要field和title）
-  isContainer?: boolean; // 标识是否为容器组件（必须包含children）
-  isField?: boolean; // 标识是否为表单组件 (必须有 field)
+  fieldType: 'input' | 'layout' | 'date' | 'select' | 'other',
   childrenPath?: string; // 指定子组件的存储路径，如 'props.rule' 或 'children'
   defaultChildren?: string[]; // 默认子组件类型列表（存储组件type字符串）
   usage?: string; // 使用说明
@@ -31,7 +21,7 @@ export interface ComponentInfo {
     description?: string;
     options?: Array<Boolean | string | number>;
     required?: boolean;
-    fields?: ComponentInfo['props'];
+    fields?: YinhaiComponentInfo['props'];
   }>;
   // 组件的事件和描述
   events?: Array<{
@@ -40,55 +30,21 @@ export interface ComponentInfo {
   }>;
 }
 
-export class ComponentRegistry {
-  private components: Map<string, ComponentInfo[]> = new Map();
+export class YinhaiComponentRegistry {
+  private components: Map<string, YinhaiComponentInfo[]> = new Map();
 
   constructor() {
     this.initializeComponents();
   }
 
   private initializeComponents() {
-    // 注册通用组件（所有UI框架都支持，不区分Vue版本）
-    commonComponents.forEach((component: ComponentInfo) => {
-      this.registerComponent(component.type, component);
-    });
-
-    // 注册 Element Plus 组件
-    elementPlusComponents.forEach((component: ComponentInfo) => {
-      this.registerComponent(component.type, component);
-    });
-
-    // 注册 Element UI 组件
-    elementUIComponents.forEach((component: ComponentInfo) => {
-      this.registerComponent(component.type, component);
-    });
-
-    // 注册 Ant Design Vue 组件
-    antDesignVueComponents.forEach((component: ComponentInfo) => {
-      this.registerComponent(component.type, component);
-    });
-    antDesignVue2Components.forEach((component: ComponentInfo) => {
-      this.registerComponent(component.type, component);
-    });
-
-    // 注册 Vant 组件
-    vantComponents.forEach((component: ComponentInfo) => {
-      this.registerComponent(component.type, component);
-    });
-    vantVue2Components.forEach((component: ComponentInfo) => {
-      this.registerComponent(component.type, component);
-    });
-
     // 注册 ta404ui 组件
-    ta404uiComponents.forEach((component: ComponentInfo) => {
+    ta404uiComponents.forEach((component: YinhaiComponentInfo) => {
       this.registerComponent(component.type, component);
     });
   }
 
-  private registerComponent(type: string, component: ComponentInfo) {
-    if (component.business && process.env.FORM_CREATE_BUSINESS !== 'true') {
-      return;
-    }
+  private registerComponent(type: string, component: YinhaiComponentInfo) {
     if (!this.components.has(type)) {
       this.components.set(type, []);
     }
@@ -100,7 +56,7 @@ export class ComponentRegistry {
     type: string,
     uiFramework: string,
     vueVersion: 'vue2' | 'vue3' = 'vue3',
-  ): ComponentInfo | undefined {
+  ): YinhaiComponentInfo | undefined {
     const components = this.components.get(type);
     if (!components) return undefined;
 
@@ -128,8 +84,8 @@ export class ComponentRegistry {
     return component;
   }
 
-  getComponents(uiFramework: string, vueVersion: 'vue2' | 'vue3' = 'vue3'): ComponentInfo[] {
-    const allComponents: ComponentInfo[] = [];
+  getComponents(uiFramework: string, vueVersion: 'vue2' | 'vue3' = 'vue3'): YinhaiComponentInfo[] {
+    const allComponents: YinhaiComponentInfo[] = [];
     const detectedFramework = this.detectFramework(uiFramework, vueVersion);
     for (const components of this.components.values()) {
       const frameworkComponents = components.filter(
@@ -140,7 +96,7 @@ export class ComponentRegistry {
       allComponents.push(...frameworkComponents);
     }
 
-    const uniqueComponents = new Map<string, ComponentInfo>();
+    const uniqueComponents = new Map<string, YinhaiComponentInfo>();
     for (const component of allComponents) {
       const key = `${component.uiFramework}-${component.type}`;
       if (!uniqueComponents.has(key) || component.vueVersion !== 'common') {
@@ -151,10 +107,12 @@ export class ComponentRegistry {
     return Array.from(uniqueComponents.values());
   }
 
-  categorizeComponents(components: ComponentInfo[]) {
-    const formComponents: ComponentInfo[] = [];
-    const layoutComponents: ComponentInfo[] = [];
-    const assistComponents: ComponentInfo[] = [];
+  categorizeComponents(components: YinhaiComponentInfo[]) {
+    const layoutComponents: YinhaiComponentInfo[] = [];
+    const inputComponents: YinhaiComponentInfo[] = [];
+    const selectComponents: YinhaiComponentInfo[] = [];
+    const dateComponents: YinhaiComponentInfo[] = [];
+    const otherComponents: YinhaiComponentInfo[] = [];
     const seenTypes = new Set<string>();
 
     components.forEach(comp => {
@@ -169,62 +127,63 @@ export class ComponentRegistry {
       };
 
       // 判断组件类型
-      if (comp.isField) {
+      if (comp.fieldType === 'input') {
         // 表单组件：用于数据输入和收集
-        formComponents.push(componentInfo);
-      } else if (comp.isContainer) {
+        inputComponents.push(componentInfo);
+      } else if (comp.fieldType === 'layout') {
         // 布局组件：用于页面布局和结构
         layoutComponents.push(componentInfo);
+      } else if (comp.fieldType === 'date') {
+        // 日期时间组件：用于用户录入时间类型的字段
+        dateComponents.push(componentInfo);
+      } else if (comp.fieldType === 'select') {
+        // 选择组件：用户选择预定义选择项的组件
+        selectComponents.push(componentInfo);
       } else {
-        // 辅助组件：其他功能组件
-        assistComponents.push(componentInfo);
+        // 其他组件
+        otherComponents.push(componentInfo);
       }
     });
-
     return {
-      formComponents: {
-        name: '表单组件',
-        description: '用于数据输入、收集和验证的组件',
-        count: formComponents.length,
-        components: formComponents,
-      },
       layoutComponents: {
-        name: '布局组件',
+        name: '布局字段',
         description: '用于页面布局和结构组织的组件',
         count: layoutComponents.length,
         components: layoutComponents,
       },
-      assistComponents: {
-        name: '辅助组件',
-        description: '提供其他功能的辅助组件',
-        count: assistComponents.length,
-        components: assistComponents,
+      inputComponents: {
+        name: '输入字段',
+        description: '用于用户录入文本类型的信息的组件',
+        count: inputComponents.length,
+        components: inputComponents,
+      },
+      selectComponents: {
+        name: '选择字段',
+        description: '用户选择预定义选择项的组件',
+        count: selectComponents.length,
+        components: selectComponents,
+      },
+      dateComponents: {
+        name: '日期时间字段',
+        description: '用户录入时间类型字段的组件',
+        count: dateComponents.length,
+        components: dateComponents,
+      },
+      otherComponents: {
+        name: '其他字段',
+        description: '其他类型的组件',
+        count: otherComponents.length,
+        components: otherComponents,
       },
     };
   }
 
   private detectFramework(uiFramework: string, vueVersion: 'vue2' | 'vue3'): string {
-    if (uiFramework === 'element-plus') {
-      return vueVersion === 'vue2' ? 'element-ui' : 'element-plus';
-    }
-
     if (uiFramework === 'ta404ui') {
       return 'ta404ui';
     }
 
-    if (uiFramework === 'element-ui') {
-      return 'element-ui';
-    }
-
-    if (uiFramework === 'ant-design-vue') {
-      return 'ant-design-vue';
-    }
-
-    if (uiFramework === 'vant') {
-      return 'vant';
-    }
-
     // 默认返回 element-plus
-    return 'element-plus';
+    return 'ta404ui';
   }
 }

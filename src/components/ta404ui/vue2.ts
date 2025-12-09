@@ -1,14 +1,12 @@
-import { ComponentInfo } from '../../core/component-registry.js';
+import { YinhaiComponentInfo } from '../../core/yinhai-component-registry';
 
-export const ta404uiComponents: ComponentInfo[] = [
+export const ta404uiComponents: YinhaiComponentInfo[] = [
   {
     type: 'single-input',
     label: '单行文本',
     uiFramework: 'ta404ui',
     vueVersion: 'vue2',
-    isField: true,
-    isContainer: false,
-    isAssist: false,
+    fieldType: 'input',
     examples: [
       {
         type: 'single-input',

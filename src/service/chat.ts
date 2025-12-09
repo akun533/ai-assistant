@@ -3,11 +3,14 @@ import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { ComponentRegistry } from '../core/component-registry.js';
+import { YinhaiComponentRegistry } from '../core/yinhai-component-registry';
 import { FormRuleGenerator } from '../core/form-rule-generator.js';
 import { generateSessionId } from '../utils';
 import { AgentMessage, AgentRequest, AgentTool, AgentType, BaseAgent, createAgent } from './agent';
 import { ToolRegistry } from './tools';
 import type { ToolArgs } from './tools/types';
+import { getSections } from './define/sections';
+
 
 // OpenAI 兼容的消息格式
 export interface OpenAIMessage {
@@ -58,12 +61,14 @@ export default class Chat {
   private toolRegistry: ToolRegistry;
   private formGenerator: FormRuleGenerator;
   private componentRegistry: ComponentRegistry;
+  private yinhaiComponentRegistry: YinhaiComponentRegistry;
   private agentCache: Map<string, BaseAgent> = new Map();
 
   constructor() {
     this.toolRegistry = new ToolRegistry();
     this.formGenerator = new FormRuleGenerator();
     this.componentRegistry = new ComponentRegistry();
+    this.yinhaiComponentRegistry = new YinhaiComponentRegistry();
   }
 
   /**
@@ -114,21 +119,8 @@ ${vueVersion}
   /**
    * 生成组件列表部分
    */
-  private buildComponentList(categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents']>): string {
-    const sections = [
-      {
-        title: 'Field 表单组件',
-        category: categorizedComponents.formComponents,
-      },
-      {
-        title: 'Container 布局组件',
-        category: categorizedComponents.layoutComponents,
-      },
-      {
-        title: 'Assist 辅助组件',
-        category: categorizedComponents.assistComponents,
-      },
-    ];
+  private buildComponentList(categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents'] | YinhaiComponentRegistry['categorizeComponents']>, version: { ui: string; vue: 'vue2' | 'vue3' }): string {
+    const sections = getSections(categorizedComponents, version)
 
     const componentListParts = sections.map(section => {
       const componentItems = section.category.components.map(comp => `- ${comp.type}: ${comp.label}`).join('\n');
@@ -164,9 +156,16 @@ ${JSON.stringify(formRule)}
   private buildEnhancedSystemPrompt(sessionId: string, version: { ui: string; vue: 'vue2' | 'vue3' }, formRule?: any): string {
     const systemPrompt = this.readSystemPrompt(version);
     const sessionInfo = this.buildSessionInfo(sessionId, version.ui, version.vue);
-    const components = this.componentRegistry.getComponents(version.ui, version.vue);
-    const categorizedComponents = this.componentRegistry.categorizeComponents(components);
-    const componentList = this.buildComponentList(categorizedComponents);
+    let components;
+    let categorizedComponents;
+    if (version.ui === 'ta404ui') {
+      components = this.yinhaiComponentRegistry.getComponents(version.ui, version.vue);
+      categorizedComponents = this.yinhaiComponentRegistry.categorizeComponents(components);
+    } else {
+      components = this.componentRegistry.getComponents(version.ui, version.vue);
+      categorizedComponents = this.componentRegistry.categorizeComponents(components);
+    }
+    const componentList = this.buildComponentList(categorizedComponents, version);
     const userRule = this.buildUserRule(formRule);
 
     return `${systemPrompt}
@@ -224,7 +223,7 @@ ${userRule}`;
     isFirst: boolean = false,
     isLast: boolean = false,
     model: string = 'deepseek-chat',
-    usage: any = null
+    usage: any = null,
   ): string {
     const chunk: OpenAIChatStreamChunk = {
       id: this.generateOpenAIId(),
@@ -336,7 +335,7 @@ ${userRule}`;
     maxDepth: number = 1,
     context: Record<string, any>,
     sessionId?: string,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): AsyncGenerator<string | { content: string; usage?: any }, void, unknown> {
     // 获取或创建 agent
     const agent = this.getAgent(agentType, apiKey, model);
@@ -413,7 +412,7 @@ ${userRule}`;
                   const toolResult = await this.handleToolCall(
                     toolCall.function.name,
                     { ...JSON.parse(toolCall.function.arguments), sessionId },
-                    context
+                    context,
                   );
                   const title = this.getToolTitle(toolCall.function.name);
                   if (title) {
@@ -449,7 +448,7 @@ ${userRule}`;
                   maxDepth + 1,
                   context,
                   sessionId,
-                  signal
+                  signal,
                 );
               } else {
                 console.log(`达到最大递归深度 (${maxDepth})，停止递归`);
@@ -559,7 +558,7 @@ ${userRule}`;
   async *chatStream(
     request: ChatRequest,
     apiKey: string,
-    signal: AbortSignal
+    signal: AbortSignal,
   ): AsyncGenerator<
     | string
     | {
