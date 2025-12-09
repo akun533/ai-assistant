@@ -1,7 +1,7 @@
 {
   "name": "@form-create/ai-assistant",
   "version": "1.0.0",
-  "description": "FormCreate AI 表单助理，用于根据自然语言描述自动生成和修改 FormCreate 表单规则",
+  "description": "AI 表单助理，用于根据自然语言描述自动生成和修改规则",
   "main": "dist/service/index.js",
   "type": "module",
   "scripts": {

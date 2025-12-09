@@ -79,7 +79,7 @@ export default class Chat {
   private readSystemPrompt(version: { ui: string; vue: 'vue2' | 'vue3' }): string {
     console.log('开始读取系统提示词文件...');
     let promptFileName;
-    if (version.ui === 'ta404ui') {
+    if (version.ui === 'ta404-ui') {
       promptFileName = 'YH_FORM_PROMPT.md';
     } else {
       promptFileName = 'SYSTEM_PROMPT.md';
@@ -534,8 +534,8 @@ ${userRule}`;
         ui: 'ant-design-vue',
         vue: 'vue2',
       },
-      'ta404ui@vue2': {
-        ui: 'ta404ui',
+      'ta404-ui@vue2': {
+        ui: 'ta404-ui',
         vue: 'vue2',
       },
     } as { [key: string]: { ui: string; vue: 'vue2' | 'vue3' } };

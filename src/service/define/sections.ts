@@ -4,7 +4,7 @@ export const getSections = (
   categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents']>,
   version: { ui: string; vue: 'vue2' | 'vue3' },
 ) => {
-  if (version.ui === 'ta404ui') {
+  if (version.ui === 'ta404-ui') {
     // 类型断言确保属性存在
     return [
       {

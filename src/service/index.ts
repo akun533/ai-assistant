@@ -58,7 +58,7 @@ service.initialize().catch(console.error);
 app.get('/api/health', (req: Request, res: Response) => {
   res.json({
     success: true,
-    message: 'FormCreate 聊天服务正常运行',
+    message: 'AI 助手 聊天服务正常运行',
     timestamp: new Date().toISOString(),
   });
 });
@@ -204,12 +204,10 @@ process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 
 // 启动服务器
 app.listen(port, () => {
-  console.log('🚀 FormCreate 表单助理已启动');
+  console.log('🚀 AI 助理已启动');
   console.log(`📡 服务器地址: http://localhost:${port}`);
   console.log(`❤️ 健康检查: http://localhost:${port}/api/health`);
   console.log(`🤖 对话接口: http://localhost:${port}/api/chat/completions`);
-  console.log('📙 渲染器文档: https://form-create.com/v3/guide/');
-  console.log(`📙 设计器文档: ${process.env.FORM_CREATE_BUSINESS  === 'true' ? 'https://pro.form-create.com/doc/' : 'https://view.form-create.com/'}`);
   console.log(`🔧 支持的 Agent: deepseek, zhipu, qwen, other`);
   console.log(`💡 提示: 在请求中使用 "agent" 参数指定 AI 服务提供商 (默认: deepseek)`);
   console.log(`🔗 Other Agent 配置: 通过 .env 文件`);

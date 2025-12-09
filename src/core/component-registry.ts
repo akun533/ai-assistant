@@ -80,7 +80,7 @@ export class ComponentRegistry {
       this.registerComponent(component.type, component);
     });
 
-    // 注册 ta404ui 组件
+    // 注册 ta404-ui 组件
     ta404uiComponents.forEach((component: ComponentInfo) => {
       this.registerComponent(component.type, component);
     });
@@ -119,8 +119,8 @@ export class ComponentRegistry {
       );
     }
 
-    // 如果还是没有找到，且当前框架不是 ta404ui，则查找通用组件
-    if (!component && detectedFramework !== 'ta404ui') {
+    // 如果还是没有找到，且当前框架不是 ta404-ui，则查找通用组件
+    if (!component && detectedFramework !== 'ta404-ui') {
       component = components.find(
         comp => comp.uiFramework === 'common' && comp.vueVersion === 'common',
       );
@@ -133,8 +133,8 @@ export class ComponentRegistry {
     const allComponents: ComponentInfo[] = [];
     const detectedFramework = this.detectFramework(uiFramework, vueVersion);
     
-    // 如果是 ta404ui 框架，则不包含公共组件
-    const shouldIncludeCommon = detectedFramework !== 'ta404ui';
+    // 如果是 ta404-ui 框架，则不包含公共组件
+    const shouldIncludeCommon = detectedFramework !== 'ta404-ui';
     
     for (const components of this.components.values()) {
       const frameworkComponents = components.filter(
@@ -177,7 +177,7 @@ export class ComponentRegistry {
         ...comp,
       };
 
-      if (comp.uiFramework === 'ta404ui') {
+      if (comp.uiFramework === 'ta404-ui') {
         // 判断组件类型
         if (comp.fieldType === 'input') {
           // 表单组件：用于数据输入和收集
@@ -262,8 +262,8 @@ export class ComponentRegistry {
       return vueVersion === 'vue2' ? 'element-ui' : 'element-plus';
     }
 
-    if (uiFramework === 'ta404ui') {
-      return 'ta404ui';
+    if (uiFramework === 'ta404-ui') {
+      return 'ta404-ui';
     }
 
     if (uiFramework === 'element-ui') {

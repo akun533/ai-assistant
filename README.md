@@ -109,7 +109,7 @@ GET /api/health
 ```json
 {
   "success": true,
-  "message": "FormCreate 聊天服务正常运行",
+  "message": "AI 助手 聊天服务正常运行",
   "timestamp": "2025-01-20T10:00:00.000Z"
 }
 ```
@@ -328,7 +328,7 @@ interface ComponentInfo {
 
   // 文档和示例
   usage?: string;                  // 使用说明
-  examples?: any[];                // 使用示例（FormCreate 规则格式）
+  examples?: any[];                // 使用示例（AI 助手 规则格式）
 
   // 组件属性定义
   props?: Array<{
