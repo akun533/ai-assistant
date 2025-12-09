@@ -2,7 +2,7 @@
 
 一个基于 Vue 3 的 AI 助手聊天面板组件，可以轻松集成到你的项目中。
 
-当前版本: v1.0.3
+当前版本: v1.0.8
 
 ## 功能特性
 
@@ -55,23 +55,16 @@ export default {
 </script>
 ```
 
-### 配置 API 地址和 Token
+### 配置请求选项和界面文本
 
-组件默认会读取环境变量中的配置：
-
-```bash
-VITE_AI_API_TOKEN=your_api_token_here
-VUE_APP_API_URL=your_api_url_here
-```
-
-你也可以通过 props 传递配置：
+组件默认会使用内置的配置，但你可以通过 props 传递自定义配置：
 
 ```vue
 <template>
   <div style="height: 600px;">
     <AiPanel 
-      api="https://your-api-endpoint.com/chat"
-      :token="yourToken"
+      :request-option="requestOption"
+      :config="config"
     />
   </div>
 </template>
@@ -85,7 +78,24 @@ export default {
   },
   data() {
     return {
-      yourToken: 'Bearer your-token-here'
+      requestOption: {
+        ui: 'element-plus',
+        basic: true,
+        form: {
+          rule: '[]',
+        },
+        messages: [],
+      },
+      config: {
+        title: 'AI助理',
+        clearChat: '清空对话',
+        welcomeTitle: '欢迎',
+        welcomeMessage: '使用我生成表单',
+        suggestionsTitle: '热门示例',
+        refreshSuggestions: '换一批',
+        copyMessage: '复制',
+        inputPlaceholder: '请输入您的问题...',
+      }
     }
   }
 }
@@ -96,10 +106,8 @@ export default {
 
 | 属性名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
-| 属性名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| api | String | 从 `VUE_APP_API_URL` 环境变量读取或使用默认值 | AI API 的地址 |
-| token | String | 从 `VUE_APP_AI_API_TOKEN` 环境变量读取 | API 访问令牌 |
+| requestOption | Object | `{ ui: 'ta404-ui@vue2', basic: true, form: { rule: '[]' }, messages: [] }` | 请求选项，用于配置AI助手的上下文信息 |
+| config | Object | 见下方说明 | 配置选项，支持国际化和自定义文本 |
 
 ## 构建
 
@@ -129,6 +137,11 @@ npm run build
 ```bash
 npm run build:package
 ```
+
+此命令将会：
+- 检查并安装依赖（如果尚未安装）
+- 构建组件到 dist 目录
+- 生成 .tgz 包文件用于发布或本地安装
 
 ## 浏览器兼容性
 

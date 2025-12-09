@@ -222,11 +222,11 @@ export default {
   computed: {
     api() {
       // 兼容多种环境的环境变量访问方式，避免直接使用 import.meta
-      return 'http://localhost:3001/api/chat/completions';
+      return process.env.VUE_APP_API_URL || 'https://api.form-create.com/ai/v2/chat/form';
     },
     token() {
       // 从环境变量获取 API 令牌，兼容多种环境，避免直接使用 import.meta
-      let token = 'sk-e0303bb2f4374ae3a03b6fd603f3d032';
+      let token = process.env.VUE_APP_AI_API_TOKEN || '';
       if (token && token.indexOf('Bearer') === -1) {
         token = `Bearer ${token}`;
       }

@@ -1,6 +1,6 @@
 {
   "name": "@akun/ai-panel",
-  "version": "1.0.8",
+  "version": "1.0.0",
   "description": "AI Assistant Panel Component",
   "main": "src/components/AiPanel.vue",
   "module": "src/components/AiPanel.vue",
@@ -23,6 +23,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:package": "node build/build-package.cjs",
+    "pack": "npm pack",
     "preview": "vite preview",
     "serve": "vite preview",
     "type-check": "vue-tsc --noEmit"

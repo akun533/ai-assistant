@@ -1,37 +1,11 @@
-<p align="center">
-    <a href="https://www.form-create.com">
-        <img width="300" alt="FormCreate" src="https://static.form-create.com/file/img/info-logo2.png">
-    </a>
-</p>
+# AI 表单助理
 
-<p align="center">
-    <a href="https://www.form-create.com/" target="_blank">官网</a>
-    <span>&nbsp;|&nbsp;</span>
-    <a href="https://view.form-create.com/" target="_blank">帮助文档</a>
-    <span>&nbsp;|&nbsp;</span>
-    <a href="https://form-create.com/v3/designer/" target="_blank">在线演示</a>
-    <span>&nbsp;|&nbsp;</span>
-    <a href="https://form-create.com/v3/mobile/" target="_blank">移动端在线演示</a>
-    <span>&nbsp;|&nbsp;</span>
-    <a href="https://form-create.com/v3/" target="_blank">FormCreate 文档</a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/xaboy/form-create" target="_blank"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="TIM" /></a>
-  <a href="https://github.com/xaboy/form-create" target="_blank"><img src="https://img.shields.io/npm/dt/@form-create/designer.svg" alt="dt" /></a>
-</p>
-
-## FormCreate AI 表单助理
-
-FormCreate AI 表单助理，用于根据自然语言描述自动生成和修改 FormCreate 表单规则。
-
-
-[![FcDesigner](https://static.form-create.com/file/img/banner-m2.jpg?20251027)](https://pro.form-create.com/view)
+AI 表单助理，用于根据自然语言描述自动生成和修改表单规则。
 
 ## ✨ 功能特性
 
 - 🤖 **多 AI 服务支持** - 支持 DeepSeek、智谱AI、通义千问及自定义 OpenAI 兼容接口
-- 🎨 **多 UI 框架** - 支持 Element Plus/UI、Ant Design Vue、Vant
+- 🎨 **多 UI 框架** - 支持 Element Plus/UI、Ant Design Vue、Vant、银海TA404-UI
 - 📝 **智能表单生成** - 根据自然语言描述自动生成完整的表单规则
 - 🔧 **表单验证与修复** - 自动验证表单规则并提供修复建议
 - 🔄 **增量更新** - 支持基于 JSONPatch 的精确表单规则修改
@@ -42,8 +16,8 @@ FormCreate AI 表单助理，用于根据自然语言描述自动生成和修改
 
 ```bash
 # 克隆项目
-git clone https://github.com/xaboy/form-create-assistant/
-cd form-create-assistant
+git clone https://github.com/akun/ai-assistant/
+cd ai-assistant
 
 # 安装依赖
 pnpm install
@@ -74,13 +48,16 @@ DEFAULT_AGENT=deepseek
 DEFAULT_MODEL=deepseek-chat
 
 # 默认 API 密钥（可选，当请求中未提供 Authorization header 时使用）
-DEFAULT_TOKEN=your-api-key-here
+DEFAULT_TOKEN=fc-xxxxxxxxxxxxxxxxxx
 
 # Other Agent 的自定义 API 端点（用于自定义 OpenAI 兼容接口）
 AGENT_API=https://api.example.com/v1/chat/completions
 
 # Agent 请求超时时间（毫秒，默认: 180000，即 3 分钟）
 AGENT_TIMEOUT=180000
+
+# 是否为 FormCreate 设计器高级版, 部分组件和功能只有高级版支持
+FORM_CREATE_BUSINESS=false
 ```
 
 ### API 密钥
@@ -134,7 +111,7 @@ Authorization: Bearer <your-api-key>
       "role": "user",
       "content": "生成一个用户注册表单"
     }
-  ],
+  ]
 }
 ```
 
@@ -142,9 +119,9 @@ Authorization: Bearer <your-api-key>
 
 | 参数         | 类型 | 必填 | 说明                                                                                          |
 |------------|------|----|---------------------------------------------------------------------------------------------|
-| `ui`       | string | 是  | UI 框架：`element-plus`、`element-ui`、`ant-design-vue`、`vant`、`vant@vue2`、`ant-design-vue@vue2` |
+| `ui`       | string | 是  | UI 框架：`element-plus`、`element-ui`、`ant-design-vue`、`vant`、`vant@vue2`、`ant-design-vue@vue2`、`ta404-ui@vue2` |
 | `messages` | array | 是  | 对话消息数组（OpenAI 格式）                                                                           |
-| `form`     | string | 是  | 当前表单规则                                                                                      |
+| `form`     | object | 否  | 当前表单规则（修改表单时使用）                                                                            |
 | `model`    | string | 否  | AI 模型名称                                                                                     |
 | `agent`    | string | 否  | AI 服务提供商：`deepseek`、`zhipu`、`qwen`、`other`（默认: `deepseek`）                                  |
 
@@ -248,6 +225,10 @@ AGENT_API=https://api.example.com/v1/chat/completions
 - **Vue3**: `ui: "vant"`
 - **Vue2**: `ui: "vant@vue2"`
 
+### 银海 TA404-UI
+
+- **Vue2**: `ui: "ta404-ui@vue2"`
+
 ### 组件架构
 
 系统采用模块化的组件架构：
@@ -255,6 +236,7 @@ AGENT_API=https://api.example.com/v1/chat/completions
 - **`src/components/element-plus/`** - Element Plus 组件定义（Vue2/Vue3）
 - **`src/components/ant-design-vue/`** - Ant Design Vue 组件定义（Vue2/Vue3）
 - **`src/components/vant/`** - Vant 组件定义（Vue2/Vue3）
+- **`src/components/ta404-ui/`** - 银海 TA404-UI 组件定义（Vue2）
 - **`src/components/common/`** - 通用组件定义（所有框架支持）
 
 ### 组件分类
@@ -263,7 +245,7 @@ AGENT_API=https://api.example.com/v1/chat/completions
 
 **表单组件 (isField: true)**
 - 用于数据输入和收集
-- 必须包含 `field` 和 `title` 属性
+- 必须包含 `field` 和 `title` 属性（TA404-UI 使用 `fieldDecoratorId`、`renderId` 和 `label`）
 - 示例：input, select, textarea, date-picker
 
 ```typescript
@@ -330,17 +312,6 @@ interface ComponentInfo {
   usage?: string;                  // 使用说明
   examples?: any[];                // 使用示例（AI 助手 规则格式）
 
-  // 组件属性定义
-  props?: Array<{
-    name: string;                  // 属性名称
-    type: 'boolean' | 'string' | 'number' | 'object' | 'Function' | 'Array';
-    defaultValue?: any;            // 默认值
-    description?: string;          // 属性说明
-    options?: Array<Boolean | string | number>; // 可选值列表
-    required?: boolean;            // 是否必需
-    fields?: ComponentInfo['props']; // 嵌套属性（用于对象类型）
-  }>;
-
   // 组件事件定义
   events?: Array<{
     name: string;                  // 事件名称
@@ -361,6 +332,7 @@ interface ComponentInfo {
 - **Ant Design Vue (Vue2)**: `src/components/ant-design-vue/vue2.ts`
 - **Vant (Vue3)**: `src/components/vant/vue3.ts`
 - **Vant (Vue2)**: `src/components/vant/vue2.ts`
+- **TA404-UI (Vue2)**: `src/components/ta404-ui/vue2.ts`
 - **通用组件**: `src/components/common/index.ts`（所有框架支持）
 
 #### 2. 定义组件信息
@@ -461,10 +433,7 @@ curl -X POST http://localhost:3001/api/chat/completions \
         "role": "user",
         "content": "生成一个用户注册表单，包含用户名、邮箱、密码和确认密码字段"
       }
-    ],
-    "form": {
-      "rule": []
-    }
+    ]
   }'
 ```
 
@@ -518,11 +487,6 @@ const response = await fetch('http://localhost:3001/api/chat/completions', {
         content: '生成一个登录表单',
       },
     ],
-    context: {
-      form: {
-        rule: [],
-      },
-    },
   }),
 });
 
@@ -560,12 +524,13 @@ while (true) {
 ## 🏗️ 项目结构
 
 ```
-form-create-assistant/
+ai-assistant/
 ├── src/
 │   ├── components/          # UI 组件定义
 │   │   ├── element-plus/    # Element Plus 组件
 │   │   ├── ant-design-vue/  # Ant Design Vue 组件
 │   │   ├── vant/            # Vant 组件
+│   │   ├── ta404-ui/        # 银海 TA404-UI 组件
 │   │   └── common/          # 通用组件
 │   ├── core/                # 核心功能
 │   │   ├── component-registry.ts      # 组件注册表
@@ -576,7 +541,8 @@ form-create-assistant/
 │   │   ├── tools/           # MCP 工具定义
 │   │   ├── chat.ts          # 聊天服务核心
 │   │   ├── index.ts         # Express 服务器入口
-│   │   └── SYSTEM_PROMPT.md # 系统提示词
+│   │   ├── SYSTEM_PROMPT.md # 系统提示词
+│   │   └── YH_FORM_PROMPT.md # 银海表单系统提示词
 │   └── utils/               # 工具函数
 ├── dist/                    # 编译输出
 ├── log/                     # 日志文件
@@ -598,10 +564,6 @@ form-create-assistant/
 1. 检查 API 密钥是否正确
 2. 检查 Agent 类型和模型是否匹配
 3. 查看日志文件：`./log/` 目录
-
-## 联系
-
-![http://static.form-create.com/file/img/support.jpg](http://static.form-create.com/file/img/support.jpg)
 
 ## License
 
