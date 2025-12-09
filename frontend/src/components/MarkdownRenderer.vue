@@ -142,12 +142,7 @@ export default {
             if (container) {
                 const codeElement = container.querySelector('code');
                 if (codeElement) {
-                    // const rule = viewForm.parseJson(codeElement.innerText);
-                    // if (Array.isArray(rule)) {
-                    //     this.designer.setupState.setRule(rule);
-                    // } else if (rule.rule) {
-                    //     this.designer.setupState.setRule(rule.rule);
-                    // }
+                  this.$emit('import', codeElement.innerText)
                 }
             }
         },

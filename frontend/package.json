@@ -1,6 +1,6 @@
 {
   "name": "@akun/ai-panel",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "AI Assistant Panel Component",
   "main": "src/components/AiPanel.vue",
   "module": "src/components/AiPanel.vue",

@@ -122,7 +122,7 @@
                 </template>
                 <template v-if="content.type === 'text'">
                   <div v-if="content.text" class="ai-message-text">
-                    <MarkdownRenderer :content="content.text"/>
+                    <MarkdownRenderer :content="content.text" @import="importText"/>
                   </div>
                 </template>
               </template>
@@ -531,6 +531,9 @@ export default {
     },
     saveHistory() {
       localStorage.setItem('fc_ai_chat', JSON.stringify(this.messages));
+    },
+    importText(text) {
+      this.$emit('importText', text)
     },
     importCode(blockId) {
       const container = document.querySelector(`[data-block-id="${blockId}"]`);
