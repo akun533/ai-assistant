@@ -6,7 +6,7 @@ import featuresMap, { features } from './features';
 // 常量定义
 const DEFAULT_UI_FRAMEWORK = 'element-plus';
 const DEFAULT_VUE_VERSION = 'vue3';
-const SUPPORTED_UI_FRAMEWORKS = ['element-plus', 'element-ui', 'ant-design-vue', 'vant'] as const;
+const SUPPORTED_UI_FRAMEWORKS = ['element-plus', 'element-ui', 'ant-design-vue', 'vant', 'ta404ui'] as const;
 const SUPPORTED_VUE_VERSIONS = ['vue2', 'vue3', 'auto'] as const;
 
 export const getComponentsDetailTool: ToolRegistration = {

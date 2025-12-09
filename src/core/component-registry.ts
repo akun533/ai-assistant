@@ -6,7 +6,7 @@ import {
   elementUIComponents,
   vantComponents,
   vantVue2Components,
-  ta404uiComponents
+  ta404uiComponents,
 } from '../components/index.js';
 import usages from '../components/usages';
 
@@ -15,6 +15,7 @@ export interface ComponentInfo {
   label: string;
   uiFramework: string;
   vueVersion: 'vue2' | 'vue3' | 'common';
+  fieldType?: 'input' | 'layout' | 'date' | 'select' | 'other' | '',
   business?: true; // 是否是高级版组件
   isAssist?: boolean; // 标识是否为辅助组件（不需要field和title）
   isContainer?: boolean; // 标识是否为容器组件（必须包含children）
@@ -49,9 +50,9 @@ export class ComponentRegistry {
 
   private initializeComponents() {
     // 注册通用组件（所有UI框架都支持，不区分Vue版本）
-    commonComponents.forEach((component: ComponentInfo) => {
-      this.registerComponent(component.type, component);
-    });
+    // commonComponents.forEach((component: ComponentInfo) => {
+    //   this.registerComponent(component.type, component);
+    // });
 
     // 注册 Element Plus 组件
     elementPlusComponents.forEach((component: ComponentInfo) => {
@@ -152,8 +153,12 @@ export class ComponentRegistry {
   }
 
   categorizeComponents(components: ComponentInfo[]) {
-    const formComponents: ComponentInfo[] = [];
     const layoutComponents: ComponentInfo[] = [];
+    const inputComponents: ComponentInfo[] = [];
+    const selectComponents: ComponentInfo[] = [];
+    const dateComponents: ComponentInfo[] = [];
+    const otherComponents: ComponentInfo[] = [];
+    const formComponents: ComponentInfo[] = [];
     const assistComponents: ComponentInfo[] = [];
     const seenTypes = new Set<string>();
 
@@ -168,17 +173,38 @@ export class ComponentRegistry {
         ...comp,
       };
 
-      // 判断组件类型
-      if (comp.isField) {
-        // 表单组件：用于数据输入和收集
-        formComponents.push(componentInfo);
-      } else if (comp.isContainer) {
-        // 布局组件：用于页面布局和结构
-        layoutComponents.push(componentInfo);
+      if (comp.uiFramework === 'ta404ui') {
+        // 判断组件类型
+        if (comp.fieldType === 'input') {
+          // 表单组件：用于数据输入和收集
+          inputComponents.push(componentInfo);
+        } else if (comp.fieldType === 'layout') {
+          // 布局组件：用于页面布局和结构
+          layoutComponents.push(componentInfo);
+        } else if (comp.fieldType === 'date') {
+          // 日期时间组件：用于用户录入时间类型的字段
+          dateComponents.push(componentInfo);
+        } else if (comp.fieldType === 'select') {
+          // 选择组件：用户选择预定义选择项的组件
+          selectComponents.push(componentInfo);
+        } else {
+          // 其他组件
+          otherComponents.push(componentInfo);
+        }
       } else {
-        // 辅助组件：其他功能组件
-        assistComponents.push(componentInfo);
+        // 判断组件类型
+        if (comp.isField) {
+          // 表单组件：用于数据输入和收集
+          formComponents.push(componentInfo);
+        } else if (comp.isContainer) {
+          // 布局组件：用于页面布局和结构
+          layoutComponents.push(componentInfo);
+        } else {
+          // 辅助组件：其他功能组件
+          assistComponents.push(componentInfo);
+        }
       }
+
     });
 
     return {
@@ -199,6 +225,30 @@ export class ComponentRegistry {
         description: '提供其他功能的辅助组件',
         count: assistComponents.length,
         components: assistComponents,
+      },
+      inputComponents: {
+        name: '输入字段',
+        description: '用于用户录入文本类型的信息的组件',
+        count: inputComponents.length,
+        components: inputComponents,
+      },
+      selectComponents: {
+        name: '选择字段',
+        description: '用户选择预定义选择项的组件',
+        count: selectComponents.length,
+        components: selectComponents,
+      },
+      dateComponents: {
+        name: '日期时间字段',
+        description: '用户录入时间类型字段的组件',
+        count: dateComponents.length,
+        components: dateComponents,
+      },
+      otherComponents: {
+        name: '其他字段',
+        description: '其他类型的组件',
+        count: otherComponents.length,
+        components: otherComponents,
       },
     };
   }

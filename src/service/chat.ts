@@ -3,7 +3,6 @@ import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { ComponentRegistry } from '../core/component-registry.js';
-import { YinhaiComponentRegistry } from '../core/yinhai-component-registry';
 import { FormRuleGenerator } from '../core/form-rule-generator.js';
 import { generateSessionId } from '../utils';
 import { AgentMessage, AgentRequest, AgentTool, AgentType, BaseAgent, createAgent } from './agent';
@@ -61,14 +60,12 @@ export default class Chat {
   private toolRegistry: ToolRegistry;
   private formGenerator: FormRuleGenerator;
   private componentRegistry: ComponentRegistry;
-  private yinhaiComponentRegistry: YinhaiComponentRegistry;
   private agentCache: Map<string, BaseAgent> = new Map();
 
   constructor() {
     this.toolRegistry = new ToolRegistry();
     this.formGenerator = new FormRuleGenerator();
     this.componentRegistry = new ComponentRegistry();
-    this.yinhaiComponentRegistry = new YinhaiComponentRegistry();
   }
 
   /**
@@ -119,8 +116,8 @@ ${vueVersion}
   /**
    * 生成组件列表部分
    */
-  private buildComponentList(categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents'] | YinhaiComponentRegistry['categorizeComponents']>, version: { ui: string; vue: 'vue2' | 'vue3' }): string {
-    const sections = getSections(categorizedComponents, version)
+  private buildComponentList(categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents']>, version: { ui: string; vue: 'vue2' | 'vue3' }): string {
+    const sections = getSections(categorizedComponents, version);
 
     const componentListParts = sections.map(section => {
       const componentItems = section.category.components.map(comp => `- ${comp.type}: ${comp.label}`).join('\n');
@@ -156,15 +153,8 @@ ${JSON.stringify(formRule)}
   private buildEnhancedSystemPrompt(sessionId: string, version: { ui: string; vue: 'vue2' | 'vue3' }, formRule?: any): string {
     const systemPrompt = this.readSystemPrompt(version);
     const sessionInfo = this.buildSessionInfo(sessionId, version.ui, version.vue);
-    let components;
-    let categorizedComponents;
-    if (version.ui === 'ta404ui') {
-      components = this.yinhaiComponentRegistry.getComponents(version.ui, version.vue);
-      categorizedComponents = this.yinhaiComponentRegistry.categorizeComponents(components);
-    } else {
-      components = this.componentRegistry.getComponents(version.ui, version.vue);
-      categorizedComponents = this.componentRegistry.categorizeComponents(components);
-    }
+    const components = this.componentRegistry.getComponents(version.ui, version.vue);
+    const categorizedComponents = this.componentRegistry.categorizeComponents(components);
     const componentList = this.buildComponentList(categorizedComponents, version);
     const userRule = this.buildUserRule(formRule);
 

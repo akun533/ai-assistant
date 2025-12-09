@@ -1,6 +1,8 @@
 import { ComponentInfo } from '../../core/component-registry.js';
+import { commonComponents } from '../common';
 
 export const vantVue2Components: ComponentInfo[] = [
+  ...commonComponents,
   {
     type: 'input',
     label: '输入框',
