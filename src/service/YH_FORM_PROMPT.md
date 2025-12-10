@@ -122,7 +122,9 @@ type ComponentRule = {
     style?: object;         // CSS样式
     required?: boolean;     // 必填字段
     placeholder?: boolean;     // 占位提示
-    children?: ComponentRule[] | string[]; // 子组件（可以是组件数组或字符串数组）
+    children?:  {
+      column: ComponentRule[]   // 放置子组件
+    }; // 子组件（可以是组件数组或字符串数组）
     dataType?: string; // 填充数据类型，默认值为static,下拉类型组件需填写
     staticData?: object[]; // 静态数据，一般是选择类型组件必须
     span?: number; // 宽度（1-24，24=100%）
