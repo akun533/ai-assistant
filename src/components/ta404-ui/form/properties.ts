@@ -328,6 +328,33 @@ const commonProps: ComponentInfo['props'] = [
       '组件的数据项。格式为经过转义的标准 JSON 格式对象数组字符串。对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联，默认值："[{\\"name\\":\\"张三\\",\\"id\\":\\"10010\\"}]"，用于 rpc 组件',
     required: true,
   },
+  {
+    name: 'cardHeadStyle',
+    type: 'string',
+    description: '标题CSS。标题的CSS样式，示例: width: 120px;height:120px;',
+    required: false,
+  },
+  {
+    name: 'width',
+    type: 'number',
+    description: '宽度。列宽度信息。',
+    required: false,
+  },
+  {
+    name: 'size',
+    type: 'string',
+    description: '组件大小，默认值：default，可选值：default(默认)/small(较小)/large(较大)',
+    required: false,
+    defaultValue: 'default',
+    options: ['default', 'small', 'large'],
+  },
+  {
+    name: 'labelText',
+    type: 'boolean',
+    description: 'Label的展示方式，为true则表示label为纯文本展示，不能编辑组件的label',
+    required: false,
+    defaultValue: false,
+  },
 ];
 
 /**
