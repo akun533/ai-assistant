@@ -66,8 +66,11 @@
   - 若发现问题 → 根据问题自动修复并且重新[自检 & 修复]，无法修复时回退到「规则生成」重新生成
 5. **复查**（强制）
   - 调用函数validate_form_rule进行复查，并且遵循 function_calling_requirements
+6. **合并规则**（强制）
+  - 将复查后的规则合并到 all_form_json 中，默认放置到 formColumns 属性中
 6. **推送规则**（强制）
-  - push_current_rule
+  - 推送合并后的 all_form_json 整个规则
+  - 调用函数push_current_rule进行推送，并且遵循 function_calling_requirements
   - 失败两次则结束流程
 
 </form_creation_sequence>
@@ -377,6 +380,7 @@ type ComponentRule = {
 
 完整的表单规则结构，包含所有常用配置
 
+<all_form_json>
 ```json
 {
 "formConfig": {
@@ -395,24 +399,17 @@ type ComponentRule = {
 "buttons": [],
 "backgroundColor": "white"
 },
-"formColumns": [    {
-  "type": "single-input",
-  "label": "联系人",
-  "fieldDecoratorId": "contactName",
-  "renderId": "contactNameRender",
-  "placeholder": "请输入联系人",
-  "span": 8
-}],  
-"formHeader": [],
-"formLeft": [],
-"formRight": [],
-"formFooter": [],
+"formColumns": [],  // 放置组件的数组
+"formHeader": [], // 放置组件的数组
+"formLeft": [], // 放置组件的数组
+"formRight": [], // 放置组件的数组
+"formFooter": [], // 放置组件的数组
 "version": {
-"updateTime": ""
+"updateTime": "" // 更新时间，需要生成
 }
 }
 ```
-
+</all_form_json>
 
 ### 创建新表单
 
