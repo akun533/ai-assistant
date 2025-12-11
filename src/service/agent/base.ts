@@ -81,7 +81,7 @@ export abstract class BaseAgent {
   async chat(request: AgentRequest, signal?: AbortSignal): Promise<ReadableStream> {
     try {
       console.log(`🔄 发送请求到 ${this.config.baseUrl}${this.getEndpoint()}`);
-      console.log(`📝 消息数量: ${request.messages?.length}`);
+      request.messages && console.log(`📝 消息数量: ${request.messages?.length}`);
 
       const response = await this.client.post(this.getEndpoint(), request, {
         responseType: 'stream',

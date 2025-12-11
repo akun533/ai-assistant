@@ -559,7 +559,11 @@ ${userRule}`;
     maxDepth: number = 1,
     sessionId?: string,
     signal?: AbortSignal,
-  ): AsyncGenerator<string | { content: string; usage?: any, conversation_id: string }, void, unknown> {
+  ): AsyncGenerator<string | { content: string; usage?: any }, void, unknown> {
+    // 常量定义
+    const MAX_RECURSION_DEPTH = 6;
+    const FUNCTION_CALL_MARKERS = '◆';
+    
     // 获取或创建 agent
     const agent = this.getAgent(agentType, apiKey, request.model);
     const lastMessage = messages[messages.length - 1];
@@ -583,9 +587,32 @@ ${userRule}`;
       agentRequest.query = lastMessage.content
     }
     console.log(`🔄 发送用户请求 (深度: ${maxDepth})，消息内容:`, lastMessage.content);
+    
+    // 辅助函数：安全地解析函数调用JSON
+    const parseFunctionCalls = (funcJson: string): any[] => {
+      try {
+        // 移除标记符并解析JSON
+        const cleanJson = funcJson.replaceAll(FUNCTION_CALL_MARKERS, '');
+        if (!cleanJson.trim()) return [];
+        console.log('解析的函数调用JSON:', cleanJson)
+        // 使用JSON.parse替代new Function提高安全性
+        return JSON.parse(cleanJson) || [];
+      } catch (error) {
+        console.warn('Failed to parse function calls:', error);
+        return [];
+      }
+    };
+    
+    // 辅助函数：发送工具状态更新
+    const sendToolStatus = (toolName: string, sessionId: string, status: string) => {
+      const title = this.getToolTitle(toolName);
+      if (title) {
+        return `[FC_TOOL]{"title":"${title}","id":"${sessionId}","status":"${status}"}`;
+      }
+      return null;
+    };
 
-    agentRequest.query = `${agentRequest.query} \n --- \n 可用工具函数为 ${JSON.stringify( tools)}, \n如果有函数调用需求，请告诉我需要用到的函数以及提供响应的参数，请用标准JSON格式字符串给出函数调用列表，将不带任何格式样式的纯JSON文本字符串放在你本次回复内容的最后，,格式为：➤➤[{"name":"函数名","arguments":"参数"},{"name":"函数名","arguments":"参数"}]`
-    let response
+    let response;
     try {
       response = await agent.chat(agentRequest, signal);
     } catch (error) {
@@ -598,8 +625,9 @@ ${userRule}`;
     const conversationMessages: AgentMessage[] = [...messages];
     const currentMessage: AgentMessage = { role: 'assistant', content: '' };
     let toolCalls: any[] = [];
-    let funcJsonStart: boolean = false
-    let funcJson = ''
+    let funcJsonStart: boolean = false;
+    let funcJson = '';
+    let pushConversationId: boolean = false;
 
     for await (const chunk of response) {
       buffer += chunk.toString();
@@ -615,26 +643,28 @@ ${userRule}`;
 
             request.conversation_id = parsed.conversation_id;
 
+
+
             if (parsed.event === 'message_end') {
-              funcJsonStart =  false
+              funcJsonStart = false;
 
               try {
                 // 收集工具调用
                 if (funcJson) {
-                  // eslint-disable-next-line no-new-func
-                  const tempToolCalls = new Function(`return ${funcJson.replaceAll('➤','') || '[]'}`).call(this)
+                  const tempToolCalls = parseFunctionCalls(funcJson);
                   for (const tempToolCall of tempToolCalls) {
-                    const title = this.getToolTitle(tempToolCall.name);
-                    if (title) {
-                      yield`[FC_TOOL]{"title":"${title}","id":"${tempToolCall.arguments.sessionId}","status":"end"}`;
+                    const statusMessage = sendToolStatus(tempToolCall.name, tempToolCall.arguments?.sessionId, "end");
+                    if (statusMessage) {
+                      yield statusMessage;
                     }
-                    toolCalls.push(tempToolCall)
+                    toolCalls.push(tempToolCall);
                   }
-                  funcJson = ''
+                  funcJson = '';
                 }
               } catch (e) {
-
+                console.warn('Error processing function calls:', e);
               }
+              
               // 处理工具调用
               if (toolCalls.length > 0) {
                 yield `\n`;
@@ -658,30 +688,35 @@ ${userRule}`;
                       request.context,
                     );
 
-                    const title = this.getToolTitle(toolCall.name);
-                    if (title) {
-                      yield`[FC_TOOL]{"title":"${title}","id":"${toolCall.arguments.sessionId}","status":"end"}`;
+                    const statusMessage = sendToolStatus(toolCall.name, toolCall.arguments?.sessionId, "end");
+                    if (statusMessage) {
+                      yield statusMessage;
                     }
+                    
                     conversationMessages.push({
                       role: 'tool',
-                      content: toolResult.data[0].text || '执行完毕',
-                      tool_call_id: toolCall.arguments.sessionId,
+                      content: toolResult.data[0]?.text || '执行完毕',
+                      tool_call_id: toolCall.arguments?.sessionId,
                     });
+                    
                     if (toolResult.data[0]?.answer) {
                       const chats = Array.isArray(toolResult.data[0]?.answer) ? toolResult.data[0]?.answer : [toolResult.data[0]?.answer];
                       for (const chat of chats) {
                         yield`\n${chat}\n`;
                       }
                     }
+                    
                     if (toolResult.data[0]?.end) {
                       return;
                     }
-                  } catch (error) {}
+                  } catch (error) {
+                    console.error(`工具调用失败: ${toolCall.name}`, error);
+                  }
                 }
 
                 toolCalls = [];
                 // 递归调用，继续传递工具和连接检查函数，但增加深度限制
-                if (maxDepth < 6) {
+                if (maxDepth < MAX_RECURSION_DEPTH) {
                   // 防止无限递归
                   yield* this.processDifyChatStream(
                     conversationMessages,
@@ -711,25 +746,33 @@ ${userRule}`;
 
             const content = parsed.answer;
 
-            if (['➤', '➤➤'].includes(content) || funcJsonStart) {
+            if (content && [FUNCTION_CALL_MARKERS, `${FUNCTION_CALL_MARKERS}${FUNCTION_CALL_MARKERS}`].includes(content.trim()) || funcJsonStart) {
               funcJsonStart = true;
               funcJson += content || '';
             } else if(content) {
               currentMessage.content += content;
               // 如果有 usage，一起返回
               if (parsed.usage) {
-                yield { content, usage: parsed.usage, conversation_id: parsed.conversation_id };
+                yield { content, usage: parsed.usage };
               } else {
-                yield { content, conversation_id: parsed.conversation_id};
+                yield content;
               }
             } else if (parsed.usage) {
               // 只有 usage 没有 content 时也要返回
-              yield { content: '', usage: parsed.usage, conversation_id: parsed.conversation_id };
+              yield { content: '', usage: parsed.usage };
             }
           } catch (error) {
-            // 忽略解析错误
+            // 记录解析错误以便调试
+            console.warn('解析响应数据时出错:', error, '原始数据:', data);
           }
         }
+      }
+
+
+
+      if (!agentRequest.conversation_id && !pushConversationId) {
+        pushConversationId = true;
+        yield`[conversation_id=${request.conversation_id}]`;
       }
     }
   }

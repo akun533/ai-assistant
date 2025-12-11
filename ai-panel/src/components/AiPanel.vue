@@ -216,17 +216,18 @@ export default {
       isUserAtBottom: true,
       suggestions: [],
       messages: [],
+      conversation_id: null,
     };
   },
 
   computed: {
     api() {
       // 兼容多种环境的环境变量访问方式，避免直接使用 import.meta
-      return process.env.VUE_APP_API_URL || 'https://api.form-create.com/ai/v2/chat/form';
+      return 'http://localhost:3001/api/chat/completions';
     },
     token() {
       // 从环境变量获取 API 令牌，兼容多种环境，避免直接使用 import.meta
-      let token = process.env.VUE_APP_AI_API_TOKEN || '';
+      let token = 'app-c9dnpJHtoUkoTzUHfSoSOZLN';
       if (token && token.indexOf('Bearer') === -1) {
         token = `Bearer ${token}`;
       }
@@ -306,6 +307,7 @@ export default {
           },
         ];
 
+        requestOption.conversation_id = this.conversation_id;
         const fetchOptions = {
           method: 'POST',
           headers: {
@@ -361,9 +363,13 @@ export default {
 
               try {
                 const parsed = JSON.parse(data);
-
                 let content = parsed.choices?.[0]?.delta?.content;
                 if (content) {
+                  if (content.startsWith('[conversation_id=')) {
+                    this.conversation_id = content.match(/\[conversation_id=(.*?)\]/)[1];
+                    continue;
+                  }
+
                   if (content.startsWith('[FC_TOOL]')) {
                     const tool = JSON.parse(content.replace('[FC_TOOL]', ''));
                     this.updateStep(aiMessage, tool);
@@ -473,6 +479,7 @@ export default {
       this.messages = [];
       this.inputText = '';
       this.isThinking = false;
+      this.conversation_id = null
       localStorage.removeItem('fc_ai_chat');
     },
     refreshSuggestions() {
