@@ -592,7 +592,13 @@ ${userRule}`;
     const parseFunctionCalls = (funcJson: string): any[] => {
       try {
         // 移除标记符并解析JSON
-        const cleanJson = funcJson.replaceAll(FUNCTION_CALL_MARKERS, '');
+        let cleanJson = funcJson.replaceAll(FUNCTION_CALL_MARKERS, '');
+        if (cleanJson.startsWith('```json')) {
+          cleanJson = cleanJson.slice(7, -3);
+        }
+        if (cleanJson.startsWith('```')) {
+          cleanJson = cleanJson.slice(3, -3);
+        }
         if (!cleanJson.trim()) return [];
         console.log('解析的函数调用JSON:', cleanJson)
         // 使用JSON.parse替代new Function提高安全性

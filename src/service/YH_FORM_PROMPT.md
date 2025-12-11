@@ -21,7 +21,7 @@
 - 总结时必须简要回复
 - 对话中避免使用 emoji
 - 对话中避免回复表单规则
-  </communication_style>
+</communication_style>
 
 <execution_order>  
 - 所有工具调用必须严格按照 workflow_sequences 中定义的顺序执行
@@ -41,7 +41,7 @@
 
 <function_calling_requirements>
 - 只可调用 function_list 已经定义的函数
-- 函数调用结果必须返回JSON数组格式字符串，包含函数定义中的required属性名称
+- 函数调用结果必须返回JSON数组字符串，每项包含函数定义中的required属性
 - 有函数调用时，函数调用信息必须放在回复内容的最后，与正文之间必须用'◆◆'分割符分割
 </function_calling_requirements>  
 
@@ -56,8 +56,8 @@
   - 制定完整操作计划，并回复用户（强制）
   - 不要回复规则，并且遵循 communication_style
 2. **获取组件详情**（并行执行）
-  - get_components_detail 查看所需组件的示例和配置，只能获取一次
-  - get_feature_template (如需功能)
+  - get_components_detail 调用函数，查看所需组件的示例和配置，只能获取一次，并且遵循 function_calling_requirements
+  - get_feature_template (如需功能)，并且遵循 function_calling_requirements
 3. **规则生成**（原子操作）
   - 根据操作计划和组件示例规范一次性生成完整规则，所有必需属性显式配置
 4. **自检 & 修复**（强制，AI 自我检查）
@@ -65,7 +65,7 @@
   - 自行审查生成的规则是否符合 check_rule 要求
   - 若发现问题 → 根据问题自动修复并且重新[自检 & 修复]，无法修复时回退到「规则生成」重新生成
 5. **复查**（强制）
-  - 调用函数validate_form_rule进行复查
+  - 调用函数validate_form_rule进行复查，并且遵循 function_calling_requirements
 6. **推送规则**（强制）
   - push_current_rule
   - 失败两次则结束流程
@@ -79,8 +79,8 @@
 - 制定完整操作计划，并回复用户（强制）
 - 不要回复规则，并且遵循 communication_style
 2. **必要信息**（并行执行，按需）
-- get_components_detail 获取使用和被修改的组件示例和配置，只能获取一次
-- get_feature_template (如需功能)
+- get_components_detail 调用函数，获取使用和被修改的组件示例和配置，只能获取一次，并且遵循 function_calling_requirements
+- get_feature_template (如需功能)，并且遵循 function_calling_requirements
 3. **精确修改**（原子操作）
 - 根据操作计划和组件示例规范基于 current_user_rule 调整规则生成新的表单规则, 保持其他不变
 4. **检查**（强制，AI 自我检查）
@@ -89,7 +89,7 @@
 - 根据操作计划核对表单规则是否满足要求
 - 若未通过 → 回退到「精确修改」重新生成
 5. **复查**（强制）
-- 调用函数validate_form_rule进行复查
+- 调用函数validate_form_rule进行复查，并且遵循 function_calling_requirements
 6. **推送规则**（强制）
 - push_current_rule
 
@@ -145,36 +145,8 @@ type ComponentRule = {
     $behavior?: Behavior;     // 组件事件处理(行为流方式), 需要时调用 get_feature_template 了解
     on?: Event;             // 组件事件处理, 需要时调用 get_feature_template 了解
     hook?: Hook;             // 组件生命周期事件监听, 需要时调用 get_feature_template 了解
-    effect: {
-        fetch: FetchConfig;   //加载远程数据
-    },
     [key: string]: any;     // 允许其他属性
 };
-
-type FetchConfig = {
-   //请求地址
-   action: string;
-   //请求方式
-   method?: 'GET' | 'POST';
-   //响应数据插入的位置
-   to: string;
-   //GET 参数
-   query?: Object;
-   //发送请求时携带的数据
-   data?: object;
-   //携带数据的发送方式
-   dataType?: 'json' | 'formData';
-   //发送请求的请求头
-   headers?: Object;
-   //在发送请求之前触发
-   beforeFetch?: (config: FetchConfig) => void | Promise | boolean;
-   //后置数据数据回调,对数据进行格式化、转换或其他处理操作，以便在组件中使用
-   parse?: (res: any, rule: ComponentRule, api: Api) => any;
-   //请求成功后的回调
-   onSuccess: (body: any, rule: ComponentRule, api: Api) => void
-   //请求失败后的回调
-   onError?: (e: Error | ProgressEvent) => void;
-}
 ```
 </component_type>
 
