@@ -559,7 +559,7 @@ ${userRule}`;
     maxDepth: number = 1,
     sessionId?: string,
     signal?: AbortSignal,
-  ): AsyncGenerator<string | { content: string; usage?: any }, void, unknown> {
+  ): AsyncGenerator<string | { content: string; usage?: any, conversation_id: string }, void, unknown> {
     // 获取或创建 agent
     const agent = this.getAgent(agentType, apiKey, request.model);
     const lastMessage = messages[messages.length - 1];
@@ -718,13 +718,13 @@ ${userRule}`;
               currentMessage.content += content;
               // 如果有 usage，一起返回
               if (parsed.usage) {
-                yield { content, usage: parsed.usage };
+                yield { content, usage: parsed.usage, conversation_id: parsed.conversation_id };
               } else {
-                yield content;
+                yield { content, conversation_id: parsed.conversation_id};
               }
             } else if (parsed.usage) {
               // 只有 usage 没有 content 时也要返回
-              yield { content: '', usage: parsed.usage };
+              yield { content: '', usage: parsed.usage, conversation_id: parsed.conversation_id };
             }
           } catch (error) {
             // 忽略解析错误
