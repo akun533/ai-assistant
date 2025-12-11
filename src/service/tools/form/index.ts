@@ -46,12 +46,9 @@ export const getComponentsDetailTool: ToolRegistration = {
     },
   },
   handler: async (args: ToolArgs, request: ToolContext) => {
-    const {
-      componentNames = [],
-      uiFramework = DEFAULT_UI_FRAMEWORK,
-      vueVersion = 'auto',
-    } = args || {};
+    const { componentNames = [], uiFramework = DEFAULT_UI_FRAMEWORK, vueVersion = 'auto' } = args || {};
 
+    console.log('componentNames', componentNames);
     if (!Array.isArray(componentNames) || componentNames.length === 0) {
       return createResponse('componentNames 必须是一个非空的字符串数组');
     }
