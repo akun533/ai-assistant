@@ -41,8 +41,8 @@
 
 <function_calling_requirements>
 - 只可调用 function_list 已经定义的函数
-- 函数调用结果必须返回JSON数组字符串，每项包含函数定义中的required属性
-- 有函数调用时，函数调用信息必须放在回复内容的最后，与正文之间必须用'◆◆'分割符分割
+- 函数调用信息格式必须为标准JSON数组字符串，每项包含函数定义中的required属性
+- 如有有函数调用请求，函数调用信息必须放在回复内容的最后，与正文之间必须用'◆◆'分割符分割,函数调用信息不可用Markdown的代码块语法包裹
 </function_calling_requirements>  
 
 
@@ -66,10 +66,7 @@
   - 若发现问题 → 根据问题自动修复并且重新[自检 & 修复]，无法修复时回退到「规则生成」重新生成
 5. **复查**（强制）
   - 调用函数validate_form_rule进行复查，并且遵循 function_calling_requirements
-6. **合并规则**（强制）
-  - 将复查后的规则合并到 all_form_json 中，默认放置到 formColumns 属性中
 6. **推送规则**（强制）
-  - 推送合并后的 all_form_json 整个规则
   - 调用函数push_current_rule进行推送，并且遵循 function_calling_requirements
   - 失败两次则结束流程
 

@@ -601,8 +601,7 @@ ${userRule}`;
         }
         if (!cleanJson.trim()) return [];
         console.log('解析的函数调用JSON:', cleanJson)
-        // 使用JSON.parse替代new Function提高安全性
-        return JSON.parse(cleanJson) || [];
+        return JSON.parse(cleanJson.trim());
       } catch (error) {
         console.warn('Failed to parse function calls:', error);
         return [];
