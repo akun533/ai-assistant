@@ -37,6 +37,8 @@ export interface ChatRequest {
     option?: string;
   };
   context: Record<string, any>;
+  agentKeyType: string;
+  conversation_id: string
 }
 
 // OpenAI 兼容的流式响应格式
@@ -313,6 +315,41 @@ ${userRule}`;
     }
   }
 
+
+  getUiVersion(ui: string): { ui: string; vue: 'vue2' | 'vue3' } {
+    const alias = {
+      'element-plus': {
+        ui: 'element-plus',
+        vue: 'vue3',
+      },
+      'element-ui': {
+        ui: 'element-ui',
+        vue: 'vue2',
+      },
+      vant: {
+        ui: 'vant',
+        vue: 'vue3',
+      },
+      'vant@vue2': {
+        ui: 'vant',
+        vue: 'vue2',
+      },
+      'ant-design-vue': {
+        ui: 'ant-design-vue',
+        vue: 'vue3',
+      },
+      'ant-design-vue@vue2': {
+        ui: 'ant-design-vue',
+        vue: 'vue2',
+      },
+      'ta404-ui@vue2': {
+        ui: 'ta404-ui',
+        vue: 'vue2',
+      },
+    } as { [key: string]: { ui: string; vue: 'vue2' | 'vue3' } };
+    return alias[ui] || alias['element-plus'];
+  }
+
   /**
    * 递归处理聊天流，支持工具调用和连接状态检查
    */
@@ -402,7 +439,7 @@ ${userRule}`;
                   const toolResult = await this.handleToolCall(
                     toolCall.function.name,
                     { ...JSON.parse(toolCall.function.arguments), sessionId },
-                    context
+                    context,
                   );
                   const title = this.getToolTitle(toolCall.function.name);
                   if (title) {
@@ -508,40 +545,194 @@ ${userRule}`;
     }
   }
 
-  getUiVersion(ui: string): { ui: string; vue: 'vue2' | 'vue3' } {
-    const alias = {
-      'element-plus': {
-        ui: 'element-plus',
-        vue: 'vue3',
-      },
-      'element-ui': {
-        ui: 'element-ui',
-        vue: 'vue2',
-      },
-      vant: {
-        ui: 'vant',
-        vue: 'vue3',
-      },
-      'vant@vue2': {
-        ui: 'vant',
-        vue: 'vue2',
-      },
-      'ant-design-vue': {
-        ui: 'ant-design-vue',
-        vue: 'vue3',
-      },
-      'ant-design-vue@vue2': {
-        ui: 'ant-design-vue',
-        vue: 'vue2',
-      },
-      'ta404-ui@vue2': {
-        ui: 'ta404-ui',
-        vue: 'vue2',
-      },
-    } as { [key: string]: { ui: string; vue: 'vue2' | 'vue3' } };
-    return alias[ui] || alias['element-plus'];
-  }
 
+  /**
+   * Dify 聊天接口, 递归处理聊天流，支持工具调用和连接状态检查
+   * @private
+   */
+  private async *processDifyChatStream(
+    messages: AgentMessage[],
+    apiKey: string,
+    request: ChatRequest,
+    tools: AgentTool[],
+    agentType: AgentType,
+    maxDepth: number = 1,
+    sessionId?: string,
+    signal?: AbortSignal,
+  ): AsyncGenerator<string | { content: string; usage?: any }, void, unknown> {
+    // 获取或创建 agent
+    const agent = this.getAgent(agentType, apiKey, request.model);
+    const lastMessage = messages[messages.length - 1];
+    // 构建 Agent 请求
+    const agentRequest: AgentRequest = {
+      query: lastMessage?.content,
+      response_mode: 'streaming',
+      conversation_id: request.conversation_id, // 使用实例属性
+      user: 'user',
+      inputs: {},
+      files: [],
+      auto_generate_name: true,
+    };
+
+    if (!agentRequest.conversation_id) {
+      // 获取系统提示词
+      const systemPrompt = messages.find((message) => message.role === 'system')
+
+      agentRequest.query = `${systemPrompt?.content} \n --- \n 用户请求：${lastMessage.content?.slice(0,100)}......`
+    } else {
+      agentRequest.query = lastMessage.content
+    }
+    console.log(`🔄 发送用户请求 (深度: ${maxDepth})，消息内容:`, lastMessage.content);
+
+    agentRequest.query = `${agentRequest.query} \n --- \n 可用工具函数为 ${JSON.stringify( tools)}, \n如果有函数调用需求，请告诉我需要用到的函数以及提供响应的参数，请用标准JSON格式字符串给出函数调用列表，将不带任何格式样式的纯JSON文本字符串放在你本次回复内容的最后，,格式为：➤➤[{"name":"函数名","arguments":"参数"},{"name":"函数名","arguments":"参数"}]`
+    let response
+    try {
+      response = await agent.chat(agentRequest, signal);
+    } catch (error) {
+      console.error('❌ 用户请求失败:', error);
+      throw error;
+    }
+
+    // 处理流式响应
+    let buffer = '';
+    const conversationMessages: AgentMessage[] = [...messages];
+    const currentMessage: AgentMessage = { role: 'assistant', content: '' };
+    let toolCalls: any[] = [];
+    let funcJsonStart: boolean = false
+    let funcJson = ''
+
+    for await (const chunk of response) {
+      buffer += chunk.toString();
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+
+          try {
+            const parsed = JSON.parse(data);
+
+            request.conversation_id = parsed.conversation_id;
+
+            if (parsed.event === 'message_end') {
+              funcJsonStart =  false
+
+              try {
+                // 收集工具调用
+                if (funcJson) {
+                  // eslint-disable-next-line no-new-func
+                  const tempToolCalls = new Function(`return ${funcJson.replaceAll('➤','') || '[]'}`).call(this)
+                  for (const tempToolCall of tempToolCalls) {
+                    const title = this.getToolTitle(tempToolCall.name);
+                    if (title) {
+                      yield`[FC_TOOL]{"title":"${title}","id":"${tempToolCall.arguments.sessionId}","status":"end"}`;
+                    }
+                    toolCalls.push(tempToolCall)
+                  }
+                  funcJson = ''
+                }
+              } catch (e) {
+
+              }
+              // 处理工具调用
+              if (toolCalls.length > 0) {
+                yield `\n`;
+                // 首先将 assistant 的响应（包含工具调用）添加到对话历史中
+                if (currentMessage.content || toolCalls.length > 0) {
+                  conversationMessages.push({
+                    role: 'assistant',
+                    content: currentMessage.content,
+                    tool_calls: toolCalls,
+                  });
+                }
+
+                // 为每个工具调用生成执行中的提示
+                // 执行工具调用
+                for (const toolCall of toolCalls) {
+                  console.log(`## 调用: ${toolCall.name}`, toolCall.arguments);
+                  try {
+                    const toolResult = await this.handleToolCall(
+                      toolCall.name,
+                      { ...(toolCall.arguments || {}), sessionId },
+                      request.context,
+                    );
+
+                    const title = this.getToolTitle(toolCall.name);
+                    if (title) {
+                      yield`[FC_TOOL]{"title":"${title}","id":"${toolCall.arguments.sessionId}","status":"end"}`;
+                    }
+                    conversationMessages.push({
+                      role: 'tool',
+                      content: toolResult.data[0].text || '执行完毕',
+                      tool_call_id: toolCall.arguments.sessionId,
+                    });
+                    if (toolResult.data[0]?.answer) {
+                      const chats = Array.isArray(toolResult.data[0]?.answer) ? toolResult.data[0]?.answer : [toolResult.data[0]?.answer];
+                      for (const chat of chats) {
+                        yield`\n${chat}\n`;
+                      }
+                    }
+                    if (toolResult.data[0]?.end) {
+                      return;
+                    }
+                  } catch (error) {}
+                }
+
+                toolCalls = [];
+                // 递归调用，继续传递工具和连接检查函数，但增加深度限制
+                if (maxDepth < 6) {
+                  // 防止无限递归
+                  yield* this.processDifyChatStream(
+                    conversationMessages,
+                    apiKey,
+                    request,
+                    tools,
+                    agentType,
+                    maxDepth + 1,
+                    sessionId,
+                    signal,
+                  );
+                } else {
+                  console.log(`达到最大递归深度 (${maxDepth})，停止递归`);
+                  yield '\n达到最大处理深度，请重新开始对话\n';
+                }
+              } else {
+                // 没有工具调用时，将 assistant 的响应添加到对话历史中
+                if (currentMessage.content) {
+                  conversationMessages.push({
+                    role: 'assistant',
+                    content: currentMessage.content,
+                  });
+                }
+              }
+              return;
+            }
+
+            const content = parsed.answer;
+
+            if (['➤', '➤➤'].includes(content) || funcJsonStart) {
+              funcJsonStart = true;
+              funcJson += content || '';
+            } else if(content) {
+              currentMessage.content += content;
+              // 如果有 usage，一起返回
+              if (parsed.usage) {
+                yield { content, usage: parsed.usage };
+              } else {
+                yield content;
+              }
+            } else if (parsed.usage) {
+              // 只有 usage 没有 content 时也要返回
+              yield { content: '', usage: parsed.usage };
+            }
+          } catch (error) {
+            // 忽略解析错误
+          }
+        }
+      }
+    }
+  }
   /**
    * OpenAI 格式的流式聊天接口
    */
@@ -563,6 +754,9 @@ ${userRule}`;
       const agentType = request.agent || 'deepseek';
       console.log(`🤖 使用 Agent: ${agentType}`);
 
+      // 获取 API 密钥类型 , 默认为 openai, 如果是 dify 则使用 dify
+      const agentKeyType = request.agentKeyType || 'openai';
+
       // 生成会话 ID
       const currentSessionId = generateSessionId();
       console.log('📋 会话 ID:', currentSessionId);
@@ -577,7 +771,6 @@ ${userRule}`;
       const hasSystemMessage = messages.some(msg => msg.role === 'system');
       if (!hasSystemMessage) {
         const version = this.getUiVersion(request.ui);
-        console.log(version);
 
         const enhancedSystemPrompt = this.buildEnhancedSystemPrompt(currentSessionId, version, request.context.form?.rule);
         messages.unshift({
@@ -589,8 +782,14 @@ ${userRule}`;
 
       console.log('🔑 使用 API 密钥:', apiKey ? `${apiKey.substring(0, 10)}...` : '未提供');
 
-      // 调用递归处理方法
-      yield* this.processChatStream(messages, apiKey, request.model, tools, agentType, 1, request.context, currentSessionId, signal);
+      // 根据 agentKeyType 字段进行分流处理
+      if (agentKeyType === 'dify') {
+        // 使用专门处理 Dify 流式会话的方法
+        yield* this.processDifyChatStream(messages, apiKey, request, tools, agentType, 1, currentSessionId, signal);
+      } else {
+        // 调用原有的递归处理方法
+        yield* this.processChatStream(messages, apiKey, request.model, tools, agentType, 1, request.context, currentSessionId, signal);
+      }
 
       console.log('📋 会话结束 ID:', currentSessionId);
     } catch (error: any) {

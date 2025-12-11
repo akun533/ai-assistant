@@ -103,6 +103,10 @@ app.post('/api/chat/completions', async (req: Request, res: Response) => {
       params.model = process.env.DEFAULT_MODEL || 'deepseek-chat';
     }
 
+    if (!params.agentKeyType) {
+      params.agentKeyType = process.env.DEFAULT_AGENT_KEY_TYPE || 'openai';
+    }
+
     if (params.form && params.form.rule) {
       params.context = { form: { rule: JSON.parse(params.form.rule) } };
     }

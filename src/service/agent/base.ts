@@ -30,8 +30,8 @@ export interface AgentTool {
 }
 
 export interface AgentRequest {
-    model: string;
-    messages: AgentMessage[];
+    model?: string;
+    messages?: AgentMessage[];
     stream?: boolean;
     tool_stream?: boolean;
     parallel_tool_calls?: boolean;
@@ -40,6 +40,14 @@ export interface AgentRequest {
     max_tokens?: number;
     tools?: AgentTool[];
     tool_choice?: 'auto' | 'none' | 'required' | { type: 'function'; function: { name: string } };
+    // dify 参数
+    response_mode?: 'streaming' | 'blocking';
+    conversation_id?: string;
+    user?: string;
+    inputs?: object;
+    query?: string;
+    files?: Array<{  }>;
+    auto_generate_name?: boolean;
 }
 
 export interface AgentConfig {
@@ -73,7 +81,7 @@ export abstract class BaseAgent {
   async chat(request: AgentRequest, signal?: AbortSignal): Promise<ReadableStream> {
     try {
       console.log(`🔄 发送请求到 ${this.config.baseUrl}${this.getEndpoint()}`);
-      console.log(`📝 消息数量: ${request.messages.length}`);
+      console.log(`📝 消息数量: ${request.messages?.length}`);
 
       const response = await this.client.post(this.getEndpoint(), request, {
         responseType: 'stream',
