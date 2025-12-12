@@ -563,7 +563,7 @@ ${userRule}`;
     // 常量定义
     const MAX_RECURSION_DEPTH = 6;
     const FUNCTION_CALL_MARKERS = '◆';
-    
+
     // 获取或创建 agent
     const agent = this.getAgent(agentType, apiKey, request.model);
     const lastMessage = messages[messages.length - 1];
@@ -587,7 +587,7 @@ ${userRule}`;
       agentRequest.query = lastMessage.content
     }
     console.log(`🔄 发送用户请求 (深度: ${maxDepth})，消息内容:`, lastMessage.content);
-    
+
     // 辅助函数：安全地解析函数调用JSON
     const parseFunctionCalls = (funcJson: string): any[] => {
       try {
@@ -607,7 +607,7 @@ ${userRule}`;
         return [];
       }
     };
-    
+
     // 辅助函数：发送工具状态更新
     const sendToolStatus = (toolName: string, sessionId: string, status: string) => {
       const title = this.getToolTitle(toolName);
@@ -669,7 +669,7 @@ ${userRule}`;
               } catch (e) {
                 console.warn('Error processing function calls:', e);
               }
-              
+
               // 处理工具调用
               if (toolCalls.length > 0) {
                 yield `\n`;
@@ -697,20 +697,20 @@ ${userRule}`;
                     if (statusMessage) {
                       yield statusMessage;
                     }
-                    
+
                     conversationMessages.push({
                       role: 'tool',
                       content: toolResult.data[0]?.text || '执行完毕',
                       tool_call_id: toolCall.arguments?.sessionId,
                     });
-                    
+
                     if (toolResult.data[0]?.answer) {
                       const chats = Array.isArray(toolResult.data[0]?.answer) ? toolResult.data[0]?.answer : [toolResult.data[0]?.answer];
                       for (const chat of chats) {
                         yield`\n${chat}\n`;
                       }
                     }
-                    
+
                     if (toolResult.data[0]?.end) {
                       return;
                     }

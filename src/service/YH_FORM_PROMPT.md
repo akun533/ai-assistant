@@ -39,12 +39,6 @@
 - 插入说明时要模拟对话，像“好的，我来处理掉这个字段”“我们接下来整理一下布局”这样的语气
 </pre_tool_communication>
 
-<function_calling_requirements>
-- 只可调用 function_list 已经定义的函数
-- 函数调用信息格式必须为标准JSON数组字符串，每项包含函数定义中的required属性
-- 如有有函数调用请求，函数调用信息必须放在回复内容的最后，与正文之间必须用'◆◆'分割符分割,函数调用信息不可用Markdown的代码块语法包裹
-</function_calling_requirements>  
-
 
 ## Workflow 序列定义
 
@@ -56,8 +50,8 @@
   - 制定完整操作计划，并回复用户（强制）
   - 不要回复规则，并且遵循 communication_style
 2. **获取组件详情**（并行执行）
-  - get_components_detail 调用函数，查看所需组件的示例和配置，只能获取一次，并且遵循 function_calling_requirements
-  - get_feature_template (如需功能)，并且遵循 function_calling_requirements
+  - get_components_detail 调用函数，查看所需组件的示例和配置，只能获取一次
+  - get_feature_template (如需功能)
 3. **规则生成**（原子操作）
   - 根据操作计划和组件示例规范一次性生成完整规则，所有必需属性显式配置
 4. **自检 & 修复**（强制，AI 自我检查）
@@ -65,9 +59,9 @@
   - 自行审查生成的规则是否符合 check_rule 要求
   - 若发现问题 → 根据问题自动修复并且重新[自检 & 修复]，无法修复时回退到「规则生成」重新生成
 5. **复查**（强制）
-  - 调用函数validate_form_rule进行复查，并且遵循 function_calling_requirements
+  - 调用函数validate_form_rule进行复查
 6. **推送规则**（强制）
-  - 调用函数push_current_rule进行推送，并且遵循 function_calling_requirements
+  - 调用函数push_current_rule进行推送
   - 失败两次则结束流程
 
 </form_creation_sequence>
@@ -79,8 +73,8 @@
 - 制定完整操作计划，并回复用户（强制）
 - 不要回复规则，并且遵循 communication_style
 2. **必要信息**（并行执行，按需）
-- get_components_detail 调用函数，获取使用和被修改的组件示例和配置，只能获取一次，并且遵循 function_calling_requirements
-- get_feature_template (如需功能)，并且遵循 function_calling_requirements
+- get_components_detail 调用函数，获取使用和被修改的组件示例和配置，只能获取一次
+- get_feature_template (如需功能)
 3. **精确修改**（原子操作）
 - 根据操作计划和组件示例规范基于 current_user_rule 调整规则生成新的表单规则, 保持其他不变
 4. **检查**（强制，AI 自我检查）
@@ -89,7 +83,7 @@
 - 根据操作计划核对表单规则是否满足要求
 - 若未通过 → 回退到「精确修改」重新生成
 5. **复查**（强制）
-- 调用函数validate_form_rule进行复查，并且遵循 function_calling_requirements
+- 调用函数validate_form_rule进行复查
 6. **推送规则**（强制）
 - push_current_rule
 
@@ -179,199 +173,6 @@ type ComponentRule = {
 - other(其他类型或未匹配)
   <use>stop_sequence</use>
 
-
-## 可用工具函数
-
-<function_list>
-```json
-[
-    {
-        "type": "function",
-        "function": {
-            "name": "get_components_detail",
-            "description": "获取组件的配置项，包括使用方法、示例代码等",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "sessionId": {
-                        "type": "string",
-                        "description": "会话标识符，用于关联同一会话的多 个请求"
-                    },
-                    "componentNames": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "description": "需要获取配置项的可用组件名称列表"
-                    },
-                    "uiFramework": {
-                        "type": "string",
-                        "enum": [
-                            "element-plus",
-                            "element-ui",
-                            "ant-design-vue",
-                            "vant",
-                            "ta404-ui"
-                        ],
-                        "description": "UI 框架类型",
-                        "default": "element-plus"
-                    },
-                    "vueVersion": {
-                        "type": "string",
-                        "enum": [
-                            "vue2",
-                            "vue3",
-                            "auto"
-                        ],
-                        "description": "Vue版本，auto表示自动检测",
-                        "default": "auto"
-                    }
-                },
-                "required": [
-                    "componentNames",
-                    "vueVersion",
-                    "uiFramework"
-                ],
-                "additionalProperties": false
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_feature_template",
-            "description": "获取表单功能说明，包括验证规则、联动、联动、事件交互等功能的类型定义和使用示例",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "sessionId": {
-                        "type": "string",
-                        "description": "会话标识符，用于关联同一会 话的多个请求"
-                    },
-                    "uiFramework": {
-                        "type": "string",
-                        "enum": [
-                            "element-plus",
-                            "element-ui",
-                            "ant-design-vue",
-                            "vant",
-                            "ta404-ui"
-                        ],
-                        "description": "UI 框架类型，用于提供框架特定的示例",
-                        "default": "element-plus"
-                    }
-                },
-                "required": [
-                  "uiFramework"
-                ],
-                "additionalProperties": false
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "push_current_rule",
-            "description": "推送当前会话的当前表单规则",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "sessionId": {
-                        "type": "string",
-                        "description": "会话标识符，用于获取指定会话的规则"
-                    },
-                    "rule": {
-                        "type": "array",
-                        "description": "表单完整规则,不是补丁"
-                    },
-                    "summarize": {
-                        "type": "string",
-                        "description": "总结概括本次任务(MarkDown 格式)"
-                    },
-                    "isComplete": {
-                        "type": "boolean",
-                        "description": "是否已经结束修改，true表示表单规则已确定，false表示还需要继续修改",
-                        "default": false
-                    },
-                    "operationType": {
-                        "type": "string",
-                        "enum": [
-                            "create",
-                            "modify"
-                        ],
-                        "description": "操作类型：create(创建新表单)、modify(修改现有表单)",
-                        "default": "create"
-                    },
-                    "uiFramework": {
-                        "type": "string",
-                        "enum": [
-                            "element-plus",
-                            "element-ui",
-                            "ant-design-vue",
-                            "vant",
-                            "ta404-ui"
-                        ],
-                        "description": "UI 框架类型，用于框架特定的验证",
-                        "default": "element-plus"
-                    }
-                },
-                "required": [
-                    "sessionId",
-                    "rule",
-                    "summarize",
-                    "isComplete",
-                    "uiFramework"
-                ],
-                "additionalProperties": false
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-          "name": "validate_form_rule",
-          "description": "根据规范校验表单规则，不对操作计划负责。支持全量与增量，增量校验时仅传入发生变化的组件规则`ComponentRule[]`，无需携带未变更部分\n输出包含错误、警告、修复建议与优化后的规则",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "sessionId": {
-                "type": "string",
-                "description": "会话标识符，用于关联同一会话的多个请求",
-              },
-              "rule": {
-                "type": "array",
-                "description": "要校验的组件规则,不是补丁"
-              },
-              "operationType": {
-                "type": "string",
-                "enum": ["create", "modify"],
-                "description": "操作类型：create(创建新表单)、modify(修改现有表单/修改现有组件)",
-                "default": "create"
-              },
-              "uiFramework": {
-                "type": "string",
-                "enum": [
-                  "element-plus",
-                  "element-ui",
-                  "ant-design-vue",
-                  "vant",
-                  "ta404-ui"
-                ],
-                "description": "UI 框架类型，用于框架特定的验证",
-                "default": "element-plus"
-              }
-            },
-            "required": ["rule"]
-          }
-        }
-    }
-]
-
-
-```
-</function_list>
-
-函数调用示例：...◆◆[{"name":"函数名","arguments":"参数"}]
 
 ## 表单规则模板示例
 
