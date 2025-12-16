@@ -54,10 +54,12 @@
   - get_feature_template (如需功能)
 3. **规则生成**（原子操作）
   - 根据操作计划和组件示例规范一次性生成完整规则，所有必需属性显式配置
+  - 不要回复规则，并且遵循 communication_style
 4. **自检 & 修复**（强制，AI 自我检查）
   - 必须通过组件示例核对所有组件的配置项位置
   - 自行审查生成的规则是否符合 check_rule 要求
   - 若发现问题 → 根据问题自动修复并且重新[自检 & 修复]，无法修复时回退到「规则生成」重新生成
+  - 不要回复规则，并且遵循 communication_style
 5. **复查**（强制）
   - 调用函数validate_form_rule进行复查
 6. **推送规则**（强制）
@@ -134,11 +136,6 @@ type ComponentRule = {
     dataType?: string; // 填充数据类型，默认值为static,下拉类型组件需填写
     staticData?: object[]; // 静态数据，一般是选择类型组件必须
     span?: number; // 宽度（1-24，24=100%）
-    rules?: ValidateRule[]; // 验证规则, 需要时调用 get_feature_template 了解
-    computed?: Computed;    // 动态计算组件规则, 需要时调用 get_feature_template 了解
-    $behavior?: Behavior;     // 组件事件处理(行为流方式), 需要时调用 get_feature_template 了解
-    on?: Event;             // 组件事件处理, 需要时调用 get_feature_template 了解
-    hook?: Hook;             // 组件生命周期事件监听, 需要时调用 get_feature_template 了解
     [key: string]: any;     // 允许其他属性
 };
 ```
@@ -178,36 +175,13 @@ type ComponentRule = {
 
 完整的表单规则结构，包含所有常用配置
 
-<all_form_json>
 ```json
-{
-"formConfig": {
-"layout": "horizontal",
-"layoutCol": "auto",
-"labelCol": 6,
-"wrapperCol": 18,
-"header": "0px",
-"footer": "0px",
-"left": "0px",
-"right": "0px",
-"gutter": 0,
-"previewDrawerWidth": "95%",
-"previewDrawerMinWidth": "",
-"showButton": true,
-"buttons": [],
-"backgroundColor": "white"
-},
-"formColumns": [],  // 放置组件的数组
-"formHeader": [], // 放置组件的数组
-"formLeft": [], // 放置组件的数组
-"formRight": [], // 放置组件的数组
-"formFooter": [], // 放置组件的数组
-"version": {
-"updateTime": "" // 更新时间，需要生成
-}
-}
+{"formConfig":{"layout":"horizontal","layoutCol":"auto","labelCol":6,"wrapperCol":18,"header":"0px","footer":"0px","left":"0px","right":"0px","gutter":0,"previewDrawerWidth":"95%","previewDrawerMinWidth":"","showButton":true,"buttons":[{"fieldDecoratorId":"PA174LA3","buttonName":"提交表单","type":"primary","display":true,"disabled":false,"icon":"save","css":"","onclick":"const formDate = this_.getValuesWithValid()\n\nconsole.log(formDate)","key":1,"index":0}],"backgroundColor":"white","isLabelWidth":true,"labelWidth":100},"formColumns":[{"type":"card","label":"建议收集表单","span":24,"display":"true","formCardStyleFit":false,"formCardStyle":{"height":"auto"},"children":{"align":"left","headerAlign":"left","addBtn":false,"delBtn":false,"column":[{"type":"single-input","label":"联系人","span":12,"display":"true","autoShow":false,"tools":{},"fieldDecoratorId":"contactPerson","renderId":"contactPerson_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请输入联系人姓名"},{"type":"single-input","label":"联系邮箱","span":12,"display":"true","autoShow":false,"tools":{},"fieldDecoratorId":"contactEmail","renderId":"contactEmail_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请输入联系邮箱"},{"type":"select","label":"分类","span":12,"display":"true","autoShow":false,"allowDataMapping":true,"icon":"icon-select","dataType":"static","staticData":[{"label":"产品建议","value":"product"},{"label":"功能建议","value":"feature"},{"label":"界面优化","value":"ui"},{"label":"性能优化","value":"performance"},{"label":"Bug反馈","value":"bug"},{"label":"其他建议","value":"other"}],"fieldDecoratorId":"category","renderId":"category_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请选择建议分类"},{"type":"multi-input","label":"建议内容","span":24,"display":"true","autoShow":false,"autoSize":true,"icon":"icon-textarea","tools":{},"fieldDecoratorId":"suggestionContent","renderId":"suggestionContent_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请详细描述您的建议内容"}]},"tools":{"showClear":false},"fieldDecoratorId":"suggestionFormCard","renderId":"suggestionFormCard_render","disabled":"false","required":false}],"formHeader":[],"formLeft":[],"formRight":[],"formFooter":[],"version":{"updateTime":1765864674334}}
 ```
-</all_form_json>
+
+## 参考示例
+
+以 ta404-ui + vue2 为例
 
 ### 创建新表单
 
@@ -215,6 +189,6 @@ type ComponentRule = {
 
 答:
 ```json
-{"formConfig":{"layout":"horizontal","layoutCol":"auto","labelCol":6,"wrapperCol":18,"header":"0px","footer":"0px","left":"0px","right":"0px","gutter":0,"previewDrawerWidth":"95%","previewDrawerMinWidth":"","showButton":true,"buttons":[],"backgroundColor":"white"},"formColumns":[{"type":"card","label":"患者基本信息","span":24,"display":"true","formCardStyleFit":false,"formCardStyle":{"height":"auto"},"children":{"align":"left","headerAlign":"left","addBtn":false,"delBtn":false,"column":[{"type":"single-input","label":"患者姓名","span":8,"display":"true","autoShow":false,"tools":{},"fieldDecoratorId":"patientName","renderId":"patientName_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请输入患者姓名"},{"type":"select","label":"就诊科室","span":8,"display":"true","autoShow":false,"allowDataMapping":true,"icon":"icon-select","dataType":"static","staticData":[{"label":"内科","value":"internal"},{"label":"外科","value":"surgery"},{"label":"儿科","value":"pediatrics"},{"label":"妇产科","value":"obstetrics"},{"label":"眼科","value":"ophthalmology"},{"label":"耳鼻喉科","value":"ent"}],"fieldDecoratorId":"department","renderId":"department_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请选择就诊科室"},{"type":"date","label":"就诊日期","span":8,"display":"true","autoShow":false,"allowClear":true,"format":"YYYY-MM-DD","showToday":true,"validNowTime":"-1","eventRunInNextTick":true,"tools":{},"fieldDecoratorId":"visitDate","renderId":"visitDate_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请选择就诊日期"}]},"tools":{"showClear":false},"fieldDecoratorId":"basicInfoCard","renderId":"basicInfoCard_render","disabled":"false","required":false},{"type":"divider","span":24,"icon":"icon-divider","height":"30px","label":"换行","display":"true","itemStyle":"height:30px","tools":{},"fieldDecoratorId":"divider1","renderId":"divider1_render"},{"type":"card","label":"就诊体验评价","span":24,"display":"true","formCardStyleFit":false,"formCardStyle":{"height":"auto"},"children":{"align":"left","headerAlign":"left","addBtn":false,"delBtn":false,"column":[{"type":"rate","label":"医生服务态度","span":12,"display":"true","allowClear":true,"autoShow":false,"tools":{},"fieldDecoratorId":"doctorService","renderId":"doctorService_render","labelStyle":"{}","disabled":false,"required":true},{"type":"rate","label":"护士服务质量","span":12,"display":"true","allowClear":true,"autoShow":false,"tools":{},"fieldDecoratorId":"nurseService","renderId":"nurseService_render","labelStyle":"{}","disabled":false,"required":true},{"type":"rate","label":"医疗环境整洁度","span":12,"display":"true","allowClear":true,"autoShow":false,"tools":{},"fieldDecoratorId":"environment","renderId":"environment_render","labelStyle":"{}","disabled":false,"required":true},{"type":"rate","label":"等待时间满意度","span":12,"display":"true","allowClear":true,"autoShow":false,"tools":{},"fieldDecoratorId":"waitingTime","renderId":"waitingTime_render","labelStyle":"{}","disabled":false,"required":true},{"type":"radio","label":"整体就诊体验","span":24,"display":"true","autoShow":false,"icon":"icon-radio","dataType":"static","allowDataMapping":true,"collectionType":"","collectionFilter":"","radioButton":false,"buttonStyle":false,"radioStyle":"","reverseFilter":false,"tools":{},"staticData":[{"label":"非常满意","value":"very_satisfied"},{"label":"满意","value":"satisfied"},{"label":"一般","value":"average"},{"label":"不满意","value":"dissatisfied"},{"label":"非常不满意","value":"very_dissatisfied"}],"fieldDecoratorId":"overallExperience","renderId":"overallExperience_render","labelStyle":"{}","disabled":false,"required":true}]},"tools":{"showClear":false},"fieldDecoratorId":"experienceCard","renderId":"experienceCard_render","disabled":"false","required":false},{"type":"divider","span":24,"icon":"icon-divider","height":"30px","label":"换行","display":"true","itemStyle":"height:30px","tools":{},"fieldDecoratorId":"divider2","renderId":"divider2_render"},{"type":"card","label":"意见建议","span":24,"display":"true","formCardStyleFit":false,"formCardStyle":{"height":"auto"},"children":{"align":"left","headerAlign":"left","addBtn":false,"delBtn":false,"column":[{"type":"multi-input","label":"您的宝贵建议","span":24,"display":"true","autoShow":false,"autoSize":true,"icon":"icon-textarea","tools":{},"fieldDecoratorId":"suggestions","renderId":"suggestions_render","labelStyle":"{}","disabled":false,"required":false,"placeholder":"请留下您的宝贵意见和建议，帮助我们改进服务"}]},"tools":{"showClear":false},"fieldDecoratorId":"suggestionsCard","renderId":"suggestionsCard_render","disabled":"false","required":false}],"formHeader":[],"formLeft":[],"formRight":[],"formFooter":[],"version":{"updateTime":1765852306728}}
+[{"type":"card","label":"患者基本信息","span":24,"display":"true","formCardStyleFit":false,"formCardStyle":{"height":"auto"},"children":{"align":"left","headerAlign":"left","addBtn":false,"delBtn":false,"column":[{"type":"single-input","label":"患者姓名","span":8,"display":"true","autoShow":false,"tools":{},"fieldDecoratorId":"patientName","renderId":"patientName_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请输入患者姓名"},{"type":"select","label":"就诊科室","span":8,"display":"true","autoShow":false,"allowDataMapping":true,"icon":"icon-select","dataType":"static","staticData":[{"label":"内科","value":"internal"},{"label":"外科","value":"surgery"},{"label":"儿科","value":"pediatrics"},{"label":"妇产科","value":"obstetrics"},{"label":"眼科","value":"ophthalmology"},{"label":"耳鼻喉科","value":"ent"}],"fieldDecoratorId":"department","renderId":"department_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请选择就诊科室"},{"type":"date","label":"就诊日期","span":8,"display":"true","autoShow":false,"allowClear":true,"format":"YYYY-MM-DD","showToday":true,"validNowTime":"-1","eventRunInNextTick":true,"tools":{},"fieldDecoratorId":"visitDate","renderId":"visitDate_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请选择就诊日期"}]},"tools":{"showClear":false},"fieldDecoratorId":"basicInfoCard","renderId":"basicInfoCard_render","disabled":"false","required":false},{"type":"divider","span":24,"icon":"icon-divider","height":"30px","label":"换行","display":"true","itemStyle":"height:30px","tools":{},"fieldDecoratorId":"divider1","renderId":"divider1_render"},{"type":"card","label":"就诊体验评价","span":24,"display":"true","formCardStyleFit":false,"formCardStyle":{"height":"auto"},"children":{"align":"left","headerAlign":"left","addBtn":false,"delBtn":false,"column":[{"type":"rate","label":"医生服务态度","span":12,"display":"true","allowClear":true,"autoShow":false,"tools":{},"fieldDecoratorId":"doctorService","renderId":"doctorService_render","labelStyle":"{}","disabled":false,"required":true},{"type":"rate","label":"护士服务质量","span":12,"display":"true","allowClear":true,"autoShow":false,"tools":{},"fieldDecoratorId":"nurseService","renderId":"nurseService_render","labelStyle":"{}","disabled":false,"required":true},{"type":"rate","label":"医疗环境整洁度","span":12,"display":"true","allowClear":true,"autoShow":false,"tools":{},"fieldDecoratorId":"environment","renderId":"environment_render","labelStyle":"{}","disabled":false,"required":true},{"type":"rate","label":"等待时间满意度","span":12,"display":"true","allowClear":true,"autoShow":false,"tools":{},"fieldDecoratorId":"waitingTime","renderId":"waitingTime_render","labelStyle":"{}","disabled":false,"required":true},{"type":"radio","label":"整体就诊体验","span":24,"display":"true","autoShow":false,"icon":"icon-radio","dataType":"static","allowDataMapping":true,"collectionType":"","collectionFilter":"","radioButton":false,"buttonStyle":false,"radioStyle":"","reverseFilter":false,"tools":{},"staticData":[{"label":"非常满意","value":"very_satisfied"},{"label":"满意","value":"satisfied"},{"label":"一般","value":"average"},{"label":"不满意","value":"dissatisfied"},{"label":"非常不满意","value":"very_dissatisfied"}],"fieldDecoratorId":"overallExperience","renderId":"overallExperience_render","labelStyle":"{}","disabled":false,"required":true}]},"tools":{"showClear":false},"fieldDecoratorId":"experienceCard","renderId":"experienceCard_render","disabled":"false","required":false},{"type":"divider","span":24,"icon":"icon-divider","height":"30px","label":"换行","display":"true","itemStyle":"height:30px","tools":{},"fieldDecoratorId":"divider2","renderId":"divider2_render"},{"type":"card","label":"意见建议","span":24,"display":"true","formCardStyleFit":false,"formCardStyle":{"height":"auto"},"children":{"align":"left","headerAlign":"left","addBtn":false,"delBtn":false,"column":[{"type":"multi-input","label":"您的宝贵建议","span":24,"display":"true","autoShow":false,"autoSize":true,"icon":"icon-textarea","tools":{},"fieldDecoratorId":"suggestions","renderId":"suggestions_render","labelStyle":"{}","disabled":false,"required":false,"placeholder":"请留下您的宝贵意见和建议，帮助我们改进服务"}]},"tools":{"showClear":false},"fieldDecoratorId":"suggestionsCard","renderId":"suggestionsCard_render","disabled":"false","required":false}]
 ```
 

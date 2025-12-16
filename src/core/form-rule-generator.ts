@@ -1,4 +1,5 @@
 import { ComponentRegistry } from './component-registry.js';
+import { validatorMap } from '../components/ta404-ui/form/componentValidators.js';
 
 // 常量定义
 export const ASSIST_COMPONENT_TYPES = ['fcRow', 'col'] as const;
@@ -148,7 +149,10 @@ export class FormRuleGenerator {
         return;
       }
 
-      if (uiFramework !== 'ta404-ui') {
+      // 使用 JSONPath 格式：$ 表示根节点，[] 表示数组索引
+      const fieldPath = path ? `${path}.rule[${index}]` : `$.rule[${index}]`;
+
+      if (!Object.is(uiFramework, 'ta404-ui')) {
         if (!field.props) {
           field.props = {};
         } else {
@@ -173,81 +177,91 @@ export class FormRuleGenerator {
             }
           });
         }
-      }
 
-      // 使用 JSONPath 格式：$ 表示根节点，[] 表示数组索引
-      const fieldPath = path ? `${path}.rule[${index}]` : `$.rule[${index}]`;
-
-      if (!field.type) {
-        errors.push(`${fieldPath} 缺少 type 属性`);
-        suggestions.push(`为 ${fieldPath} 添加 type 属性，例如: "input", "select", "textarea" 等`);
-        return;
-      }
-
-      // 检查组件是否支持
-      let component = componentRegistry?.getComponent(field.type, uiFramework);
-      if (!component && field._fc_drag_tag) {
-        component = componentRegistry?.getComponent(field._fc_drag_tag, uiFramework);
-        if (component) {
-          field.type = component.examples[0].type;
-        }
-      }
-      if (!component) {
-        if (field?.children?.length) {
-          component = {
-            isField: !!field?.field,
-            isAssist: !field?.field,
-            isContainer: true,
-          };
-        } else {
+        if (!field.type) {
+          errors.push(`${fieldPath} 缺少 type 属性`);
+          suggestions.push(`为 ${fieldPath} 添加 type 属性，例如: "input", "select", "textarea" 等`);
           return;
         }
-      }
 
-      const isAssist = this.isAssistComponent(field, componentRegistry, uiFramework);
-      const isContainer = this.isContainerComponent(field, componentRegistry, uiFramework);
+        // 检查组件是否支持
+        let component = componentRegistry?.getComponent(field.type, uiFramework);
+        if (!component && field._fc_drag_tag) {
+          component = componentRegistry?.getComponent(field._fc_drag_tag, uiFramework);
+          if (component) {
+            field.type = component.examples[0].type;
+          }
+        }
+        if (!component) {
+          if (field?.children?.length) {
+            component = {
+              isField: !!field?.field,
+              isAssist: !field?.field,
+              isContainer: true,
+            };
+          } else {
+            return;
+          }
+        }
 
-      // 检查必需字段
-      if (component.isField && !field.field) {
-        errors.push(`${fieldPath} 缺少必需的 field 属性`);
-        suggestions.push(`为 ${fieldPath} 添加 field 属性，例如: "username", "email" 等`);
-      } else if (isAssist) {
-        delete field.field;
-      }
+        const isAssist = this.isAssistComponent(field, componentRegistry, uiFramework);
+        const isContainer = this.isContainerComponent(field, componentRegistry, uiFramework);
 
-      if (!field._fc_drag_tag && component.type) {
-        field._fc_drag_tag = component.type;
-      }
+        // 检查必需字段
+        if (component.isField && !field.field) {
+          errors.push(`${fieldPath} 缺少必需的 field 属性`);
+          suggestions.push(`为 ${fieldPath} 添加 field 属性，例如: "username", "email" 等`);
+        } else if (isAssist) {
+          delete field.field;
+        }
 
-      // 容器组件验证和改进
-      const childrenPath = component?.childrenPath || DEFAULT_CHILDREN_PATH;
+        if (!field._fc_drag_tag && component.type) {
+          field._fc_drag_tag = component.type;
+        }
 
-      // 如果组件定义了 childrenPath 且不是默认的 children，需要迁移子组件
-      if (childrenPath !== DEFAULT_CHILDREN_PATH && field.children && Array.isArray(field.children)) {
-        // 将 children 移动到正确的位置
-        this.setValueByPath(field, childrenPath, field.children);
-        delete field.children;
-      }
+        // 容器组件验证和改进
+        const childrenPath = component?.childrenPath || DEFAULT_CHILDREN_PATH;
 
-      const children = this.getValueByPath(field, childrenPath);
+        // 如果组件定义了 childrenPath 且不是默认的 children，需要迁移子组件
+        if (childrenPath !== DEFAULT_CHILDREN_PATH && field.children && Array.isArray(field.children)) {
+          // 将 children 移动到正确的位置
+          this.setValueByPath(field, childrenPath, field.children);
+          delete field.children;
+        }
 
-      // 如果没有子组件，尝试自动推断并添加默认子组件
-      if (isContainer && (!children || !Array.isArray(children) || children.length === 0)) {
-        errors.push(`${fieldPath} 是容器组件，必须包含 ${childrenPath} 属性`);
-        suggestions.push(`为 ${fieldPath} 添加 ${childrenPath} 属性，包含子组件数组`);
-        if (component.examples && component.examples.length > 0) {
-          suggestions.push(`参考示例: ${JSON.stringify(component.examples[0], null, 2)}`);
+        const children = this.getValueByPath(field, childrenPath);
+
+        // 如果没有子组件，尝试自动推断并添加默认子组件
+        if (isContainer && (!children || !Array.isArray(children) || children.length === 0)) {
+          errors.push(`${fieldPath} 是容器组件，必须包含 ${childrenPath} 属性`);
+          suggestions.push(`为 ${fieldPath} 添加 ${childrenPath} 属性，包含子组件数组`);
+          if (component.examples && component.examples.length > 0) {
+            suggestions.push(`参考示例: ${JSON.stringify(component.examples[0], null, 2)}`);
+          }
+        }
+
+        // 递归验证和改进子组件
+        if (children && Array.isArray(children)) {
+          children.forEach((child: FormField, childIndex: number) => {
+            // 使用 JSONPath 格式：在父路径基础上添加 .props.rule[index]
+            const childPath = `${fieldPath}.${childrenPath}[${childIndex}]`;
+            validateAndImproveField(child, childIndex, childPath);
+          });
+        }
+      } else {
+        console.log('调用了ta404-ui的组件校验函数');
+        const validator = validatorMap[field.type];
+
+        if (validator) {
+          // 验证组件属性
+          const result = validator(field);
+
+          if (!result.isValid) {
+            errors.push(...result.errors.map((error: any) => `${fieldPath} ${error}`));
+          }
         }
       }
 
-      // 递归验证和改进子组件
-      if (children && Array.isArray(children)) {
-        children.forEach((child: FormField, childIndex: number) => {
-          // 使用 JSONPath 格式：在父路径基础上添加 .props.rule[index]
-          const childPath = `${fieldPath}.${childrenPath}[${childIndex}]`;
-          validateAndImproveField(child, childIndex, childPath);
-        });
-      }
     };
 
     // 处理所有字段

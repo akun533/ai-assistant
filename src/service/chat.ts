@@ -247,7 +247,6 @@ ${userRule}`;
     try {
       // 直接从 ToolRegistry 获取完整的工具定义
       const mcpTools = this.toolRegistry.getAllToolDefinitions();
-
       if (mcpTools.length === 0) {
         return [];
       }
@@ -445,7 +444,7 @@ ${userRule}`;
                   if (title) {
                     yield`[FC_TOOL]{"title":"${title}","id":"${toolCall.id}","status":"end"}`;
                   }
-                  console.log(`${toolResult.data[0].text}...`);
+                  console.log(`${toolResult.data[0].text?.slice(0,100)}...`);
                   conversationMessages.push({
                     role: 'tool',
                     content: toolResult.data[0].text || '执行完毕',

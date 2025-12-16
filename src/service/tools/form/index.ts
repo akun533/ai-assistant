@@ -48,7 +48,6 @@ export const getComponentsDetailTool: ToolRegistration = {
   handler: async (args: ToolArgs, request: ToolContext) => {
     const { componentNames = [], uiFramework = DEFAULT_UI_FRAMEWORK, vueVersion = 'auto' } = args || {};
 
-    console.log('componentNames', componentNames);
     if (!Array.isArray(componentNames) || componentNames.length === 0) {
       return createResponse('componentNames 必须是一个非空的字符串数组');
     }
@@ -121,7 +120,6 @@ ${comp.childrenPath ? `子组件路径：${comp.childrenPath}` : ''}
 export const validateFormRuleTool: ToolRegistration = {
   definition: {
     name: 'validate_form_rule',
-    private: true,
     title: '检查表单规则有效性',
     description: '根据规范校验表单规则，不对操作计划负责。支持全量与增量，增量校验时仅传入发生变化的组件规则`ComponentRule[]`，无需携带未变更部分\n输出包含错误、警告、修复建议与优化后的规则',
     inputSchema: {
@@ -167,8 +165,14 @@ export const validateFormRuleTool: ToolRegistration = {
     // 处理新的参数结构：rule 可能是数组或对象
     const formRule: any = {
       rule: rule,
-      option: option || getDefaultFormOptions(),
     };
+
+    if (Object.is(uiFramework, 'ta404-ui')) {
+      formRule.formConfig = getDefaultFormConfig();
+    } else {
+      formRule.option = option || getDefaultFormOptions();
+    }
+
 
     // 验证并改进规则
     const validateAndImproveResult = request.formGenerator.validateRule(formRule, uiFramework, request.componentRegistry);
@@ -417,6 +421,24 @@ function getDefaultFormOptions() {
     resetBtn: true,
   };
 }
+function getDefaultFormConfig() {
+  return {
+    layout: 'horizontal',
+    layoutCol: 'auto',
+    labelCol: 6,
+    wrapperCol: 18,
+    header: '0px',
+    footer: '0px',
+    left: '0px',
+    right: '0px',
+    gutter: 0,
+    previewDrawerWidth: '95%',
+    previewDrawerMinWidth: '',
+    showButton: true,
+    buttons: [],
+    backgroundColor: 'white',
+  };
+}
 
 function createDetailedValidate(validateAndImproveResult: any, rule: any, uiFramework: string, componentRegistry: any): ValidateDetails {
   const components = componentRegistry.getComponents(uiFramework);
@@ -456,12 +478,12 @@ function createDetailedValidate(validateAndImproveResult: any, rule: any, uiFram
 
 function formatFeatureTemplateResponse(data: {uiFramework: string} ): string {
   let response = '';
-  let featuresMapTemp
-  const { uiFramework } = data
+  let featuresMapTemp;
+  const { uiFramework } = data;
   if (uiFramework === 'ta404-ui') {
-    featuresMapTemp = yinhaiFeaturesMap
+    featuresMapTemp = yinhaiFeaturesMap;
   } else {
-    featuresMapTemp = featuresMap
+    featuresMapTemp = featuresMap;
   }
   Object.keys(featuresMapTemp).forEach((type: string, index: number) => {
     const featureData = featuresMapTemp[type];
