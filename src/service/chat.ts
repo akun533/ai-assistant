@@ -37,7 +37,7 @@ export interface ChatRequest {
     option?: string;
   };
   context: Record<string, any>;
-  agentKeyType: string;
+  agentMessageType: string;
   conversation_id: string
 }
 
@@ -89,7 +89,7 @@ export default class Chat {
     try {
       const __filename = fileURLToPath(import.meta.url);
       const __dirname = dirname(__filename);
-      const systemPromptPath = join(__dirname, promptFileName);
+      const systemPromptPath = join(__dirname, 'prompt', promptFileName);
       const systemPrompt = readFileSync(systemPromptPath, 'utf-8');
       console.log('✅ 成功读取系统提示词文件');
       return systemPrompt;
@@ -580,11 +580,11 @@ ${userRule}`;
 
     if (!agentRequest.conversation_id) {
       // 获取系统提示词
-      const systemPrompt = messages.find((message) => message.role === 'system')
+      const systemPrompt = messages.find((message) => message.role === 'system');
 
-      agentRequest.query = `${systemPrompt?.content} \n --- \n 用户请求：${lastMessage.content?.slice(0,100)}......`
+      agentRequest.query = `${systemPrompt?.content} \n --- \n 用户请求：${lastMessage.content?.slice(0,100)}......`;
     } else {
-      agentRequest.query = lastMessage.content
+      agentRequest.query = lastMessage.content;
     }
     console.log(`🔄 发送用户请求 (深度: ${maxDepth})，消息内容:`, lastMessage.content);
 
@@ -600,7 +600,7 @@ ${userRule}`;
           cleanJson = cleanJson.slice(3, -3);
         }
         if (!cleanJson.trim()) return [];
-        console.log('解析的函数调用JSON:', cleanJson)
+        console.log('解析的函数调用JSON:', cleanJson);
         return JSON.parse(cleanJson.trim());
       } catch (error) {
         console.warn('Failed to parse function calls:', error);
@@ -649,7 +649,6 @@ ${userRule}`;
             request.conversation_id = parsed.conversation_id;
 
 
-
             if (parsed.event === 'message_end') {
               funcJsonStart = false;
 
@@ -658,7 +657,7 @@ ${userRule}`;
                 if (funcJson) {
                   const tempToolCalls = parseFunctionCalls(funcJson);
                   for (const tempToolCall of tempToolCalls) {
-                    const statusMessage = sendToolStatus(tempToolCall.name, tempToolCall.arguments?.sessionId, "end");
+                    const statusMessage = sendToolStatus(tempToolCall.name, tempToolCall.arguments?.sessionId, 'end');
                     if (statusMessage) {
                       yield statusMessage;
                     }
@@ -693,7 +692,7 @@ ${userRule}`;
                       request.context,
                     );
 
-                    const statusMessage = sendToolStatus(toolCall.name, toolCall.arguments?.sessionId, "end");
+                    const statusMessage = sendToolStatus(toolCall.name, toolCall.arguments?.sessionId, 'end');
                     if (statusMessage) {
                       yield statusMessage;
                     }
@@ -754,7 +753,7 @@ ${userRule}`;
             if (content && [FUNCTION_CALL_MARKERS, `${FUNCTION_CALL_MARKERS}${FUNCTION_CALL_MARKERS}`].includes(content.trim()) || funcJsonStart) {
               funcJsonStart = true;
               funcJson += content || '';
-            } else if(content) {
+            } else if (content) {
               currentMessage.content += content;
               // 如果有 usage，一起返回
               if (parsed.usage) {
@@ -772,7 +771,6 @@ ${userRule}`;
           }
         }
       }
-
 
 
       if (!agentRequest.conversation_id && !pushConversationId) {
@@ -803,7 +801,7 @@ ${userRule}`;
       console.log(`🤖 使用 Agent: ${agentType}`);
 
       // 获取 API 密钥类型 , 默认为 openai, 如果是 dify 则使用 dify
-      const agentKeyType = request.agentKeyType || 'openai';
+      const agentMessageType = request.agentMessageType || 'openai';
 
       // 生成会话 ID
       const currentSessionId = generateSessionId();
@@ -830,8 +828,8 @@ ${userRule}`;
 
       console.log('🔑 使用 API 密钥:', apiKey ? `${apiKey.substring(0, 10)}...` : '未提供');
 
-      // 根据 agentKeyType 字段进行分流处理
-      if (agentKeyType === 'dify') {
+      // 根据 agentMessageType 字段进行分流处理
+      if (agentMessageType === 'dify') {
         // 使用专门处理 Dify 流式会话的方法
         yield* this.processDifyChatStream(messages, apiKey, request, tools, agentType, 1, currentSessionId, signal);
       } else {
