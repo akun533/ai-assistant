@@ -72,7 +72,7 @@ function createValidator(schema: ValidationSchema): (componentProps: ComponentPr
         }
       }
     }
-    console.log('componentProps', componentProps);
+
     // 验证字段值范围
     if (schema.enums) {
       for (const [field, allowedValues] of Object.entries(schema.enums)) {
