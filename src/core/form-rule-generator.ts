@@ -1,5 +1,5 @@
 import { ComponentRegistry } from './component-registry.js';
-import { validatorMap } from '../components/ta404-ui/form/componentValidators.js';
+import { validatorMap } from '../components/ta404-ui/form/fieldsPropsValidators.js';
 
 // 常量定义
 export const ASSIST_COMPONENT_TYPES = ['fcRow', 'col'] as const;

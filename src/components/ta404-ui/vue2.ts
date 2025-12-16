@@ -14,12 +14,12 @@ interface TaComponent extends Omit<ComponentInfo, 'events' | 'props' | 'fieldTyp
 
 interface TaComponentGroup {
   title: string;
-  type: 'layout' | 'input' | 'select' | 'date' | 'other' | '';
+  type: 'layout' | 'input' | 'select' | 'date' | 'assist' | 'display';
   list: TaComponent[];
 }
 
 import taComponents from './form/fieldsConfig';
-import { getDefaultPropsByFieldType } from './form/properties';
+import fieldsProps from './form/fieldsProps';
 
 /**
  * 解析组件事件配置
@@ -44,7 +44,13 @@ const getTaComponents = (): ComponentInfo[] => {
   return taComponentTemp.flatMap(group =>
     group.list.map(item => {
       const eventsDefinitions = item.eventsDefinitions || {};
-      const fieldType = group.type || 'other';
+      const fieldType = group.type;
+
+      const optionProps = fieldsProps[item.type]?.props;
+
+      const cloneItem = JSON.parse(JSON.stringify(item));
+      delete cloneItem.eventsDefinitions;
+      delete cloneItem.optionProps;
       return {
         type: item.type,
         label: item.label,
@@ -52,9 +58,9 @@ const getTaComponents = (): ComponentInfo[] => {
         vueVersion: 'vue2',
         fieldType,
         examples: [
-          JSON.parse(JSON.stringify(item)),
+          cloneItem,
         ],
-        props: getDefaultPropsByFieldType(item.type),
+        props: optionProps,
         events: parseComponentEvents(eventsDefinitions),
       } satisfies ComponentInfo;
     }),

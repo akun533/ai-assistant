@@ -6,9 +6,9 @@ export default [
     type: 'layout',
     list: [
       {
-        type: 'Div',
+        type: 'div',
         icon: 'icon-card',
-        label: 'div容器',
+        label: 'Div容器',
         placement: 'right',
         span: 24,
         display: 'true', // 是否展示
