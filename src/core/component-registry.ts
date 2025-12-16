@@ -15,7 +15,7 @@ export interface ComponentInfo {
   label: string;
   uiFramework: string;
   vueVersion: 'vue2' | 'vue3' | 'common';
-  fieldType?: 'input' | 'layout' | 'date' | 'select' | 'other' | '',
+  fieldType?: 'input' | 'layout' | 'date' | 'select' | 'display' | 'assist',
   business?: true; // 是否是高级版组件
   isAssist?: boolean; // 标识是否为辅助组件（不需要field和title）
   isContainer?: boolean; // 标识是否为容器组件（必须包含children）
@@ -132,10 +132,10 @@ export class ComponentRegistry {
   getComponents(uiFramework: string, vueVersion: 'vue2' | 'vue3' = 'vue3'): ComponentInfo[] {
     const allComponents: ComponentInfo[] = [];
     const detectedFramework = this.detectFramework(uiFramework, vueVersion);
-    
+
     // 如果是 ta404-ui 框架，则不包含公共组件
     const shouldIncludeCommon = detectedFramework !== 'ta404-ui';
-    
+
     for (const components of this.components.values()) {
       const frameworkComponents = components.filter(
         comp =>
@@ -161,9 +161,9 @@ export class ComponentRegistry {
     const inputComponents: ComponentInfo[] = [];
     const selectComponents: ComponentInfo[] = [];
     const dateComponents: ComponentInfo[] = [];
-    const otherComponents: ComponentInfo[] = [];
     const formComponents: ComponentInfo[] = [];
     const assistComponents: ComponentInfo[] = [];
+    const displayComponents: ComponentInfo[] = [];
     const seenTypes = new Set<string>();
 
     components.forEach(comp => {
@@ -191,9 +191,12 @@ export class ComponentRegistry {
         } else if (comp.fieldType === 'select') {
           // 选择组件：用户选择预定义选择项的组件
           selectComponents.push(componentInfo);
-        } else {
-          // 其他组件
-          otherComponents.push(componentInfo);
+        } else if (comp.fieldType === 'assist') {
+          // 辅助组件
+          assistComponents.push(componentInfo);
+        } else if (comp.fieldType === 'display') {
+          // 辅助组件
+          displayComponents.push(componentInfo);
         }
       } else {
         // 判断组件类型
@@ -219,7 +222,7 @@ export class ComponentRegistry {
         components: formComponents,
       },
       layoutComponents: {
-        name: '布局组件',
+        name: '容器布局组件',
         description: '用于页面布局和结构组织的组件',
         count: layoutComponents.length,
         components: layoutComponents,
@@ -231,28 +234,28 @@ export class ComponentRegistry {
         components: assistComponents,
       },
       inputComponents: {
-        name: '输入字段',
+        name: '输入组件',
         description: '用于用户录入文本类型的信息的组件',
         count: inputComponents.length,
         components: inputComponents,
       },
       selectComponents: {
-        name: '选择字段',
+        name: '选择组件',
         description: '用户选择预定义选择项的组件',
         count: selectComponents.length,
         components: selectComponents,
       },
       dateComponents: {
-        name: '日期时间字段',
+        name: '日期时间组件',
         description: '用户录入时间类型字段的组件',
         count: dateComponents.length,
         components: dateComponents,
       },
-      otherComponents: {
-        name: '其他字段',
-        description: '其他类型的组件',
-        count: otherComponents.length,
-        components: otherComponents,
+      displayComponents: {
+        name: '数据展示组件',
+        description: '主要用于展示数据的组件，比如表格，文本span，段落p，步骤，时间轴等',
+        count: displayComponents.length,
+        components: displayComponents,
       },
     };
   }
