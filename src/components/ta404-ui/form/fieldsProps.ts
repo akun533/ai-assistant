@@ -556,17 +556,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.childrenColumns,
       CommonProps.isRender,
       CommonProps.itemStyle,
-      {
-        name: 'tools',
-        type: 'object',
-        description: '工具配置',
-        required: true,
-        defaultValue: {
-          'showClone': true,
-          'showDelete': true,
-          'showClear': true,
-        },
-      },
+      CommonProps.tools,
       CommonProps.parentLabelCol,
       CommonProps.parentWrapperCol,
       CommonProps.parentSpan,

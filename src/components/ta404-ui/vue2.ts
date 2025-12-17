@@ -86,7 +86,6 @@ const getTaComponents = (): ComponentInfo[] => {
         prop.description = description;
 
       });
-      console.log('optionProps', optionProps);
       const cloneItem = JSON.parse(JSON.stringify(item));
       delete cloneItem.eventsDefinitions;
       return {
