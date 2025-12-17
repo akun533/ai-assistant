@@ -46,15 +46,25 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   style: {
     name: 'style',
     type: 'string',
-    description: '组件样式，示例："color:red;font-size:20px"',
+    description: '组件样式',
+    example: 'color:red;font-size:20px',
   },
   display: {
     name: 'display',
     type: 'string',
-    description: '是否显示组件，默认值："true"，可选值："false"和"true"',
+    description: '是否显示组件',
     defaultValue: 'true',
     required: false,
-    options: ['true', 'false'],
+    options: [
+      {
+        value: 'false',
+        label: '否',
+      },
+      {
+        value: 'true',
+        label: '是',
+      }
+    ],
   },
   disabled: {
     name: 'disabled',
@@ -89,8 +99,9 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   message: {
     name: 'message',
     type: 'string',
-    description: '验证提示信息，示例："请填写单行文本信息"/"请填写密码"',
+    description: '验证提示信息',
     required: false,
+    example: '请填写单行文本信息',
   },
   rules: {
     name: 'rules',
@@ -101,8 +112,9 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   extra: {
     name: 'extra',
     type: 'string',
-    description: '额外描述信息，示例："我是额外信息，主要用于补充描述该项属性的填写注意事项"',
+    description: '额外描述信息',
     required: false,
+    example: '我是额外信息，主要用于补充描述该项属性的填写注意事项'
   },
   span: {
     name: 'span',
@@ -114,13 +126,13 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   tools: {
     name: 'tools',
     type: 'object',
-    description: '工具配置，默认值：{}',
+    description: '工具配置',
     required: true,
   },
   autoShow: {
     name: 'autoShow',
     type: 'boolean',
-    description: '是否自动显示组件，默认值：false，可选值：false 和 true',
+    description: '是否自动显示组件',
     required: true,
     defaultValue: false,
   },
@@ -133,97 +145,112 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   validateTrigger: {
     name: 'validateTrigger',
     type: 'Array',
-    description: '触发验证的事件，可选值：["change", "blur"]，示例：["blur"]',
+    description: '触发验证的事件',
     required: false,
+    example: ['blur'],
+    options: [
+      {
+        value: 'change',
+        label: '值变化',
+      },
+      {
+        value: 'blur',
+        label: '失去焦点',
+      }
+    ]
   },
   rules_object: {
     name: 'rules',
     type: 'object',
     description:
-        "自定义验证规则（转义的JSON字符串），示例：[{\n pattern: '(^\\d{15}$)|(^\\d{17}(\\d|X|x)$)',\n message: '需要输入身份证号'\n}]",
+        "自定义验证规则（转义的JSON字符串）",
     required: false,
+    example: "[{\n pattern: '(^\\d{15}$)|(^\\d{17}(\\d|X|x)$)',\n message: '需要输入身份证号'\n}]"
   },
   allowClear: {
     name: 'allowClear',
     type: 'boolean',
-    description: '是否允许清除 / 是否支持清空，默认值：true (在 rpc 中) / 无 (在 single-input, password 中)，可选值：false 和 true',
+    description: '是否允许清除 / 是否支持清空',
     required: false,
     defaultValue: true,
   },
   addonBefore: {
     name: 'addonBefore',
     type: 'string',
-    description: '前置内容，用于 single-input, password 组件',
+    description: '前置内容',
     required: false,
   },
   addonAfter: {
     name: 'addonAfter',
     type: 'string',
-    description: '后置内容，用于 single-input, password 组件',
+    description: '后置内容',
     required: false,
   },
   isRender: {
     name: 'isRender',
     type: 'string',
-    description: '是否渲染元素，为 false 时元素不渲染，表单提交时不验证，可选值：false 和 true',
+    description: '是否渲染元素，为 false 时元素不渲染，表单提交时不验证',
     required: true,
     defaultValue: true,
   },
   labelCol: {
     name: 'labelCol',
     type: 'number',
-    description: '标签所占栅格，与 wrapperCol 属性合为 24，默认值：6，可选值：1-24',
+    description: '标签所占栅格，与 wrapperCol 属性合为 24，可选值：1-24',
     required: false,
     defaultValue: 6,
   },
   wrapperCol: {
     name: 'wrapperCol',
     type: 'number',
-    description: '封装组件栅格，与 labelCol 合为 24，默认值：18，可选值：1-24',
+    description: '封装组件栅格，与 labelCol 合为 24，可选值：1-24',
     required: false,
     defaultValue: 18,
   },
   labelStyle: {
     name: 'labelStyle',
     type: 'string',
-    description: '标签样式（转义的JSON字符串），示例："{"color":"red"}"',
+    description: '标签样式（转义的JSON字符串）',
     required: true,
+    example: '{"color":"red"}'
   },
   labelWidth: {
     name: 'labelWidth',
     type: 'number',
-    description: '标签宽度，示例：100',
+    description: '标签宽度',
     required: false,
+    example: 100
   },
   isLongLabel: {
     name: 'isLongLabel',
     type: 'boolean',
-    description: '是否为长标签，可选值：false 和 true',
+    description: '是否为长标签',
     required: false,
   },
   haveEnterButton: {
     name: 'haveEnterButton',
     type: 'boolean',
-    description: '是否显示搜索按钮，默认值：false，可选值：false 和 true，用于 single-input 组件',
+    description: '是否显示搜索按钮',
     required: false,
     defaultValue: false,
   },
   enterButton: {
     name: 'enterButton',
     type: 'string',
-    description: '搜索按钮文本，用于 single-input 组件',
+    description: '搜索按钮文本',
     required: false,
   },
   itemStyle: {
     name: 'itemStyle',
     type: 'string',
-    description: '组件样式，示例："color:red;font-size:20px"，用于 multi-input 组件',
+    description: '组件样式',
     required: false,
+    example: 'color:red;font-size:20px'
   },
   autoSize: {
     name: 'autoSize',
     type: 'boolean',
-    description: '是否根据内容自适应高度，默认值：true，可选值：false 和 true，用于 multi-input 组件',
+    description: '是否根据内容自适应高度',
     required: false,
     defaultValue: true,
   },
@@ -231,96 +258,125 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
     name: 'rows',
     type: 'number',
     description:
-        '多行文本行数，最小为1的整数。当 autoSize 属性为 false 时需要配置此项，当 autoSize 值为 true 时需要移除此项，默认值：2，用于 multi-input 组件',
+        '多行文本行数，最小为1的整数。当 autoSize 属性为 false 时需要配置此项，当 autoSize 值为 true 时需要移除此项',
     required: false,
     defaultValue: 2,
   },
   min: {
     name: 'min',
     type: 'number',
-    description: '最小可输入值，示例：1，用于 number 组件',
+    description: '最小可输入值',
     required: false,
+    example: 1,
   },
   max: {
     name: 'max',
     type: 'number',
-    description: '最大可输入值，示例：100，用于 number 组件',
+    description: '最大可输入值',
     required: false,
+    example: 100,
   },
   precision: {
     name: 'precision',
     type: 'number',
-    description: '数字精度,小数点后位数，比如2则为.00，示例：2，用于 number 组件',
+    description: '数字精度,小数点后位数，比如2则为.00',
     required: false,
     defaultValue: 0,
+    example: 2,
   },
   step: {
     name: 'step',
     type: 'number',
-    description: '值修改时的步长，用于 number 组件',
+    description: '值修改时的步长',
     required: false,
     defaultValue: 1,
   },
   asAmount: {
     name: 'asAmount',
     type: 'boolean',
-    description: '是否为金额类型，可选值：false 和 true，用于 number 组件',
+    description: '是否为金额类型',
     required: false,
   },
   amountPre: {
     name: 'amountPre',
     type: 'string',
-    description: '金额前缀。数值为金额类型时（asAmount 值为 true）此项生效，需要配置，用于 number 组件',
+    description: '金额前缀。数值为金额类型时（asAmount 值为 true）此项生效，需要配置',
     required: false,
   },
   alignRight: {
     name: 'alignRight',
     type: 'boolean',
-    description: '值是否右对齐，可选值：false 和 true，用于 number 组件',
+    description: '值是否右对齐',
     required: false,
     defaultValue: false,
   },
   decimalSeparator: {
     name: 'decimalSeparator',
     type: 'string',
-    description: '小数点符号，默认值：.，用于 number 组件',
+    description: '小数点符号',
     required: false,
     defaultValue: '.',
   },
   dataType: {
     name: 'dataType',
     type: 'string',
-    description: '数据填充方式，默认值：static，可选值：static/remote/customRemote，用于 rpc 组件',
+    description: '数据源填充方式',
     required: true,
     defaultValue: 'static',
-    options: ['static', 'remote', 'customRemote'],
+    options: [
+      {
+        value: 'static',
+        label: '静态数据',
+      },
+      {
+        value: 'remote',
+        label: '远程数据',
+      },
+      {
+        value: 'customRemote',
+        label: '自定义远程数据',
+      }
+    ],
   },
   dropdownTrigger: {
     name: 'dropdownTrigger',
     type: 'string',
-    description: '查询行为触发方式，默认值：delay，可选值：delay/enterKeyup/click，用于 rpc 组件',
+    description: '查询行为触发方式',
     required: false,
     defaultValue: 'delay',
-    options: ['delay', 'enterKeyup', 'click'],
+    options: [
+      {
+        value: 'delay',
+        label: '延时触发',
+      },
+      {
+        value: 'enterKeyup',
+        label: '回车触发',
+      },
+      {
+        value: 'click',
+        label: '点击触发',
+      }
+    ],
   },
   dropdownMatchSelectWidth: {
     name: 'dropdownMatchSelectWidth',
     type: 'boolean',
-    description: '下拉框与输入框同宽，默认值：false，可选值：false 和 true，用于 rpc 组件',
+    description: '下拉框与输入框同宽',
     required: false,
     defaultValue: false,
   },
   dropdownMatchSelectWidthValue: {
     name: 'dropdownMatchSelectWidthValue',
     type: 'string',
-    description: '下拉输入框宽度，一般为带 px 单位宽度，默认值：500px，用于 rpc 组件',
+    description: '下拉输入框宽度，一般为带 px 单位宽度',
     required: false,
     defaultValue: '500px',
   },
   searchDelay: {
     name: 'searchDelay',
     type: 'number',
-    description: '延迟时间，当 dropdownTrigger 属性值为 delay 时，此项必须，单位毫秒，默认值：600，用于 rpc 组件',
+    description: '延迟时间，当 dropdownTrigger 属性值为 delay 时，此项必须，单位毫秒',
     required: true,
     defaultValue: 600,
   },
@@ -328,7 +384,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
     name: 'titleList',
     type: 'Array',
     description:
-        '需要展示的表头信息配置，为 JSON 格式的对象数组，对象只能包含 key 和 value 属性。支持配置多组。key 属性表示属性字段变量，value 表示字段名称，不支持其他属性格式，默认值：[{"key": "id", "value": "编号"}, {"key": "name", "value": "名称"}]，用于 rpc 组件',
+        '需要展示的表头信息配置，为 JSON 格式的对象数组，对象只能包含 key 和 value 属性。支持配置多组。key 属性表示属性字段变量，value 表示字段名称，不支持其他属性格式',
     required: true,
     defaultValue: [
       {
@@ -345,7 +401,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
     name: 'optionConfig',
     type: 'object',
     description:
-        '配置选中后的实际值对应的字段和显示值对应的字段。格式固定，为 JSON 对象，只能包含 value 和 label 属性，与 titleList 属性 key 关联，默认值：{"value": "id", "label": "name"}，用于 rpc 组件',
+        '配置选中后的实际值对应的字段和显示值对应的字段。格式固定，为 JSON 对象，只能包含 value 和 label 属性，与 titleList 属性 key 关联',
     required: true,
     defaultValue: {
       value: 'id',
@@ -356,14 +412,16 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
     name: 'data',
     type: 'string',
     description:
-        '组件的数据项。格式为经过转义的标准 JSON 格式对象数组字符串。对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联，默认值："[{"name":"张三","id":"10010"}]"，用于 rpc 组件',
+        '组件的数据项。格式为经过转义的标准 JSON 格式对象数组字符串。对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联',
     required: true,
+    example: '[{"name":"张三","id":"10010"}]'
   },
   cardHeadStyle: {
     name: 'cardHeadStyle',
     type: 'string',
-    description: '标题CSS。标题的CSS样式，示例: width: 120px;height:120px;',
+    description: '标题CSS。标题的CSS样式',
     required: false,
+    example: 'width: 120px;height:120px;'
   },
   width: {
     name: 'width',
@@ -374,10 +432,23 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   size: {
     name: 'size',
     type: 'string',
-    description: '组件大小，默认值：default，可选值：default(默认)/small(较小)/large(较大)',
+    description: '组件大小',
     required: false,
     defaultValue: 'default',
-    options: ['default', 'small', 'large'],
+    options: [
+      {
+        value: 'default',
+        label: '默认',
+      },
+      {
+        value: 'small',
+        label: '较小',
+      },
+      {
+        value: 'large',
+        label: '较大',
+      }
+    ],
   },
   labelText: {
     name: 'labelText',
@@ -389,8 +460,9 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   staticData: {
     name: 'staticData',
     type: 'string',
-    description: '静态数据源，格式为经过转义标准的 JSON 格式对象数组字符串，对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联，默认值："[{"name":"张三","id":"10010"}]"，用于 rpc 组件',
+    description: '静态数据源，格式为经过转义标准的 JSON 格式对象数组字符串，对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联',
     required: false,
+    example: '[{"name":"张三","id":"10010"}]'
   },
   // FIX ME
   format: {
@@ -403,14 +475,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   validNowTime: {
     name: 'validNowTime',
     type: 'boolean',
-    description: '是否只显示当前时间之后的时间，默认值：false，可选值：false 和 true，用于 datePicker 、timePicker 、dateTimePicker 、dateRangePicker 、timeRangePicker 、dateTimeRangePicker 组件',
+    description: '是否只显示当前时间之后的时间',
     required: false,
     defaultValue: false,
   },
   childrenColumn: {
     name: 'children',
     type: 'object',
-    description: '子组件配置，column为组件列表，默认值：{column: []}',
+    description: '子组件配置，column为组件列表',
     required: true,
     defaultValue: {
       column: [],
@@ -419,7 +491,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   childrenColumns: {
     name: 'children',
     type: 'object',
-    description: '子组件配置，columns为组件列表，默认值：{columns: []}',
+    description: '子组件配置，columns为组件列表',
     required: true,
     defaultValue: {
       columns: [],
