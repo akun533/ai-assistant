@@ -19,8 +19,8 @@ export interface Feature {
 
 export const yinhaiFeatures = [
   validateFeature,
-  controlFeature,
-  computedFeature, // 开源版不支持
+  // controlFeature,
+  // computedFeature, // 开源版不支持
   eventFeature,
 ];
 
