@@ -1,14 +1,14 @@
 import {
   antDesignVue2Components,
   antDesignVueComponents,
-  commonComponents,
   elementPlusComponents,
   elementUIComponents,
   vantComponents,
   vantVue2Components,
   ta404uiComponents,
-} from '../components/index.js';
+} from '../components';
 import usages from '../components/usages';
+import { PropsDefinition } from '../components/ta404-ui/form/fieldsProps';
 
 export interface ComponentInfo {
   type: string;
@@ -33,7 +33,7 @@ export interface ComponentInfo {
     options?: Array<Boolean | string | number>;
     required?: boolean;
     fields?: ComponentInfo['props'];
-  }>;
+  } | PropsDefinition>;
   // 组件的事件和描述
   events?: Array<{
     name: string;

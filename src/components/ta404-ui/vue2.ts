@@ -50,7 +50,6 @@ const getTaComponents = (): ComponentInfo[] => {
 
       const cloneItem = JSON.parse(JSON.stringify(item));
       delete cloneItem.eventsDefinitions;
-      delete cloneItem.optionProps;
       return {
         type: item.type,
         label: item.label,
