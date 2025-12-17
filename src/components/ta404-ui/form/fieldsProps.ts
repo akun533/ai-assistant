@@ -3,7 +3,7 @@ export interface PropsDefinition {
   type: 'boolean' | 'string' | 'number' | 'object' | 'Function' | 'Array';
   defaultValue?: any;
   description?: string;
-  options?: Array<Boolean | string | number | object>;
+  options?: Array<{ value: string; label: string} | string | number | boolean>;
   required?: boolean;
   label?: string;
   example?: any;
@@ -119,7 +119,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   span: {
     name: 'span',
     type: 'number',
-    description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
+    description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数',
     required: true,
     defaultValue: 8,
   },
@@ -460,7 +460,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   staticData: {
     name: 'staticData',
     type: 'string',
-    description: '静态数据源，格式为经过转义标准的 JSON 格式对象数组字符串，对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联',
+    description: '静态数据源，格式为经过转义标准的 JSON 格式对象数组字符串',
     required: false,
     example: '[{"name":"张三","id":"10010"}]',
   },
