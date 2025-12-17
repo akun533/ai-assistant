@@ -3,9 +3,10 @@ export interface PropsDefinition {
   type: 'boolean' | 'string' | 'number' | 'object' | 'Function' | 'Array';
   defaultValue?: any;
   description?: string;
-  options?: Array<Boolean | string | number>;
+  options?: Array<Boolean | string | number | object>;
   required?: boolean;
   label?: string;
+  example?: any;
 }
 
 export interface ComponentProp {
@@ -165,7 +166,8 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
     name: 'isRender',
     type: 'string',
     description: '是否渲染元素，为 false 时元素不渲染，表单提交时不验证，可选值：false 和 true',
-    required: false,
+    required: true,
+    defaultValue: true,
   },
   labelCol: {
     name: 'labelCol',
@@ -404,7 +406,46 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
     description: '是否只显示当前时间之后的时间，默认值：false，可选值：false 和 true，用于 datePicker 、timePicker 、dateTimePicker 、dateRangePicker 、timeRangePicker 、dateTimeRangePicker 组件',
     required: false,
     defaultValue: false,
-  }
+  },
+  childrenColumn: {
+    name: 'children',
+    type: 'object',
+    description: '子组件配置，column为组件列表，默认值：{column: []}',
+    required: true,
+    defaultValue: {
+      column: [],
+    },
+  },
+  childrenColumns: {
+    name: 'children',
+    type: 'object',
+    description: '子组件配置，columns为组件列表，默认值：{columns: []}',
+    required: true,
+    defaultValue: {
+      columns: [],
+    },
+  },
+  parentLabelCol: {
+    name: 'parentLabelCol',
+    type: 'number',
+    description: '容器内部表单项组件的标签所占栅格',
+    required: false,
+    defaultValue: 6,
+  },
+  parentWrapperCol: {
+    name: 'parentWrapperCol',
+    type: 'number',
+    description: '容器内部表单项组件的录入控件所占栅格',
+    required: false,
+    defaultValue: 18,
+  },
+  parentSpan: {
+    name: 'parentSpan',
+    type: 'number',
+    description: '容器内部表单项的占据栅格',
+    required: false,
+    defaultValue: 8,
+  },
 };
 
 const ComponentsProps:Record<string, ComponentProp> = {
@@ -419,76 +460,437 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.display,
       CommonProps.label,
       CommonProps.span,
-      CommonProps.tools,
+      CommonProps.childrenColumns,
+      CommonProps.isRender,
+      CommonProps.itemStyle,
+      {
+        name: 'tools',
+        type: 'object',
+        description: '工具配置',
+        required: true,
+        defaultValue: {
+          'showClone': true,
+          'showDelete': true,
+          'showClear': true,
+        },
+      },
+      CommonProps.parentLabelCol,
+      CommonProps.parentWrapperCol,
+      CommonProps.parentSpan,
     ],
   },
   tabs: {
     type: 'tabs',
     props: [
+      CommonProps.type,
+      CommonProps.span,
+      CommonProps.label,
       CommonProps.fieldDecoratorId,
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
       CommonProps.display,
-      CommonProps.label,
-      CommonProps.span,
-      CommonProps.tools,
-      CommonProps.staticData,
-      CommonProps.size,
       CommonProps.labelText,
+      {
+        name: 'tools',
+        type: 'object',
+        description: '工具配置',
+        required: true,
+        defaultValue: {
+          'showClear': true,
+        },
+      },
+      {
+        name: 'tabPosition',
+        type: 'string',
+        description: '标签位置',
+        required: true,
+        defaultValue: 'left',
+        options: [
+          {
+            label: '顶部',
+            value: 'top',
+          },
+          {
+            label: '左侧',
+            value: 'left',
+          },
+          {
+            label: '右侧',
+            value: 'right',
+          },
+          {
+            label: '底部',
+            value: 'bottom',
+          },
+        ],
+      },
+      {
+        name: 'tabType',
+        type: 'string',
+        description: '标签页样式类型',
+        required: true,
+        defaultValue: 'line',
+        options: [
+          {
+            label: '线条样式',
+            value: 'line',
+          },
+          {
+            label: '卡片样式',
+            value: 'card',
+          },
+          {
+            label: '可编辑卡片（可动态删除新增）',
+            value: 'editable-card',
+          },
+        ],
+      },
+      {
+        name: 'staticData',
+        type: 'Array',
+        description: '标签页数据源，每个标签页项容器中的组件数据存储在children.column中，格式为标准的 JSON 格式对象数组',
+        required: false,
+        defaultValue: [
+          {
+            tab: 'tab-1',
+            key: '1',
+            children: {
+              column: [],
+            },
+          },
+        ],
+      },
     ],
   },
   collapse: {
     type: 'collapse',
     props: [
+      CommonProps.type,
       CommonProps.fieldDecoratorId,
       CommonProps.renderId,
-      CommonProps.css,
-      CommonProps.style,
       CommonProps.display,
       CommonProps.label,
       CommonProps.span,
-      CommonProps.tools,
-      CommonProps.staticData
+      {
+        name: 'bordered',
+        type: 'boolean',
+        description: '是否显示边框',
+        required: true,
+        defaultValue: true,
+      },
+      {
+        name: 'tools',
+        type: 'object',
+        description: '工具配置',
+        required: true,
+        defaultValue: {
+          'showClear': true,
+        },
+      },
+      {
+        name: 'staticData',
+        type: 'Array',
+        description: '折叠面板数据源，每个标折叠项容器中的组件数据存储在children.column中，格式为标准的 JSON 格式对象数组',
+        required: false,
+        defaultValue: [
+          {
+            'header': 'pane-1',
+            'key': '1',
+            'column': [],
+          },
+        ],
+      },
     ],
   },
   card: {
     type: 'card',
     props: [
-      CommonProps.fieldDecoratorId,
-      CommonProps.renderId,
-      CommonProps.css,
-      CommonProps.style,
+      CommonProps.type,
       CommonProps.display,
       CommonProps.label,
       CommonProps.span,
-      CommonProps.tools,
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.isRender,
+      CommonProps.childrenColumn,
+      {
+        name: 'formCardStyleFit',
+        type: 'boolean',
+        description: '卡片自适应高度',
+        required: true,
+        defaultValue: false,
+      },
+      {
+        name: 'formCardStyle',
+        type: 'object',
+        description: '卡片容器样式，当formCardStyleFit属性值为false时此项生效，否则失效',
+        required: true,
+        defaultValue: {
+          'height': '450px',
+        },
+      },
+      {
+        name: 'cardHeadStyle',
+        type: 'string',
+        description: '卡片容器标题样式字符串',
+        required: false,
+        example: 'width:120px;font-size:160px',
+      },
+      {
+        name: 'cardStyle',
+        type: 'string',
+        description: '卡片容器样式字符串',
+        required: false,
+        example: 'width:800px;height:400px',
+      },
+      {
+        name: 'tools',
+        type: 'object',
+        description: '工具配置',
+        required: true,
+        defaultValue: {
+          'showClear': true,
+        },
+      },
+      {
+        name: 'headButtons',
+        type: 'Array',
+        description: '卡片容器标题栏按钮,只能放置type为button的组件, JSON格式数组,',
+        required: false,
+        example: [
+          {
+            'type': 'button',
+            'span': 4,
+            'label': '按钮',
+            'slotName': '',
+            'size': 'default',
+            'buttonType': 'primary',
+            'display': 'true',
+            'tools': {},
+            'fieldDecoratorId': 'AS1BMUR9',
+            'renderId': 'P2B4G23VVSHK',
+          },
+        ],
+      },
+      CommonProps.parentLabelCol,
+      CommonProps.parentWrapperCol,
+      CommonProps.parentSpan,
     ],
   },
   drawer: {
     type: 'drawer',
     props: [
+      CommonProps.type,
       CommonProps.fieldDecoratorId,
       CommonProps.renderId,
-      CommonProps.css,
-      CommonProps.style,
       CommonProps.display,
       CommonProps.label,
       CommonProps.span,
-      CommonProps.tools,
+      CommonProps.childrenColumn,
+      {
+        name: 'closable',
+        type: 'boolean',
+        description: '是否显示关闭按钮',
+        required: true,
+        defaultValue: true,
+      },
+      {
+        name: 'maskClosable',
+        type: 'boolean',
+        description: '是否允许点击遮罩层关闭',
+        required: true,
+        defaultValue: true,
+      },
+      {
+        name: 'height',
+        type: 'string',
+        description: '抽屉高度',
+        required: false,
+        defaultValue: '500px',
+      },
+      {
+        name: 'footerHeight',
+        type: 'string',
+        description: '抽屉底部高度',
+        required: true,
+        defaultValue: '55px',
+      },
+      {
+        name: 'width',
+        type: 'number',
+        description: '抽屉宽度',
+        required: true,
+        defaultValue: 800,
+      },
+      {
+        name: 'title',
+        type: 'string',
+        description: '抽屉标题',
+      },
+      {
+        name: 'placement',
+        type: 'string',
+        description: '抽屉位置',
+        required: true,
+        defaultValue: 'right',
+        options: [
+          {
+            label: '左侧',
+            value: 'left',
+          },
+          {
+            label: '右侧',
+            value: 'right',
+          },
+          {
+            label: '顶部',
+            value: 'top',
+          },
+          {
+            label: '底部',
+            value: 'bottom',
+          },
+        ],
+      },
+      {
+        name: 'tools',
+        type: 'object',
+        description: '工具配置',
+        required: true,
+        defaultValue: {
+          'showClear': true,
+        },
+      },
+      CommonProps.parentLabelCol,
+      CommonProps.parentWrapperCol,
+      CommonProps.parentSpan,
     ],
   },
   modal: {
     type: 'modal',
     props: [
+      CommonProps.type,
       CommonProps.fieldDecoratorId,
       CommonProps.renderId,
-      CommonProps.css,
-      CommonProps.style,
       CommonProps.display,
       CommonProps.label,
       CommonProps.span,
+      CommonProps.childrenColumn,
+      {
+        name: 'title',
+        type: 'string',
+        description: '标题',
+        required: true,
+        defaultValue: '标题',
+      },
+      {
+        name: 'width',
+        type: 'number',
+        description: '宽度',
+        required: true,
+        defaultValue: 800,
+      },
+      {
+        name: 'height',
+        type: 'number',
+        description: '高度',
+        required: true,
+        defaultValue: 500,
+      },
+      {
+        name: 'okText',
+        type: 'string',
+        description: '确定按钮文字',
+        required: true,
+        defaultValue: '确定',
+      },
+      {
+        name: 'okType',
+        type: 'string',
+        description: '确定按钮类型',
+        required: true,
+        defaultValue: 'primary',
+        options: [
+          {
+            label: '主要',
+            value: 'primary',
+          },
+          {
+            label: '默认',
+            value: 'default',
+          },
+          {
+            label: '虚线',
+            value: 'dashed',
+          },
+          {
+            label: '链接',
+            value: 'link',
+          },
+          {
+            label: '文本',
+            value: 'text',
+          },
+          {
+            label: '危险',
+            value: 'danger',
+          },
+        ],
+      },
+      {
+        name: 'cancelText',
+        type: 'string',
+        description: '取消按钮文字',
+        required: true,
+        defaultValue: '取消',
+      },
       CommonProps.tools,
+      {
+        name: 'maskClosable',
+        type: 'boolean',
+        description: '是否允许点击遮罩层关闭',
+        required: true,
+        defaultValue: true,
+      },
+      {
+        name: 'destroyOnClose',
+        type: 'boolean',
+        description: '关闭后销毁 Modal 里的子元素',
+        required: true,
+        defaultValue: true,
+      },
+      {
+        name: 'draggable',
+        type: 'boolean',
+        description: '是否可拖拽',
+        required: false,
+        defaultValue: false,
+      },
+      {
+        name: 'closeModalAfterOk',
+        type: 'boolean',
+        description: '点击确定按钮后关闭 Modal',
+        required: true,
+        defaultValue: true,
+      },
+      {
+        name: 'keyboard',
+        type: 'boolean',
+        description: '是否支持键盘 esc 关闭',
+        required: true,
+        defaultValue: true,
+      },
+      {
+        name: 'hideSave',
+        type: 'boolean',
+        description: '是否隐藏确定按钮',
+        required: false,
+        defaultValue: false,
+      },
+      CommonProps.parentLabelCol,
+      CommonProps.parentWrapperCol,
+      CommonProps.parentSpan,
     ],
   },
   'border-layout': {
@@ -502,21 +904,196 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.tools,
-      CommonProps.dataType,
-      CommonProps.staticData,
+      CommonProps.itemStyle,
+      {
+        name: 'layout',
+        type: 'object',
+        description: '布局配置，配置上下左右模块容器的范围边界大小, 高度和宽度为字符串',
+        required: true,
+        defaultValue: {
+          'header': '0',
+          'right': '0',
+          'left': '0',
+          'footer': '0',
+        },
+        example: {
+          'header': '200px',
+          'right': '0',
+          'left': '256px',
+          'footer': '55px',
+        }
+      },
+      {
+        name: 'headerCfg',
+        type: 'object',
+        description: '头部配置, title表示头部标题，showBar是否显示工具条，expand表示是否可展开收起，expandText表示展开按钮文字，FoldText表示收起按钮文字，barHeight表示工具条高度，showBorder表示是否显示工具条边框',
+        required: true,
+        defaultValue: {
+          "title": "",
+          "showBar": false,
+          "expand": false,
+          "expandText": "收起",
+          "FoldText": "展开",
+          "barHeight": "0",
+          "showBorder": false
+        }
+      },
+      {
+        name: 'leftCfg',
+        type: 'object',
+        description: '左侧配置, title表示左侧标题，showBar是否显示工具条，expand表示是否可展开收起，expandText表示展开按钮文字，FoldText表示收起按钮文字，barHeight表示工具条高度，showBorder表示是否显示工具条边框',
+        required: true,
+        defaultValue: {
+          "title": "",
+          "showBar": false,
+          "expand": false,
+          "expandText": "收起",
+          "FoldText": "展开",
+          "barHeight": "0",
+        }
+      },
+      {
+        name: 'rightCfg',
+        type: 'object',
+        description: '右侧配置, title表示右侧标题，showBar是否显示工具条，expand表示是否可展开收起，expandText表示展开按钮文字，FoldText表示收起按钮文字，barHeight表示工具条高度，showBorder表示是否显示工具条边框',
+        required: true,
+        defaultValue: {
+          "title": "",
+          "showBar": false,
+          "expand": false,
+          "expandText": "收起",
+          "FoldText": "展开",
+          "barHeight": "0",
+          "showBorder": false
+        }
+      },
+      {
+        name: 'footerCfg',
+        type: 'object',
+        description: '底部配置, title表示底部标题，showBar是否显示工具条，expand表示是否可展开收起，expandText表示展开按钮文字，FoldText表示收起按钮文字，barHeight表示工具条高度，showBorder表示是否显示工具条边框',
+        required: true,
+        defaultValue: {
+          "title": "",
+          "showBar": false,
+          "expand": false,
+          "expandText": "收起",
+          "FoldText": "展开",
+          "barHeight": "0",
+        }
+      },
+      {
+        name: 'centerCfg',
+        type: 'object',
+        description: 'title表示中心标题，barHeight表示工具条高度，footerHeight表示底部工具条高度',
+        required: true,
+        defaultValue: {
+          "title": "",
+          "barHeight": "0",
+          "footerHeight": "0"
+        }
+      },
+      {
+        name: 'children',
+        type: 'object',
+        description: '子组件放置位置',
+        required: true,
+        example: {
+          "centers": [
+            {
+              "type": "single-input",
+              "label": "输入框",
+              "span": 8,
+              "display": "true",
+              "autoShow": false,
+              "tools": {},
+              "fieldDecoratorId": "KU849K4I",
+              "renderId": "JOM73JTO9157",
+              "labelStyle": "{}"
+            }
+          ],
+          "headers": [
+
+          ],
+          "headerExtra": [],
+          "footers": [],
+          "footerExtra": [],
+          "lefts": [          {
+            "type": "multi-input",
+            "label": "多行输入框",
+            "autoShow": false,
+            "autoSize": true,
+            "span": 8,
+            "display": "true",
+            "tools": {},
+            "fieldDecoratorId": "NAEDSM6O",
+            "renderId": "OHNMQP9QSDU5",
+            "labelStyle": "{}"
+          }],
+          "leftExtra": [],
+          "rights": [],
+          "rightExtra": [],
+          "centerExtra": [],
+          "centerFooter": []
+        },
+        defaultValue: {
+          "centers": [],
+          "headers": [],
+          "headerExtra": [],
+          "footers": [],
+          "footerExtra": [],
+          "lefts": [],
+          "leftExtra": [],
+          "rights": [],
+          "rightExtra": [],
+          "centerExtra": [],
+          "centerFooter": []
+        }
+      },
+      {
+        name: 'fitHeight',
+        type: 'string',
+        description: '填充高度',
+        required: true,
+        defaultValue: '100%',
+      },
+      {
+        name: 'showBorder',
+        type: 'boolean',
+        description: '是否显示边框',
+        required: true,
+        defaultValue: true,
+      },
+      {
+        name: 'showPadding',
+        type: 'boolean',
+        description: '是否显示内边距',
+        required: true,
+        defaultValue: true,
+      },
     ],
   },
   search: {
     type: 'search',
     props: [
+      CommonProps.type,
       CommonProps.fieldDecoratorId,
       CommonProps.renderId,
-      CommonProps.css,
-      CommonProps.style,
       CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       CommonProps.tools,
+      CommonProps.parentLabelCol,
+      CommonProps.parentWrapperCol,
+      CommonProps.parentSpan,
+      CommonProps.isRender,
+      CommonProps.childrenColumn,
+      {
+        name: 'cardHeadStyle',
+        type: 'string',
+        description: '搜索栏标题样式',
+        required: false,
+        example: 'color: red;font-size:16px',
+      },
     ],
   },
   'single-input': {
@@ -1335,7 +1912,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.dataType,
-      CommonProps.style
+      CommonProps.style,
     ],
   },
   dynamic: {
