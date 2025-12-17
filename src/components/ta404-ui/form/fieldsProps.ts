@@ -563,15 +563,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.style,
       CommonProps.display,
       CommonProps.labelText,
-      {
-        name: 'tools',
-        type: 'object',
-        description: '工具配置',
-        required: true,
-        defaultValue: {
-          'showClear': true,
-        },
-      },
+      CommonProps.tools,
       {
         name: 'tabPosition',
         type: 'string',
@@ -651,15 +643,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         required: true,
         defaultValue: true,
       },
-      {
-        name: 'tools',
-        type: 'object',
-        description: '工具配置',
-        required: true,
-        defaultValue: {
-          'showClear': true,
-        },
-      },
+      CommonProps.tools,
       {
         name: 'staticData',
         type: 'Array',
@@ -716,15 +700,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         required: false,
         example: 'width:800px;height:400px',
       },
-      {
-        name: 'tools',
-        type: 'object',
-        description: '工具配置',
-        required: true,
-        defaultValue: {
-          'showClear': true,
-        },
-      },
+      CommonProps.tools,
       {
         name: 'headButtons',
         type: 'Array',
@@ -825,15 +801,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'tools',
-        type: 'object',
-        description: '工具配置',
-        required: true,
-        defaultValue: {
-          'showClear': true,
-        },
-      },
+      CommonProps.tools,
       CommonProps.parentLabelCol,
       CommonProps.parentWrapperCol,
       CommonProps.parentSpan,
@@ -1171,59 +1139,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   'single-input': {
     type: 'single-input',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -1231,12 +1162,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         required: true,
         defaultValue: false,
       },
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位提示文字',
-        required: false,
-      },
+      CommonProps.placeholder,
       {
         name: 'disabled',
         type: 'boolean',
@@ -1255,19 +1181,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -1298,13 +1213,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'allowClear',
-        type: 'boolean',
-        description: '是否允许清除 / 是否支持清空',
-        required: false,
-        defaultValue: true,
-      },
+      CommonProps.allowClear,
       {
         name: 'addonBefore',
         type: 'string',
@@ -1364,59 +1273,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   'input-group': {
     type: 'input-group',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -1496,59 +1368,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   'input-search': {
     type: 'input-search',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -1563,12 +1398,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         required: false,
         defaultValue: false,
       },
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位提示文字',
-        required: false,
-      },
+      CommonProps.placeholder,
       {
         name: 'disabled',
         type: 'boolean',
@@ -1587,19 +1417,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -1660,59 +1479,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   password: {
     type: 'password',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -1720,12 +1502,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         required: true,
         defaultValue: false,
       },
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位提示文字',
-        required: false,
-      },
+      CommonProps.placeholder,
       {
         name: 'disabled',
         type: 'boolean',
@@ -1744,19 +1521,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -1787,13 +1553,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'allowClear',
-        type: 'boolean',
-        description: '是否允许清除 / 是否支持清空',
-        required: false,
-        defaultValue: true,
-      },
+      CommonProps.allowClear,
       {
         name: 'addonBefore',
         type: 'string',
@@ -1852,59 +1612,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   'multi-input': {
     type: 'multi-input',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -1919,12 +1642,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         required: false,
         defaultValue: true,
       },
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位提示文字',
-        required: false,
-      },
+      CommonProps.placeholder,
       {
         name: 'disabled',
         type: 'boolean',
@@ -1943,19 +1661,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -2046,59 +1753,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   number: {
     type: 'number',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -2113,12 +1783,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         required: false,
         defaultValue: '.',
       },
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位提示文字',
-        required: false,
-      },
+      CommonProps.placeholder,
       {
         name: 'disabled',
         type: 'boolean',
@@ -2137,19 +1802,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -2275,59 +1929,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   rpc: {
     type: 'rpc',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -2356,12 +1973,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位提示文字',
-        required: false,
-      },
+      CommonProps.placeholder,
       {
         name: 'disabled',
         type: 'boolean',
@@ -2380,19 +1992,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -2400,13 +2001,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         required: false,
         example: '请填写单行文本信息',
       },
-      {
-        name: 'allowClear',
-        type: 'boolean',
-        description: '是否允许清除 / 是否支持清空',
-        required: false,
-        defaultValue: true,
-      },
+      CommonProps.allowClear,
       {
         name: 'dropdownTrigger',
         type: 'string',
@@ -2528,59 +2123,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   switch: {
     type: 'switch',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -2606,19 +2164,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'isRender',
         type: 'string',
@@ -2665,59 +2212,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   radio: {
     type: 'radio',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -2764,19 +2274,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -2882,59 +2381,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   checkbox: {
     type: 'checkbox',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -2981,19 +2443,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -3079,59 +2530,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   select: {
     type: 'select',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -3160,12 +2574,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位提示文字',
-        required: false,
-      },
+      CommonProps.placeholder,
       {
         name: 'disabled',
         type: 'boolean',
@@ -3184,19 +2593,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -3228,13 +2626,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'allowClear',
-        type: 'boolean',
-        description: '是否允许清除 / 是否支持清空',
-        required: false,
-        defaultValue: true,
-      },
+      CommonProps.allowClear,
       {
         name: 'isRender',
         type: 'string',
@@ -3342,59 +2734,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   cascader: {
     type: 'cascader',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -3423,12 +2778,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位提示文字',
-        required: false,
-      },
+      CommonProps.placeholder,
       {
         name: 'disabled',
         type: 'boolean',
@@ -3447,19 +2797,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -3491,13 +2830,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'allowClear',
-        type: 'boolean',
-        description: '是否允许清除 / 是否支持清空',
-        required: false,
-        defaultValue: true,
-      },
+      CommonProps.allowClear,
       {
         name: 'isRender',
         type: 'string',
@@ -3582,59 +2915,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   tree: {
     type: 'tree',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -3663,12 +2959,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位提示文字',
-        required: false,
-      },
+      CommonProps.placeholder,
       {
         name: 'disabled',
         type: 'boolean',
@@ -3687,19 +2978,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'message',
         type: 'string',
@@ -3731,13 +3011,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        name: 'allowClear',
-        type: 'boolean',
-        description: '是否允许清除 / 是否支持清空',
-        required: false,
-        defaultValue: true,
-      },
+      CommonProps.allowClear,
       {
         name: 'isRender',
         type: 'string',
@@ -3810,59 +3084,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   rate: {
     type: 'rate',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -3888,19 +3125,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'isRender',
         type: 'string',
@@ -3968,59 +3194,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   slider: {
     type: 'slider',
     props: [
-      {
-        name: 'fieldDecoratorId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        required: true,
-      },
-      {
-        name: 'renderId',
-        type: 'string',
-        description: '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        required: true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
       {
         name: 'css',
         type: 'string',
         description: 'CSS样式',
       },
-      {
-        name: 'style',
-        type: 'string',
-        description: '组件样式',
-        example: 'color:red;font-size:20px',
-      },
-      {
-        name: 'display',
-        type: 'string',
-        description: '是否显示组件',
-        defaultValue: 'true',
-        required: false,
-        options: [
-          {
-            value: 'false',
-            label: '否',
-          },
-          {
-            value: 'true',
-            label: '是',
-          },
-        ],
-      },
+      CommonProps.style,
+      CommonProps.display,
       {
         name: 'label',
         type: 'string',
         description: '组件显示名称',
         required: true,
       },
-      {
-        name: 'span',
-        type: 'number',
-        description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        required: true,
-        defaultValue: 8,
-      },
+      CommonProps.span,
       {
         name: 'autoShow',
         type: 'boolean',
@@ -4046,19 +3235,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
         description: '默认值，类型根据组件类型而定',
         required: false,
       },
-      {
-        name: 'fieldsAlias',
-        type: 'string',
-        description: '组件字段别名',
-        required: false,
-      },
-      {
-        name: 'extra',
-        type: 'string',
-        description: '额外描述信息',
-        required: false,
-        example: '我是额外信息，主要用于补充描述该项属性的填写注意事项',
-      },
+      CommonProps.fieldsAlias,
+      CommonProps.extra,
       {
         name: 'step',
         type: 'number',
@@ -4206,13 +3384,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -4311,13 +3483,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -4525,13 +3691,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -4680,13 +3840,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -4962,13 +4116,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -5187,13 +4335,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -5404,13 +4546,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -5617,13 +4753,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -5834,13 +4964,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -6043,13 +5167,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -6260,13 +5378,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -6477,13 +5589,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -6694,13 +5800,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '{"color":"red"}',
       },
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'isLongLabel',
         'type': 'boolean',
@@ -8203,13 +7303,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
     props: [
       CommonProps.label,
       CommonProps.span,
-      {
-        'name': 'labelWidth',
-        'type': 'number',
-        'description': '标签宽度',
-        'required': false,
-        'example': 100,
-      },
+      CommonProps.labelWidth,
       {
         'name': 'longLabel',
         'type': 'boolean',
