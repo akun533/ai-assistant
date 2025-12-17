@@ -101,7 +101,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
     type: 'string',
     description: '验证提示信息',
     required: false,
-    example: '请填写单行文本信息',
+    example: '请填写文本信息',
   },
   rules: {
     name: 'rules',
@@ -1158,13 +1158,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       {
         name: 'rules',
         type: 'string',
@@ -1319,13 +1313,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       CommonProps.isRender,
       CommonProps.labelCol,
       CommonProps.wrapperCol,
@@ -1363,13 +1351,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       {
         name: 'rules',
         type: 'string',
@@ -1443,13 +1425,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       {
         name: 'rules',
         type: 'string',
@@ -1518,13 +1494,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       {
         name: 'rules_object',
         type: 'object',
@@ -1628,13 +1598,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       CommonProps.allowClear,
       {
         name: 'dropdownTrigger',
@@ -1770,13 +1734,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       {
         name: 'validateTrigger',
         type: 'Array',
@@ -1853,13 +1811,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       {
         name: 'rules_object',
         type: 'object',
@@ -1917,13 +1869,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       {
         name: 'rules_object',
         type: 'object',
@@ -2041,13 +1987,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       {
         name: 'rules_object',
         type: 'object',
@@ -2142,13 +2082,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       CommonProps.fieldsAlias,
       CommonProps.extra,
-      {
-        name: 'message',
-        type: 'string',
-        description: '验证提示信息',
-        required: false,
-        example: '请填写单行文本信息',
-      },
+      CommonProps.message,
       {
         name: 'rules_object',
         type: 'object',
@@ -2326,12 +2260,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -2374,12 +2303,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -2531,12 +2455,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -2622,12 +2541,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -2778,12 +2692,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -2928,12 +2837,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -3090,12 +2994,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -3244,12 +3143,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -3394,12 +3288,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -3548,12 +3437,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -3694,12 +3578,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -3848,12 +3727,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -4002,12 +3876,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.autoShow,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.required,
       {
         'name': 'initialValue',
@@ -5160,12 +5029,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.css,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.display,
       CommonProps.autoShow,
       CommonProps.labelText,
@@ -5284,12 +5148,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.extra,
       CommonProps.css,
       CommonProps.required,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.display,
       CommonProps.fieldDecoratorId,
       CommonProps.renderId,
@@ -5472,12 +5331,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.span,
       CommonProps.display,
-      {
-        'name': 'disabled',
-        'type': 'boolean',
-        'description': '是否禁用输入框',
-        'required': false,
-      },
+      CommonProps.disabled,
       CommonProps.css,
       CommonProps.fieldDecoratorId,
       CommonProps.renderId,
