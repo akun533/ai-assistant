@@ -4133,29 +4133,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   color: {
     type: 'color',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -4173,19 +4154,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -4284,29 +4254,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   photo: {
     type: 'photo',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -4324,19 +4275,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -4544,29 +4484,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   upload: {
     type: 'upload',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -4584,19 +4505,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -4717,29 +4627,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   transfer: {
     type: 'transfer',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -4757,19 +4648,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -4997,29 +4877,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   year: {
     type: 'year',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -5037,19 +4898,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -5256,29 +5106,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   quarter: {
     type: 'quarter',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -5296,19 +5127,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -5527,29 +5347,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   month: {
     type: 'month',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -5567,19 +5368,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -5790,29 +5580,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   week: {
     type: 'week',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -5830,19 +5601,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -6049,29 +5809,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   date: {
     type: 'date',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -6089,19 +5830,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -6312,29 +6042,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   time: {
     type: 'time',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -6352,19 +6063,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -6567,29 +6267,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   datetime: {
     type: 'datetime',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -6607,19 +6288,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -6830,29 +6500,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   daterange: {
     type: 'daterange',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -6870,19 +6521,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -7093,29 +6733,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   datetimerange: {
     type: 'datetimerange',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -7133,19 +6754,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -7356,29 +6966,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   richText: {
     type: 'richText',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -7396,19 +6987,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'content',
         'type': 'string',
@@ -7420,29 +7000,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   echarts: {
     type: 'echarts',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -7460,19 +7021,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'dataType',
         'type': 'string',
@@ -7620,29 +7170,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   dynamic: {
     type: 'dynamic',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -7660,19 +7191,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'dataType',
         'type': 'string',
@@ -7694,12 +7214,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'rowKey',
         'type': 'string',
@@ -7829,29 +7344,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   bigTable: {
     type: 'bigTable',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -7869,19 +7365,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'labelText',
         'type': 'boolean',
@@ -7945,12 +7430,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'example': '[{"name":"张三","id":"10010"}]',
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'border',
         'type': 'string',
@@ -8264,29 +7744,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   span: {
     type: 'span',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -8304,19 +7765,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'labelText',
         'type': 'boolean',
@@ -8324,12 +7774,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': false,
         'defaultValue': false,
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'text',
         'type': 'string',
@@ -8342,29 +7787,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   p: {
     type: 'p',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -8382,19 +7808,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'labelText',
         'type': 'boolean',
@@ -8402,12 +7817,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': false,
         'defaultValue': false,
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'pText',
         'type': 'string',
@@ -8431,29 +7841,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   steps: {
     type: 'steps',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -8471,19 +7862,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'size',
         'type': 'string',
@@ -8533,12 +7913,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'direction',
         'type': 'string',
@@ -8623,29 +7998,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
   timeline: {
     type: 'timeline',
     props: [
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
       {
         'name': 'display',
         'type': 'string',
@@ -8663,19 +8019,8 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.label,
+      CommonProps.span,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -8711,12 +8056,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'mode',
         'type': 'string',
@@ -8775,53 +8115,22 @@ const ComponentsProps:Record<string, ComponentProp> = {
   'e-tree': {
     type: 'e-tree',
     props: [
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
+      CommonProps.label,
       {
         'name': 'id',
         'type': 'string',
         'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
         'required': true,
       },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
+      CommonProps.span,
+      CommonProps.css,
       {
         'name': 'disabled',
         'type': 'boolean',
         'description': '是否禁用输入框',
         'required': false,
       },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       {
         'name': 'autoShow',
         'type': 'boolean',
@@ -8829,13 +8138,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': true,
         'defaultValue': false,
       },
-      {
-        'name': 'labelText',
-        'type': 'boolean',
-        'description': 'Label的展示方式，为true则表示label为纯文本展示，不能编辑组件的label',
-        'required': false,
-        'defaultValue': true,
-      },
+      CommonProps.labelText,
       {
         'name': 'itemStyle',
         'type': 'string',
@@ -8871,12 +8174,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': false,
         'example': '[{"name":"张三","id":"10010"}]',
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'height',
         'type': 'number',
@@ -8918,36 +8216,9 @@ const ComponentsProps:Record<string, ComponentProp> = {
   iframe: {
     type: 'iframe',
     props: [
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.span,
+      CommonProps.label,
+      CommonProps.display,
       {
         'name': 'id',
         'type': 'string',
@@ -8974,53 +8245,18 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'description': 'iframe 的 src 属性',
         'required': false,
       },
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
-      {
-        'name': 'labelText',
-        'type': 'boolean',
-        'description': 'Label的展示方式，为true则表示label为纯文本展示，不能编辑组件的label',
-        'required': false,
-        'defaultValue': true,
-      },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
+      CommonProps.labelText,
+      CommonProps.tools,
     ],
   },
   'tree-modal': {
     type: 'tree-modal',
     props: [
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
+      CommonProps.label,
       {
         'name': 'id',
         'type': 'string',
@@ -9046,11 +8282,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': false,
         'example': '我是额外信息，主要用于补充描述该项属性的填写注意事项',
       },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
+      CommonProps.css,
       {
         'name': 'required',
         'type': 'boolean',
@@ -9063,41 +8295,10 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'description': '是否禁用输入框',
         'required': false,
       },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.display,
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.style,
       {
         'name': 'width',
         'type': 'number',
@@ -9139,12 +8340,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': false,
         'example': '[{"name":"张三","id":"10010"}]',
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'title',
         'type': 'string',
@@ -9205,78 +8401,21 @@ const ComponentsProps:Record<string, ComponentProp> = {
   space: {
     type: 'space',
     props: [
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
+      CommonProps.label,
       {
         'name': 'id',
         'type': 'string',
         'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
         'required': true,
       },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
-      {
-        'name': 'labelText',
-        'type': 'boolean',
-        'description': 'Label的展示方式，为true则表示label为纯文本展示，不能编辑组件的label',
-        'required': false,
-        'defaultValue': true,
-      },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.span,
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
+      CommonProps.display,
+      CommonProps.labelText,
+      CommonProps.tools,
       {
         'name': 'itemStyle',
         'type': 'string',
@@ -9289,59 +8428,13 @@ const ComponentsProps:Record<string, ComponentProp> = {
   divider: {
     type: 'divider',
     props: [
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.label,
+      CommonProps.span,
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
+      CommonProps.display,
       {
         'name': 'itemStyle',
         'type': 'string',
@@ -9349,76 +8442,25 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': false,
         'example': 'color:red;font-size:20px',
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
     ],
   },
   'label-con': {
     type: 'label-con',
     props: [
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
+      CommonProps.label,
       {
         'name': 'id',
         'type': 'string',
         'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
         'required': true,
       },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.css,
+      CommonProps.display,
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.style,
+      CommonProps.span,
       {
         'name': 'labelCol',
         'type': 'object',
@@ -9426,12 +8468,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': false,
         'defaultValue': 6,
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'itemStyle',
         'type': 'string',
@@ -9473,71 +8510,25 @@ const ComponentsProps:Record<string, ComponentProp> = {
   button: {
     type: 'button',
     props: [
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
+      CommonProps.label,
       {
         'name': 'id',
         'type': 'string',
         'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
         'required': true,
       },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.span,
+      CommonProps.display,
       {
         'name': 'disabled',
         'type': 'boolean',
         'description': '是否禁用输入框',
         'required': false,
       },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
+      CommonProps.css,
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.style,
       {
         'name': 'size',
         'type': 'string',
@@ -9559,12 +8550,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'itemStyle',
         'type': 'string',
@@ -9587,25 +8573,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
   'button-label': {
     type: 'button-label',
     props: [
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
+      CommonProps.label,
       {
         'name': 'id',
         'type': 'string',
         'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
         'required': true,
       },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
+      CommonProps.span,
       {
         'name': 'labelWidth',
         'type': 'number',
@@ -9626,46 +8601,11 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'required': false,
         'defaultValue': 6,
       },
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
+      CommonProps.display,
       {
         'name': 'size',
         'type': 'string',
@@ -9687,12 +8627,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'buttonLabel',
         'type': 'string',
@@ -9713,65 +8648,19 @@ const ComponentsProps:Record<string, ComponentProp> = {
   'button-group': {
     type: 'button-group',
     props: [
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
+      CommonProps.label,
       {
         'name': 'id',
         'type': 'string',
         'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
         'required': true,
       },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.span,
+      CommonProps.css,
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.style,
+      CommonProps.display,
       {
         'name': 'dataType',
         'type': 'string',
@@ -9821,12 +8710,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
           },
         ],
       },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.tools,
       {
         'name': 'groupType',
         'type': 'string',
@@ -9866,78 +8750,15 @@ const ComponentsProps:Record<string, ComponentProp> = {
   report: {
     type: 'report',
     props: [
-      {
-        'name': 'id',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'label',
-        'type': 'string',
-        'description': '组件显示名称',
-        'required': true,
-      },
-      {
-        'name': 'fieldDecoratorId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的8位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'renderId',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
-        'name': 'css',
-        'type': 'string',
-        'description': 'CSS样式',
-      },
-      {
-        'name': 'style',
-        'type': 'string',
-        'description': '组件样式',
-        'example': 'color:red;font-size:20px',
-      },
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'required': false,
-        'defaultValue': 'true',
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
-      {
-        'name': 'span',
-        'type': 'number',
-        'description': '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数。默认值：8，可选值：1-24',
-        'required': true,
-        'defaultValue': 8,
-      },
-      {
-        'name': 'labelText',
-        'type': 'boolean',
-        'description': 'Label的展示方式，为true则表示label为纯文本展示，不能编辑组件的label',
-        'required': false,
-        'defaultValue': true,
-      },
-      {
-        'name': 'tools',
-        'type': 'object',
-        'description': '工具配置',
-        'required': true,
-      },
+      CommonProps.label,
+      CommonProps.fieldDecoratorId,
+      CommonProps.renderId,
+      CommonProps.css,
+      CommonProps.style,
+      CommonProps.display,
+      CommonProps.span,
+      CommonProps.labelText,
+      CommonProps.tools,
       {
         'name': 'formParams',
         'type': 'Array',
