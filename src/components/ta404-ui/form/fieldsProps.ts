@@ -4137,23 +4137,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -4258,23 +4242,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -4488,23 +4456,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -4631,23 +4583,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -4881,23 +4817,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -5110,23 +5030,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -5351,23 +5255,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -5584,23 +5472,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -5813,23 +5685,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -6046,23 +5902,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -6271,23 +6111,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -6504,23 +6328,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -6737,23 +6545,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -6970,23 +6762,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -7004,23 +6780,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -7174,23 +6934,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -7348,23 +7092,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -7748,23 +7476,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -7791,23 +7503,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -7845,23 +7541,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -8002,23 +7682,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.renderId,
       CommonProps.css,
       CommonProps.style,
-      {
-        'name': 'display',
-        'type': 'string',
-        'description': '是否显示组件',
-        'defaultValue': 'true',
-        'required': false,
-        'options': [
-          {
-            'value': 'false',
-            'label': '否',
-          },
-          {
-            'value': 'true',
-            'label': '是',
-          },
-        ],
-      },
+      CommonProps.display,
       CommonProps.label,
       CommonProps.span,
       {
@@ -8116,12 +7780,6 @@ const ComponentsProps:Record<string, ComponentProp> = {
     type: 'e-tree',
     props: [
       CommonProps.label,
-      {
-        'name': 'id',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
       CommonProps.span,
       CommonProps.css,
       {
@@ -8220,12 +7878,6 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.label,
       CommonProps.display,
       {
-        'name': 'id',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
-      {
         'name': 'fitHeight',
         'type': 'string',
         'description': '填充高度',
@@ -8257,12 +7909,6 @@ const ComponentsProps:Record<string, ComponentProp> = {
     type: 'tree-modal',
     props: [
       CommonProps.label,
-      {
-        'name': 'id',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
       {
         'name': 'initialValue',
         'type': 'string',
@@ -8402,12 +8048,6 @@ const ComponentsProps:Record<string, ComponentProp> = {
     type: 'space',
     props: [
       CommonProps.label,
-      {
-        'name': 'id',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
       CommonProps.span,
       CommonProps.fieldDecoratorId,
       CommonProps.renderId,
@@ -8449,12 +8089,6 @@ const ComponentsProps:Record<string, ComponentProp> = {
     type: 'label-con',
     props: [
       CommonProps.label,
-      {
-        'name': 'id',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
       CommonProps.css,
       CommonProps.display,
       CommonProps.fieldDecoratorId,
@@ -8511,12 +8145,6 @@ const ComponentsProps:Record<string, ComponentProp> = {
     type: 'button',
     props: [
       CommonProps.label,
-      {
-        'name': 'id',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
       CommonProps.span,
       CommonProps.display,
       {
@@ -8574,12 +8202,6 @@ const ComponentsProps:Record<string, ComponentProp> = {
     type: 'button-label',
     props: [
       CommonProps.label,
-      {
-        'name': 'id',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
       CommonProps.span,
       {
         'name': 'labelWidth',
@@ -8649,12 +8271,6 @@ const ComponentsProps:Record<string, ComponentProp> = {
     type: 'button-group',
     props: [
       CommonProps.label,
-      {
-        'name': 'id',
-        'type': 'string',
-        'description': '组件唯一标识符，自动生成，以字母开头的12位随机码（32进制）',
-        'required': true,
-      },
       CommonProps.span,
       CommonProps.css,
       CommonProps.fieldDecoratorId,
