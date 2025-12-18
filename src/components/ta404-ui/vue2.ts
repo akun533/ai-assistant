@@ -8,6 +8,11 @@ export interface TaComponent extends Omit<ComponentInfo, 'events' | 'props' | 'f
   display?: string | boolean;
   tools?: Record<string, any>;
   eventsDefinitions?: Record<string, any>;
+  eventList: {
+    eventType: string; // 事件类型, 如 click、change、blur
+    methodType: string; // 方法类型, 默认为 '1',
+    textarea: string; // 方法内容，函数体
+  }[];
   vueVersion?: 'vue2' | 'vue3' | 'common'; // 可选属性，因为不是所有地方都需要
   [key: string]: any;
 }

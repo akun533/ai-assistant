@@ -40,11 +40,13 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   css: {
     name: 'css',
+    label: 'CSS样式',
     type: 'string',
     description: 'CSS样式',
   },
   style: {
     name: 'style',
+    label: '组件样式',
     type: 'string',
     description: '组件样式',
     example: 'color:red;font-size:20px',
@@ -68,36 +70,42 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   disabled: {
     name: 'disabled',
+    label: '是否禁用',
     type: 'boolean',
     description: '是否禁用输入框',
     required: false,
   },
   placeholder: {
     name: 'placeholder',
+    label: '占位提示文字',
     type: 'string',
     description: '输入框占位提示文字',
     required: false,
   },
   required: {
     name: 'required',
+    label: '是否必填',
     type: 'boolean',
     description: '是否必填',
     required: false,
   },
   label: {
     name: 'label',
+    label: '组件显示名称',
     type: 'string',
     description: '组件显示名称',
     required: true,
   },
   initialValue: {
     name: 'initialValue',
+    label: '默认值',
     type: 'string',
     description: '默认值，类型根据组件类型而定',
     required: false,
   },
   message: {
     name: 'message',
+    label: '验证提示信息',
     type: 'string',
     description: '验证提示信息',
     required: false,
@@ -105,12 +113,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   rules: {
     name: 'rules',
+    label: '自定义验证规则',
     type: 'string',
     description: '自定义验证规则（转义的JSON字符串）',
     required: false,
   },
   extra: {
     name: 'extra',
+    label: '额外描述信息',
     type: 'string',
     description: '额外描述信息',
     required: false,
@@ -118,6 +128,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   span: {
     name: 'span',
+    label: '栅格列数',
     type: 'number',
     description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数',
     required: true,
@@ -125,12 +136,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   tools: {
     name: 'tools',
+    label: '工具配置',
     type: 'object',
     description: '工具配置',
     required: true,
   },
   autoShow: {
     name: 'autoShow',
+    label: '自动显示',
     type: 'boolean',
     description: '是否自动显示组件',
     required: true,
@@ -138,6 +151,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   fieldsAlias: {
     name: 'fieldsAlias',
+    label: '字段别名',
     type: 'string',
     description: '组件字段别名',
     required: false,
@@ -161,6 +175,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   rules_object: {
     name: 'rules',
+    label: '自定义验证规则对象',
     type: 'object',
     description:
         '自定义验证规则（转义的JSON字符串）',
@@ -169,6 +184,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   allowClear: {
     name: 'allowClear',
+    label: '允许清除',
     type: 'boolean',
     description: '是否允许清除 / 是否支持清空',
     required: false,
@@ -176,18 +192,21 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   addonBefore: {
     name: 'addonBefore',
+    label: '前置内容',
     type: 'string',
     description: '前置内容',
     required: false,
   },
   addonAfter: {
     name: 'addonAfter',
+    label: '后置内容',
     type: 'string',
     description: '后置内容',
     required: false,
   },
   isRender: {
     name: 'isRender',
+    label: '是否渲染',
     type: 'string',
     description: '是否渲染元素，为 false 时元素不渲染，表单提交时不验证',
     required: true,
@@ -195,6 +214,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   labelCol: {
     name: 'labelCol',
+    label: '标签栅格',
     type: 'number',
     description: '标签所占栅格，与 wrapperCol 属性合为 24，可选值：1-24',
     required: false,
@@ -202,6 +222,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   wrapperCol: {
     name: 'wrapperCol',
+    label: '封装组件栅格',
     type: 'number',
     description: '封装组件栅格，与 labelCol 合为 24，可选值：1-24',
     required: false,
@@ -209,6 +230,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   labelStyle: {
     name: 'labelStyle',
+    label: '标签样式',
     type: 'string',
     description: '标签样式（转义的JSON字符串）',
     required: true,
@@ -216,6 +238,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   labelWidth: {
     name: 'labelWidth',
+    label: '标签宽度',
     type: 'number',
     description: '标签宽度',
     required: false,
@@ -223,12 +246,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   isLongLabel: {
     name: 'isLongLabel',
+    label: '长文本标签',
     type: 'boolean',
     description: '是否为长文本标签',
     required: false,
   },
   haveEnterButton: {
     name: 'haveEnterButton',
+    label: '显示搜索按钮',
     type: 'boolean',
     description: '是否显示搜索按钮',
     required: false,
@@ -236,12 +261,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   enterButton: {
     name: 'enterButton',
+    label: '搜索按钮文本',
     type: 'string',
     description: '搜索按钮文本',
     required: false,
   },
   itemStyle: {
     name: 'itemStyle',
+    label: '组件样式',
     type: 'string',
     description: '组件样式',
     required: false,
@@ -249,6 +276,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   autoSize: {
     name: 'autoSize',
+    label: '自适应高度',
     type: 'boolean',
     description: '是否根据内容自适应高度',
     required: false,
@@ -256,6 +284,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   rows: {
     name: 'rows',
+    label: '行数',
     type: 'number',
     description:
         '多行文本行数，最小为1的整数。当 autoSize 属性为 false 时需要配置此项，当 autoSize 值为 true 时需要移除此项',
@@ -264,6 +293,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   min: {
     name: 'min',
+    label: '最小值',
     type: 'number',
     description: '最小可输入值',
     required: false,
@@ -271,6 +301,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   max: {
     name: 'max',
+    label: '最大值',
     type: 'number',
     description: '最大可输入值',
     required: false,
@@ -278,6 +309,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   precision: {
     name: 'precision',
+    label: '数字精度',
     type: 'number',
     description: '数字精度,小数点后位数，比如2则为.00',
     required: false,
@@ -286,6 +318,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   step: {
     name: 'step',
+    label: '步长',
     type: 'number',
     description: '值修改时的步长',
     required: false,
@@ -293,18 +326,21 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   asAmount: {
     name: 'asAmount',
+    label: '金额类型',
     type: 'boolean',
     description: '是否为金额类型',
     required: false,
   },
   amountPre: {
     name: 'amountPre',
+    label: '金额前缀',
     type: 'string',
     description: '金额前缀。数值为金额类型时（asAmount 值为 true）此项生效，需要配置',
     required: false,
   },
   alignRight: {
     name: 'alignRight',
+    label: '右对齐',
     type: 'boolean',
     description: '值是否右对齐',
     required: false,
@@ -312,6 +348,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   decimalSeparator: {
     name: 'decimalSeparator',
+    label: '小数点符号',
     type: 'string',
     description: '小数点符号',
     required: false,
@@ -319,6 +356,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   dataType: {
     name: 'dataType',
+    label: '数据源填充方式',
     type: 'string',
     description: '数据源填充方式',
     required: true,
@@ -340,6 +378,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   dropdownTrigger: {
     name: 'dropdownTrigger',
+    label: '查询行为触发方式',
     type: 'string',
     description: '查询行为触发方式',
     required: false,
@@ -361,6 +400,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   dropdownMatchSelectWidth: {
     name: 'dropdownMatchSelectWidth',
+    label: '下拉框与输入框同宽',
     type: 'boolean',
     description: '下拉框与输入框同宽',
     required: false,
@@ -368,6 +408,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   dropdownMatchSelectWidthValue: {
     name: 'dropdownMatchSelectWidthValue',
+    label: '下拉输入框宽度',
     type: 'string',
     description: '下拉输入框宽度，一般为带 px 单位宽度',
     required: false,
@@ -375,6 +416,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   searchDelay: {
     name: 'searchDelay',
+    label: '延迟时间',
     type: 'number',
     description: '延迟时间，当 dropdownTrigger 属性值为 delay 时，此项必须，单位毫秒',
     required: true,
@@ -382,6 +424,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   titleList: {
     name: 'titleList',
+    label: '表头信息配置',
     type: 'Array',
     description:
         '需要展示的表头信息配置，为 JSON 格式的对象数组，对象只能包含 key 和 value 属性。支持配置多组。key 属性表示属性字段变量，value 表示字段名称，不支持其他属性格式',
@@ -399,6 +442,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   optionConfig: {
     name: 'optionConfig',
+    label: '选项配置',
     type: 'object',
     description:
         '配置选中后的实际值对应的字段和显示值对应的字段。格式固定，为 JSON 对象，只能包含 value 和 label 属性，与 titleList 属性 key 关联',
@@ -410,6 +454,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   data: {
     name: 'data',
+    label: '数据项',
     type: 'string',
     description:
         '组件的数据项。格式为经过转义的标准 JSON 格式对象数组字符串。对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联',
@@ -418,6 +463,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   cardHeadStyle: {
     name: 'cardHeadStyle',
+    label: '标题CSS',
     type: 'string',
     description: '标题CSS。标题的CSS样式',
     required: false,
@@ -425,12 +471,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   width: {
     name: 'width',
+    label: '宽度',
     type: 'number',
     description: '宽度。列宽度信息。',
     required: false,
   },
   size: {
     name: 'size',
+    label: '组件大小',
     type: 'string',
     description: '组件大小',
     required: false,
@@ -452,6 +500,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   labelText: {
     name: 'labelText',
+    label: 'Label展示方式',
     type: 'boolean',
     description: 'Label的展示方式，为true则表示label为纯文本展示，不能编辑组件的label',
     required: false,
@@ -459,6 +508,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   staticData: {
     name: 'staticData',
+    label: '静态数据源',
     type: 'string',
     description: '静态数据源，格式为经过转义标准的 JSON 格式对象数组字符串',
     required: false,
@@ -467,6 +517,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   // FIX ME
   format: {
     name: 'format',
+    label: '格式化格式',
     type: 'string',
     description: '格式化格式',
     required: false,
@@ -474,6 +525,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   validNowTime: {
     name: 'validNowTime',
+    label: '仅显示当前时间之后',
     type: 'boolean',
     description: '是否只显示当前时间之后的时间',
     required: false,
@@ -481,6 +533,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   childrenColumn: {
     name: 'children',
+    label: '子组件配置',
     type: 'object',
     description: '子组件配置，column为组件列表',
     required: true,
@@ -490,6 +543,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   childrenColumns: {
     name: 'children',
+    label: '子组件配置',
     type: 'object',
     description: '子组件配置，columns为组件列表',
     required: true,
@@ -499,6 +553,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   parentLabelCol: {
     name: 'parentLabelCol',
+    label: '容器标签栅格',
     type: 'number',
     description: '容器内部表单项组件的标签所占栅格',
     required: false,
@@ -506,6 +561,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   parentWrapperCol: {
     name: 'parentWrapperCol',
+    label: '容器控件栅格',
     type: 'number',
     description: '容器内部表单项组件的录入控件所占栅格',
     required: false,
@@ -513,6 +569,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   parentSpan: {
     name: 'parentSpan',
+    label: '容器占据栅格',
     type: 'number',
     description: '容器内部表单项的占据栅格',
     required: false,
@@ -520,6 +577,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   validNowTimeString:{
     'name': 'validNowTime',
+    'label': '禁用日期范围',
     'type': 'string',
     'description': '禁用日期范围',
     'required': false,
@@ -5319,14 +5377,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       {
         name: 'formConfig.initMethod',
         type: 'string',
-        description: '初始化方法',
+        description: '自定义函数代码块，主要用于定义页面全局函数，优先级高于formConfig.functions',
         required: false,
         defaultValue: '',
       },
       {
         name: 'formConfig.functions',
         type: 'string',
-        description: '函数配置',
+        description: '自定义函数代码块，页面初始化后执行，执行优先级次于initMethod。',
         required: false,
         defaultValue: '',
       },
