@@ -12,7 +12,7 @@ import { PropsDefinition } from '../components/ta404-ui/form/fieldsProps';
 
 export interface ComponentInfo {
   type: string;
-  label: string;
+  label?: string;
   uiFramework: string;
   vueVersion: 'vue2' | 'vue3' | 'common';
   fieldType?: 'input' | 'layout' | 'date' | 'select' | 'display' | 'assist',

@@ -1,6 +1,6 @@
 export interface PropsDefinition {
   name: string;
-  type: 'boolean' | 'string' | 'number' | 'object' | 'Function' | 'Array';
+  type: 'boolean' | 'string' | 'number' | 'object' | 'Function' | 'Array' | 'any';
   defaultValue?: any;
   description?: string;
   options?: Array<{ value: string; label: string} | string | number | boolean>;
@@ -538,7 +538,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
         'label': '今日之后',
       },
     ],
-  }
+  },
 };
 
 const ComponentsProps:Record<string, ComponentProp> = {
@@ -5133,6 +5133,216 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'formParams',
         'type': 'Array',
         'description': '表单参数配置',
+      },
+    ],
+  },
+  'form-container': {
+    type: 'form-container',
+    props: [
+      {
+        name: 'formConfig',
+        type: 'object',
+        description: '表单配置,内部属性配置方式参考 formConfig.开头的属性定义',
+        required: true,
+        defaultValue: {
+          'layout': 'horizontal',
+          'layoutCol': 'auto',
+          'labelCol': 6,
+          'wrapperCol': 18,
+          'header': '0px',
+          'footer': '0px',
+          'left': '0px',
+          'right': '0px',
+          'gutter': 0,
+          'previewDrawerWidth': '95%',
+          'previewDrawerMinWidth': '',
+          'showButton': true,
+          'buttons': [],
+          'backgroundColor': 'white',
+          'initMethod': '',
+          'functions': '',
+          'isLabelWidth': true,
+          'labelWidth': 120,
+        },
+      },
+      {
+        name: 'formColumns',
+        type: 'Array',
+        description: '表单项配置，默认放置子组件的位置',
+        required: true,
+        defaultValue: [],
+      },
+      {
+        name: 'formHeader',
+        type: 'Array',
+        description: '表单头部配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'formLeft',
+        type: 'Array',
+        description: '表单左侧配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'formRight',
+        type: 'Array',
+        description: '表单右侧配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'formFooter',
+        type: 'Array',
+        description: '表单底部配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'version',
+        type: 'object',
+        description: '版本信息',
+        required: true,
+        defaultValue: {
+          'updateTime': 1766025935700,
+        },
+      },
+      {
+        name: 'formConfig.layout',
+        type: 'string',
+        description: '表单项布局',
+        required: true,
+        options: [
+          {
+            value: 'horizontal',
+            label: '水平布局',
+          },
+          {
+            value: 'vertical',
+            label: '垂直布局',
+          },
+        ],
+      },
+      {
+        name: 'formConfig.layoutCol',
+        type: 'any',
+        description: '表单项布局列数,为数字或者"auto"',
+        required: true,
+        defaultValue: 'auto',
+      },
+      {
+        name: 'formConfig.labelCol',
+        type: 'number',
+        description: '标签列宽',
+        required: false,
+        defaultValue: 6,
+      },
+      {
+        name: 'formConfig.wrapperCol',
+        type: 'number',
+        description: '控件列宽',
+        required: false,
+        defaultValue: 18,
+      },
+      {
+        name: 'formConfig.header',
+        type: 'string',
+        description: '头部间距',
+        required: false,
+        defaultValue: '0px',
+      },
+      {
+        name: 'formConfig.footer',
+        type: 'string',
+        description: '底部间距',
+        required: false,
+        defaultValue: '0px',
+      },
+      {
+        name: 'formConfig.left',
+        type: 'string',
+        description: '左侧间距',
+        required: false,
+        defaultValue: '0px',
+      },
+      {
+        name: 'formConfig.right',
+        type: 'string',
+        description: '右侧间距',
+        required: false,
+        defaultValue: '0px',
+      },
+      {
+        name: 'formConfig.gutter',
+        type: 'number',
+        description: '栅格间隔',
+        required: false,
+        defaultValue: 0,
+      },
+      {
+        name: 'formConfig.previewDrawerWidth',
+        type: 'string',
+        description: '预览抽屉宽度',
+        required: false,
+        defaultValue: '95%',
+      },
+      {
+        name: 'formConfig.previewDrawerMinWidth',
+        type: 'string',
+        description: '预览抽屉最小宽度',
+        required: false,
+        defaultValue: '',
+      },
+      {
+        name: 'formConfig.showButton',
+        type: 'boolean',
+        description: '是否显示按钮',
+        required: false,
+        defaultValue: true,
+      },
+      {
+        name: 'formConfig.buttons',
+        type: 'Array',
+        description: '按钮配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'formConfig.backgroundColor',
+        type: 'string',
+        description: '背景颜色',
+        required: false,
+        defaultValue: 'white',
+      },
+      {
+        name: 'formConfig.initMethod',
+        type: 'string',
+        description: '初始化方法',
+        required: false,
+        defaultValue: '',
+      },
+      {
+        name: 'formConfig.functions',
+        type: 'string',
+        description: '函数配置',
+        required: false,
+        defaultValue: '',
+      },
+      {
+        name: 'formConfig.isLabelWidth',
+        type: 'boolean',
+        description: '是否启用标签宽度',
+        required: false,
+        defaultValue: true,
+      },
+      {
+        name: 'formConfig.labelWidth',
+        type: 'number',
+        description: '标签宽度',
+        required: false,
+        defaultValue: 120,
       },
     ],
   },
