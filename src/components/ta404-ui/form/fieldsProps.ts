@@ -1479,6 +1479,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.autoShow,
       {
         name: 'decimalSeparator',
+        label: '小数点符号',
         type: 'string',
         description: '小数点符号',
         required: false,
@@ -1495,6 +1496,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.validateTrigger,
       {
         name: 'min',
+        label: '最小值',
         type: 'number',
         description: '最小可输入值',
         required: false,
@@ -1716,6 +1718,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         name: 'radioButton',
+        label: '按钮样式单选框',
         type: 'boolean',
         description: '是否使用按钮样式的单选框',
         required: false,
@@ -1723,6 +1726,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'buttonStyle',
+        label: '按钮样式填充',
         type: 'boolean',
         description: '按钮样式选中是否填充',
         required: false,
@@ -1730,6 +1734,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'radioStyle',
+        label: '单选框样式',
         type: 'string',
         description: '单选框样式，格式为json',
         required: false,
@@ -1738,6 +1743,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.itemStyle,
       {
         name: 'cancelChecked',
+        label: '可取消选中',
         type: 'boolean',
         description: '可取消选中',
         required: false,
@@ -1805,6 +1811,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         name: 'mode',
+        label: '选择类型',
         type: 'string',
         description: '选择类型',
         required: false,
@@ -1837,6 +1844,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'showValue',
+        label: '显示选项值',
         type: 'boolean',
         description: '是否显示选项值',
         required: false,
@@ -1844,6 +1852,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'dropdownMatchSelectWidth',
+        label: '下拉菜单与选择器同宽',
         type: 'boolean',
         description: '下拉菜单与选择器同宽',
         required: false,
@@ -1851,6 +1860,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'defaultActiveFirstOption',
+        label: '默认高亮第一个选项',
         type: 'boolean',
         description: '默认高亮第一个选项',
         required: false,
@@ -1858,6 +1868,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'openOnFocus',
+        label: '获得焦点时打开下拉菜单',
         type: 'boolean',
         description: '获得焦点时打开下拉菜单',
         required: false,
@@ -2053,6 +2064,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.extra,
       {
         name: 'step',
+        label: '步长',
         type: 'number',
         description: '步长',
         required: false,
@@ -2060,6 +2072,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'min',
+        label: '最小值',
         type: 'number',
         description: '最小值',
         required: false,
@@ -2067,6 +2080,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'max',
+        label: '最大值',
         type: 'number',
         description: '最大值',
         required: false,
@@ -2080,6 +2094,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         name: 'range',
+        label: '范围选择',
         type: 'boolean',
         description: '范围选择',
         required: false,
@@ -2116,6 +2131,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         'name': 'panelPosition',
+        'label': '面板位置',
         'type': 'string',
         'description': '面板位置',
         'required': true,
@@ -2123,6 +2139,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'verticalPosition',
+        'label': '垂直位置',
         'type': 'string',
         'description': '垂直位置',
         'required': true,
@@ -2173,18 +2190,21 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'uploadUrl',
+        'label': '上传地址',
         'type': 'string',
         'description': '上传地址',
         'required': false,
       },
       {
         'name': 'imageUrl',
+        'label': '图片地址',
         'type': 'string',
         'description': '图片src',
         'required': false,
       },
       {
         'name': 'desc',
+        'label': '操作提示',
         'type': 'string',
         'description': '操作提示',
         'required': false,
@@ -2208,6 +2228,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'maxSize',
+        'label': '文件大小限制',
         'type': 'number',
         'description': '文件大小限制',
         'required': false,
@@ -2234,6 +2255,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'widthSize',
+        'label': '宽度限制值',
         'type': 'number',
         'description': '宽度限制值',
         'required': false,
@@ -2260,24 +2282,28 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'heightSize',
+        'label': '高度限制值',
         'type': 'number',
         'description': '高度限制值',
         'required': false,
       },
       {
         'name': 'uploadType',
+        'label': '文件类型限制',
         'type': 'string',
         'description': '文件类型限制',
         'required': false,
       },
       {
         'name': 'labelText',
+        'label': '隐藏标签',
         'type': 'boolean',
         'description': '隐藏标签',
         'required': false,
       },
       {
         'name': 'isView',
+        'label': '查看模式',
         'type': 'boolean',
         'description': '是否为查看模式',
         'required': false,
@@ -5075,6 +5101,32 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'type': 'string',
         'description': '按钮类型',
         'label': '按钮类型',
+        options: [
+          {
+            label: '主要',
+            value: 'primary',
+          },
+          {
+            label: '默认',
+            value: 'default',
+          },
+          {
+            label: '虚线',
+            value: 'dashed',
+          },
+          {
+            label: '链接',
+            value: 'link',
+          },
+          {
+            label: '文本',
+            value: 'text',
+          },
+          {
+            label: '危险',
+            value: 'danger',
+          },
+        ],
       },
       {
         'name': 'icon',
@@ -5142,6 +5194,32 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'type': 'string',
         'description': '按钮类型',
         'label': '按钮类型',
+        options: [
+          {
+            label: '主要',
+            value: 'primary',
+          },
+          {
+            label: '默认',
+            value: 'default',
+          },
+          {
+            label: '虚线',
+            value: 'dashed',
+          },
+          {
+            label: '链接',
+            value: 'link',
+          },
+          {
+            label: '文本',
+            value: 'text',
+          },
+          {
+            label: '危险',
+            value: 'danger',
+          },
+        ],
       },
       {
         'name': 'icon',
