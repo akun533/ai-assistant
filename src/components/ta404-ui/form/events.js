@@ -18,6 +18,6 @@ export const change = {
   label: '输入框内容变化时的回调',
   arguments: [{
     name: 'e',
-    label: '浏览器Event对象',
+    label: 'e是浏览器Event对象，读取输入的值用法为 e.target.value',
   }],
 }

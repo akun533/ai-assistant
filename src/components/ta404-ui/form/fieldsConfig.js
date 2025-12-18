@@ -9,7 +9,6 @@ export default [
         type: 'div',
         icon: 'icon-card',
         label: 'Div容器',
-        placement: 'right',
         span: 24,
         display: 'true', // 是否展示
         tools: {
@@ -39,12 +38,8 @@ export default [
         staticData: [
           {
             tab: 'tab-1',
-            key: 1,
+            key: '1',
             children: {
-              align: 'center',
-              headerAlign: 'center',
-              addBtn: true,
-              delBtn: true,
               column: [],
             },
           }
@@ -274,7 +269,6 @@ export default [
         icon: 'icon-border-layout',
         span: 24,
         display: 'true',
-        dataType: 'remote',
         scroll: {
           x: '100%',
           y: 100,
@@ -330,7 +324,7 @@ export default [
             arguments: [
               {
                 name: 'value',
-                label: '修改后的值',
+                label: '修改后的值, value是浏览器Event对象，读取输入的值用法为 value.target.value',
               }
             ],
           },
@@ -369,7 +363,7 @@ export default [
             label: '点击搜索或按下回车键时的回调',
             arguments: [{
               name: 'value',
-              label: '当前文本值',
+              label: '当前文本值, value即为输入的值',
             }],
           },
         },
@@ -419,7 +413,7 @@ export default [
             label: '变化回调',
             arguments: [{
               name: 'value',
-              label: '变化后的值',
+              label: '变化后的值, value即为输入的值',
             }],
           },
         },
@@ -566,7 +560,7 @@ export default [
             arguments: [
               {
                 name: 'e',
-                label: '$event',
+                label: 'e是浏览器Event对象，读取输入的值用法为 e.target.value',
               }
             ],
           },
@@ -603,7 +597,7 @@ export default [
             arguments: [
               {
                 name: 'value',
-                label: '修改后的值',
+                label: '修改后的值，value即为实际值',
               }
             ],
           },
@@ -641,7 +635,7 @@ export default [
             arguments: [
               {
                 name: 'value',
-                label: '修改后的值',
+                label: '修改后的值，value即为实际值',
               }
             ],
           },
@@ -650,7 +644,7 @@ export default [
             arguments: [
               {
                 name: 'value',
-                label: '选择的值',
+                label: '选择的值，value即为实际值',
               }
             ],
           },
@@ -706,11 +700,11 @@ export default [
             arguments: [
               {
                 name: 'value',
-                label: '修改后的值',
+                label: '修改后的值，value即为实际值',
               },
               {
                 name: 'selectedOptions',
-                label: '该行的行数据',
+                label: '该行的行数据，selectedOptions即为实际值',
               }
             ],
           },
@@ -764,7 +758,7 @@ export default [
             arguments: [
               {
                 name: 'value',
-                label: '修改后的值',
+                label: '修改后的值，value即为实际值',
               }
             ],
           },
@@ -784,7 +778,7 @@ export default [
             label: '选择时的回调',
             arguments: [{
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }],
           },
         },
@@ -806,7 +800,7 @@ export default [
             label: '值发生改变时触发change事件',
             arguments: [{
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }],
           },
         },
@@ -859,7 +853,7 @@ export default [
         autoShow: false,
         isAuto: true,
         fileList: [],
-        uploadUrl: 'http://127.0.0.1:10186/formcenter/demo/uploadFile',
+        uploadUrl: '',
         delUrl: '',
         host: '',
         tools: {},
@@ -881,10 +875,10 @@ export default [
         currentMode: 'normal',
         dataType: 'static',
         staticData: '[\n' +
-          ' { "id": "1101", "title": "content1" , "description": "description of content" , "disabled": false }, \n' +
-          ' { "id": "1102", "title": "content3" , "description": "description of content" , "disabled": false }, \n' +
-          ' { "id": "1103", "title": "content3" , "description": "description of content" , "disabled": true } \n' +
-          ']',
+            ' { "id": "1101", "title": "content1" , "description": "description of content" , "disabled": false }, \n' +
+            ' { "id": "1102", "title": "content3" , "description": "description of content" , "disabled": false }, \n' +
+            ' { "id": "1103", "title": "content3" , "description": "description of content" , "disabled": true } \n' +
+            ']',
         bigTableProps: {
           rowId: 'id',
           column: [{
@@ -976,7 +970,7 @@ export default [
           arguments: [
             {
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }
           ],
         },
@@ -999,7 +993,7 @@ export default [
           arguments: [
             {
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }
           ],
         },
@@ -1022,7 +1016,7 @@ export default [
           arguments: [
             {
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }
           ],
         },
@@ -1045,7 +1039,7 @@ export default [
           arguments: [
             {
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }
           ],
         },
@@ -1069,7 +1063,7 @@ export default [
           arguments: [
             {
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }
           ],
         },
@@ -1092,7 +1086,7 @@ export default [
           arguments: [
             {
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }
           ],
         },
@@ -1115,7 +1109,7 @@ export default [
           arguments: [
             {
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }
           ],
         },
@@ -1138,7 +1132,7 @@ export default [
           arguments: [
             {
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }
           ],
         },
@@ -1161,7 +1155,7 @@ export default [
           arguments: [
             {
               name: 'value',
-              label: '修改后的值',
+              label: '修改后的值，value即为实际值',
             }
           ],
         },
@@ -1191,25 +1185,25 @@ export default [
         display: 'true',
         optionConfigType: 'grap',
         optionJsCode:
-          'const option = {\n' +
-          '  title: {\n' +
-          '    text: "echarts示例"\n' +
-          '  },\n' +
-          '  xAxis: {\n' +
-          '    type: "category",\n' +
-          '    data: [ "衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子" ]\n' +
-          '  },\n' +
-          '  yAxis: {\n' +
-          '    type: "value"\n' +
-          '  },\n' +
-          '  series: [\n' +
-          '    {\n' +
-          '      data: data,\n' +
-          '      type: "bar"\n' +
-          '    }\n' +
-          '  ]\n' +
-          '};\n' +
-          'resolve(option)\n',
+            'const option = {\n' +
+            '  title: {\n' +
+            '    text: "echarts示例"\n' +
+            '  },\n' +
+            '  xAxis: {\n' +
+            '    type: "category",\n' +
+            '    data: [ "衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子" ]\n' +
+            '  },\n' +
+            '  yAxis: {\n' +
+            '    type: "value"\n' +
+            '  },\n' +
+            '  series: [\n' +
+            '    {\n' +
+            '      data: data,\n' +
+            '      type: "bar"\n' +
+            '    }\n' +
+            '  ]\n' +
+            '};\n' +
+            'resolve(option)\n',
         showType: 'xAxis',
         showData: '衬衫,羊毛衫,雪纺衫,裤子,高跟鞋,袜子',
         localData: '10,20,10,10,14,15',
@@ -1427,10 +1421,10 @@ export default [
         size: 'default',
         stepType: 'default',
         staticData: '[\n' +
-          ' { "title": "Started", "description": "This is a description.", "icon": "user", "status": "finish" }, \n' +
-          ' { "title": "In Progress", "description": "This is a description.", "icon": "loading", "status": "process"}, \n' +
-          ' { "title": "Finished", "description": "This is a description.", "icon": "smile-o", "status": "wait"} \n' +
-          ']',
+            ' { "title": "Started", "description": "This is a description.", "icon": "user", "status": "finish" }, \n' +
+            ' { "title": "In Progress", "description": "This is a description.", "icon": "loading", "status": "process"}, \n' +
+            ' { "title": "Finished", "description": "This is a description.", "icon": "smile-o", "status": "wait"} \n' +
+            ']',
         dataType: 'static',
         titleField: 'title',
         descriptionField: 'description',
@@ -1446,9 +1440,9 @@ export default [
         mode: 'left',
         color: 'blue',
         staticData: '[\n' +
-          ' { "time": "2024.07.31", "state": "已发货" }, \n' +
-          ' { "time": "2024.07.30", "state": "待取件" }\n' +
-          ']',
+            ' { "time": "2024.07.31", "state": "已发货" }, \n' +
+            ' { "time": "2024.07.30", "state": "待取件" }\n' +
+            ']',
         dataType: 'static',
         nameField: 'time',
         style: 'padding: 8px 0;',
