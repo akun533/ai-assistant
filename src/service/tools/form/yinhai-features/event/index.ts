@@ -22,7 +22,6 @@ const readEventPrompt = function (): string {
 
 const eventPrompt = readEventPrompt();
 const eventDocsTable = generateEventDocsTable(quickMethodCodeList);
-console.log('eventDocsTable', eventDocsTable);
 export default {
   name: 'event',
   label: '事件交互',
