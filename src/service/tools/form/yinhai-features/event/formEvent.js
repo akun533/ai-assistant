@@ -1,33 +1,3 @@
-import beautifier from 'js-beautify'
-
-export function jsBeautify (code, preserveInline = false) {
-  return beautifier.js(code, {
-    indent_size: 2,
-    indent_char: ' ',
-    max_preserve_newlines: -1,
-    preserve_newlines: false,
-    keep_array_indentation: true,
-    break_chained_methods: true,
-    brace_style: preserveInline ? 'preserve-inline' : 'collapse',
-    space_before_conditional: true,
-    unescape_strings: true,
-    jslint_happy: true,
-    end_with_newline: true,
-    wrap_line_length: 110,
-    comma_first: false,
-    e4x: true,
-    indent_empty_lines: true,
-    js: {
-      indent_level: 0, // 初始缩进级别
-      keep_function_indentation: true, // 保持函数缩进，默认false
-      space_after_anon_function: true, // 在匿名函数的括号前加空格,默认为false
-      space_in_empty_paren: true, // 在括号中留空格，默认为false
-      space_in_paren: true, // 在函数参数之间增加空格，默认为false
-      unindent_chained_methods: true, // Unindent链接方法,默认为false
-    },
-  })
-}
-
 export const funcContent = [
   { name: 'change', desc: '选中选项或输入的值变化时，调用此函数，一个参数： value为变化的值', },
   { name: 'callBack', desc: '数据选中回调方法，方法有两个参数：value为选中会写的值对应设置中\'选中组件值\'，item为选中的行数据', },
