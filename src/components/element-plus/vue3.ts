@@ -1,5 +1,5 @@
 import { ComponentInfo } from '../../core/component-registry.js';
-import { commonComponents } from '../common'
+import { commonComponents } from '../common/index.js'
 
 
 export const elementPlusComponents: ComponentInfo[] = [

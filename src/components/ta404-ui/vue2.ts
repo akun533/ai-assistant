@@ -23,8 +23,8 @@ export interface TaComponentGroup {
   list: TaComponent[];
 }
 
-import fieldsProps, { PropsDefinition } from './form/fieldsProps';
-import taComponents from './form/form-container';
+import fieldsProps, { PropsDefinition } from './form/fieldsProps.js';
+import taComponents from './form/form-container.js';
 
 /**
  * 解析组件事件配置
