@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "tsx src/service/index.ts",
     "start:build": "tsc && node dist/service/index.js",
+    "build:backend": "node build-backend.cjs",
     "lint": "eslint src --ext .ts,.js",
     "lint:fix": "eslint src --ext .ts,.js --fix",
     "format": "prettier --write src/**/*.{ts,js,json,md}",
