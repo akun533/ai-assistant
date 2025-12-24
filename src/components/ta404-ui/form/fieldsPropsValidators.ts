@@ -5,7 +5,7 @@
  */
 
 import fieldsConfig from './fieldsConfig.js';
-import ComponentsProps from './fieldsProps';
+import ComponentsProps from './fieldsProps.js';
 
 // 类型定义
 interface ValidationSchema {

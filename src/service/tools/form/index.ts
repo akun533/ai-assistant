@@ -1,8 +1,8 @@
 import { applyJSONPatch } from '../../../core/json-patch-validator.js';
-import { createResponse, removeRulePrefix } from '../../../utils';
-import { ToolArgs, ToolContext, ToolRegistration, ValidateDetails } from '../types';
-import featuresMap, { features } from './features';
-import yinhaiFeaturesMap from './yinhai-features';
+import { createResponse, removeRulePrefix } from '../../../utils/index.js';
+import { ToolArgs, ToolContext, ToolRegistration, ValidateDetails } from '../types/index.js';
+import featuresMap, { features } from './features/index.js';
+import yinhaiFeaturesMap from './yinhai-features/index.js';
 
 // 常量定义
 const DEFAULT_UI_FRAMEWORK = 'element-plus';

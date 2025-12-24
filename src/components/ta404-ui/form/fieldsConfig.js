@@ -1,4 +1,4 @@
-import { change, click, blur, } from './events'
+import { change, click, blur, } from './events.js'
 
 export default [
   {

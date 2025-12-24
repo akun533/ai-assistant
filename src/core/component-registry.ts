@@ -6,9 +6,9 @@ import {
   vantComponents,
   vantVue2Components,
   ta404uiComponents,
-} from '../components/index';
-import usages from '../components/usages';
-import { PropsDefinition } from '../components/ta404-ui/form/fieldsProps';
+} from '../components/index.js';
+import usages from '../components/usages.js';
+import { PropsDefinition } from '../components/ta404-ui/form/fieldsProps.js';
 
 export interface ComponentInfo {
   type: string;

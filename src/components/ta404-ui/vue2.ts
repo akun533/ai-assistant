@@ -1,4 +1,4 @@
-import { ComponentInfo } from '../../core/component-registry';
+import { ComponentInfo } from '../../core/component-registry.js';
 
 export interface TaComponent extends Omit<ComponentInfo, 'events' | 'props' | 'fieldType' | 'uiFramework' | 'vueVersion' | 'label'> {
   type: string;

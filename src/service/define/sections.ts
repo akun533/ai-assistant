@@ -1,4 +1,4 @@
-import { ComponentRegistry } from '../../core/component-registry';
+import { ComponentRegistry } from '../../core/component-registry.js';
 
 export const getSections = (
   categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents']>,
