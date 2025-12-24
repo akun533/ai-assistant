@@ -34,7 +34,7 @@ function cleanOldPackages() {
   console.log('🧹 清理旧的打包文件...');
   const files = readdirSync(projectRoot);
   const packageFiles = files.filter(file => file.endsWith('.tgz') || file.endsWith('.tar.gz'));
-  
+
   packageFiles.forEach(file => {
     console.log(`   删除: ${file}`);
     rmSync(resolve(projectRoot, file), { force: true });
@@ -44,7 +44,7 @@ function cleanOldPackages() {
 try {
   // 清理旧的打包文件
   cleanOldPackages();
-  
+
   // 检查是否已经安装依赖
   console.log('🔍 检查依赖...');
   if (!existsSync(resolve(projectRoot, 'node_modules'))) {
@@ -59,11 +59,11 @@ try {
   // 构建 Docker 镜像
   console.log('🐳 构建 Docker 镜像...');
   const imageName = `${packageName.replace('@', '').replace('/', '-')}-backend:${packageVersion}`;
-  execCommand(`docker build -f Dockerfile.backend -t ${imageName} .`);
-  
+  execCommand(`docker build -f Dockerfile -t ${imageName} .`);
+
   console.log('✅ 后端服务打包完成!');
   console.log(`🐳 Docker 镜像已创建: ${imageName}`);
-  
+
   // 提供使用说明
   console.log('\n💡 使用方式:');
   console.log(`   1. 运行容器: docker run -p 3001:3001 ${imageName}`);
@@ -71,7 +71,7 @@ try {
   console.log(`   3. 带环境变量运行: docker run -p 3001:3001 -e DEFAULT_AGENT=deepseek ${imageName}`);
   console.log(`   4. 查看运行状态: curl http://localhost:3001/api/health`);
   console.log(`   5. 发送聊天请求: curl -X POST http://localhost:3001/api/chat/completions -H "Content-Type: application/json" -d '{"messages": [{"role": "user", "content": "Hello"}]}'`);
-  
+
 } catch (error) {
   console.error('❌ 打包过程中出现错误:');
   console.error(error.message);

@@ -31,7 +31,7 @@ pnpm install
 pnpm run build
 
 # 3. 构建 Docker 镜像
-docker build -f Dockerfile.backend -t @form-create/ai-assistant-backend:1.0.0 .
+docker build -f Dockerfile -t @form-create/ai-assistant:1.0.0 .
 ```
 
 ## 运行容器
@@ -40,7 +40,7 @@ docker build -f Dockerfile.backend -t @form-create/ai-assistant-backend:1.0.0 .
 
 ```bash
 # 运行容器并映射端口
-docker run -p 3001:3001 @form-create/ai-assistant-backend:1.0.0
+docker run -p 3001:3001 @form-create/ai-assistant:1.0.0
 ```
 
 ### 带环境变量运行
@@ -52,7 +52,7 @@ docker run -p 3001:3001 \
   -e DEFAULT_MODEL=deepseek-chat \
   -e AGENT_API=https://api.deepseek.com/chat/completions \
   -e AGENT_TIMEOUT=30000 \
-  @form-create/ai-assistant-backend:1.0.0
+  @form-create/ai-assistant:1.0.0
 ```
 
 ### 后台运行
@@ -61,7 +61,7 @@ docker run -p 3001:3001 \
 # 在后台运行容器
 docker run -d -p 3001:3001 \
   -e DEFAULT_AGENT=deepseek \
-  @form-create/ai-assistant-backend:1.0.0
+  @form-create/ai-assistant:1.0.0
 ```
 
 ## 配置选项
@@ -85,7 +85,7 @@ docker run -d -p 3001:3001 \
 ```bash
 docker run -p 3001:3001 \
   -v /path/to/your/.env:/app/.env \
-  @form-create/ai-assistant-backend:1.0.0
+  @form-create/ai-assistant:1.0.0
 ```
 
 ## 验证部署
@@ -129,7 +129,7 @@ curl -X POST http://localhost:3001/api/chat/completions \
 version: '3.8'
 services:
   ai-assistant-backend:
-    image: @form-create/ai-assistant-backend:1.0.0
+    image: @form-create/ai-assistant:1.0.0
     ports:
       - "3001:3001"
     environment:
@@ -150,20 +150,20 @@ services:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ai-assistant-backend
+  name: ai-assistant
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ai-assistant-backend
+      app: ai-assistant
   template:
     metadata:
       labels:
-        app: ai-assistant-backend
+        app: ai-assistant
     spec:
       containers:
-      - name: ai-assistant-backend
-        image: @form-create/ai-assistant-backend:1.0.0
+      - name: ai-assistant
+        image: @form-create/ai-assistant:1.0.0
         ports:
         - containerPort: 3001
         env:
@@ -189,10 +189,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ai-assistant-backend-service
+  name: ai-assistant-service
 spec:
   selector:
-    app: ai-assistant-backend
+    app: ai-assistant
   ports:
     - protocol: TCP
       port: 80
@@ -228,9 +228,9 @@ docker exec -it <container-id> /bin/sh
 
 ```bash
 # 为镜像添加新标签
-docker tag @form-create/ai-assistant-backend:1.0.0 @form-create/ai-assistant-backend:latest
+docker tag @form-create/ai-assistant:1.0.0 @form-create/ai-assistant:latest
 
 # 推送到私有仓库
-docker tag @form-create/ai-assistant-backend:1.0.0 your-registry.com/ai-assistant:1.0.0
+docker tag @form-create/ai-assistant:1.0.0 your-registry.com/ai-assistant:1.0.0
 docker push your-registry.com/ai-assistant:1.0.0
 ```
