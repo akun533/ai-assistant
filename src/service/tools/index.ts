@@ -1,6 +1,6 @@
-import formTools from './form/index';
-import type { ToolRegistration, ToolDefinition, ToolContext, ToolHandler } from './types';
-export * from './types';
+import formTools from './form/index.js';
+import type { ToolRegistration, ToolDefinition, ToolContext, ToolHandler } from './types/index.js';
+export * from './types/index.js';
 
 export class ToolRegistry {
   private tools = new Map<string, ToolRegistration>();
