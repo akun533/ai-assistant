@@ -36,19 +36,19 @@
     "fast-json-patch": "^3.1.1",
     "jsondiffpatch": "^0.7.3",
     "node-fetch": "^3.3.2",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "typescript": "^5.0.0",
+    "@types/express": "^5.0.3",
+    "@types/node": "^20.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.0",
-    "tsx": "^4.0.0",
-    "typescript": "^5.0.0"
+    "tsx": "^4.0.0"
   }
 }
