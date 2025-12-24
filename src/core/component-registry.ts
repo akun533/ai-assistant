@@ -6,7 +6,7 @@ import {
   vantComponents,
   vantVue2Components,
   ta404uiComponents,
-} from '../components';
+} from '../components/index';
 import usages from '../components/usages';
 import { PropsDefinition } from '../components/ta404-ui/form/fieldsProps';
 
