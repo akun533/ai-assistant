@@ -1,4 +1,4 @@
-import formTools from './form';
+import formTools from './form/index';
 import type { ToolRegistration, ToolDefinition, ToolContext, ToolHandler } from './types';
 export * from './types';
 

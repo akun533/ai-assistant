@@ -4,11 +4,11 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { ComponentRegistry } from '../core/component-registry.js';
 import { FormRuleGenerator } from '../core/form-rule-generator.js';
-import { generateSessionId } from '../utils';
-import { AgentMessage, AgentRequest, AgentTool, AgentType, BaseAgent, createAgent } from './agent';
-import { ToolRegistry } from './tools';
-import type { ToolArgs } from './tools/types';
-import { getSections } from './define/sections';
+import { generateSessionId } from '../utils/index.js';
+import { AgentMessage, AgentRequest, AgentTool, AgentType, BaseAgent, createAgent } from './agent/index.js';
+import { ToolRegistry } from './tools/index.js';
+import type { ToolArgs } from './tools/types/index.js';
+import { getSections } from './define/sections.js';
 
 
 // OpenAI 兼容的消息格式
