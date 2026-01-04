@@ -26,6 +26,9 @@ RUN pnpm run build
 # 检查 dist 目录内容
 RUN ls -la dist/
 
+# 创建 .env 文件并设置环境变量
+RUN echo "AGENT_API=http://192.168.20.91:8022/v1/chat/completions" > .env
+
 # 暴露端口
 EXPOSE 3001
 
