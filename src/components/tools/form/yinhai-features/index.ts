@@ -1,7 +1,7 @@
-import validateFeature from './validate';
-import computedFeature from './computed';
-import controlFeature from './control';
-import eventFeature from './event';
+import validateFeature from './validate/index.js';
+import computedFeature from './computed/index.js';
+import controlFeature from './control/index.js';
+import eventFeature from './event/index.js';
 
 export interface FeatureTemplate {
     description: string;

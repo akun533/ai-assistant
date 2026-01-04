@@ -1,6 +1,6 @@
 export interface PropsDefinition {
   name: string;
-  type: 'boolean' | 'string' | 'number' | 'object' | 'Function' | 'Array';
+  type: 'boolean' | 'string' | 'number' | 'object' | 'Function' | 'Array' | 'any';
   defaultValue?: any;
   description?: string;
   options?: Array<{ value: string; label: string} | string | number | boolean>;
@@ -40,11 +40,13 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   css: {
     name: 'css',
+    label: 'CSS样式',
     type: 'string',
     description: 'CSS样式',
   },
   style: {
     name: 'style',
+    label: '组件样式',
     type: 'string',
     description: '组件样式',
     example: 'color:red;font-size:20px',
@@ -68,36 +70,42 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   disabled: {
     name: 'disabled',
+    label: '是否禁用',
     type: 'boolean',
     description: '是否禁用输入框',
     required: false,
   },
   placeholder: {
     name: 'placeholder',
+    label: '占位提示文字',
     type: 'string',
     description: '输入框占位提示文字',
     required: false,
   },
   required: {
     name: 'required',
+    label: '是否必填',
     type: 'boolean',
     description: '是否必填',
     required: false,
   },
   label: {
     name: 'label',
+    label: '组件显示名称',
     type: 'string',
     description: '组件显示名称',
     required: true,
   },
   initialValue: {
     name: 'initialValue',
+    label: '默认值',
     type: 'string',
     description: '默认值，类型根据组件类型而定',
     required: false,
   },
   message: {
     name: 'message',
+    label: '验证提示信息',
     type: 'string',
     description: '验证提示信息',
     required: false,
@@ -105,12 +113,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   rules: {
     name: 'rules',
+    label: '自定义验证规则',
     type: 'string',
     description: '自定义验证规则（转义的JSON字符串）',
     required: false,
   },
   extra: {
     name: 'extra',
+    label: '额外描述信息',
     type: 'string',
     description: '额外描述信息',
     required: false,
@@ -118,6 +128,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   span: {
     name: 'span',
+    label: '栅格列数',
     type: 'number',
     description: '栅格占据列数，整个组件在外部容器中占的栅格，计算方式为 24 / 列数',
     required: true,
@@ -125,12 +136,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   tools: {
     name: 'tools',
+    label: '工具配置',
     type: 'object',
     description: '工具配置',
     required: true,
   },
   autoShow: {
     name: 'autoShow',
+    label: '自动显示',
     type: 'boolean',
     description: '是否自动显示组件',
     required: true,
@@ -138,6 +151,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   fieldsAlias: {
     name: 'fieldsAlias',
+    label: '字段别名',
     type: 'string',
     description: '组件字段别名',
     required: false,
@@ -161,6 +175,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   rules_object: {
     name: 'rules',
+    label: '自定义验证规则对象',
     type: 'object',
     description:
         '自定义验证规则（转义的JSON字符串）',
@@ -169,6 +184,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   allowClear: {
     name: 'allowClear',
+    label: '允许清除',
     type: 'boolean',
     description: '是否允许清除 / 是否支持清空',
     required: false,
@@ -176,18 +192,21 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   addonBefore: {
     name: 'addonBefore',
+    label: '前置内容',
     type: 'string',
     description: '前置内容',
     required: false,
   },
   addonAfter: {
     name: 'addonAfter',
+    label: '后置内容',
     type: 'string',
     description: '后置内容',
     required: false,
   },
   isRender: {
     name: 'isRender',
+    label: '是否渲染',
     type: 'string',
     description: '是否渲染元素，为 false 时元素不渲染，表单提交时不验证',
     required: true,
@@ -195,6 +214,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   labelCol: {
     name: 'labelCol',
+    label: '标签栅格',
     type: 'number',
     description: '标签所占栅格，与 wrapperCol 属性合为 24，可选值：1-24',
     required: false,
@@ -202,6 +222,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   wrapperCol: {
     name: 'wrapperCol',
+    label: '封装组件栅格',
     type: 'number',
     description: '封装组件栅格，与 labelCol 合为 24，可选值：1-24',
     required: false,
@@ -209,6 +230,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   labelStyle: {
     name: 'labelStyle',
+    label: '标签样式',
     type: 'string',
     description: '标签样式（转义的JSON字符串）',
     required: true,
@@ -216,6 +238,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   labelWidth: {
     name: 'labelWidth',
+    label: '标签宽度',
     type: 'number',
     description: '标签宽度',
     required: false,
@@ -223,12 +246,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   isLongLabel: {
     name: 'isLongLabel',
+    label: '长文本标签',
     type: 'boolean',
     description: '是否为长文本标签',
     required: false,
   },
   haveEnterButton: {
     name: 'haveEnterButton',
+    label: '显示搜索按钮',
     type: 'boolean',
     description: '是否显示搜索按钮',
     required: false,
@@ -236,12 +261,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   enterButton: {
     name: 'enterButton',
+    label: '搜索按钮文本',
     type: 'string',
     description: '搜索按钮文本',
     required: false,
   },
   itemStyle: {
     name: 'itemStyle',
+    label: '组件样式',
     type: 'string',
     description: '组件样式',
     required: false,
@@ -249,6 +276,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   autoSize: {
     name: 'autoSize',
+    label: '自适应高度',
     type: 'boolean',
     description: '是否根据内容自适应高度',
     required: false,
@@ -256,6 +284,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   rows: {
     name: 'rows',
+    label: '行数',
     type: 'number',
     description:
         '多行文本行数，最小为1的整数。当 autoSize 属性为 false 时需要配置此项，当 autoSize 值为 true 时需要移除此项',
@@ -264,6 +293,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   min: {
     name: 'min',
+    label: '最小值',
     type: 'number',
     description: '最小可输入值',
     required: false,
@@ -271,6 +301,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   max: {
     name: 'max',
+    label: '最大值',
     type: 'number',
     description: '最大可输入值',
     required: false,
@@ -278,6 +309,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   precision: {
     name: 'precision',
+    label: '数字精度',
     type: 'number',
     description: '数字精度,小数点后位数，比如2则为.00',
     required: false,
@@ -286,6 +318,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   step: {
     name: 'step',
+    label: '步长',
     type: 'number',
     description: '值修改时的步长',
     required: false,
@@ -293,18 +326,21 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   asAmount: {
     name: 'asAmount',
+    label: '金额类型',
     type: 'boolean',
     description: '是否为金额类型',
     required: false,
   },
   amountPre: {
     name: 'amountPre',
+    label: '金额前缀',
     type: 'string',
     description: '金额前缀。数值为金额类型时（asAmount 值为 true）此项生效，需要配置',
     required: false,
   },
   alignRight: {
     name: 'alignRight',
+    label: '右对齐',
     type: 'boolean',
     description: '值是否右对齐',
     required: false,
@@ -312,6 +348,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   decimalSeparator: {
     name: 'decimalSeparator',
+    label: '小数点符号',
     type: 'string',
     description: '小数点符号',
     required: false,
@@ -319,6 +356,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   dataType: {
     name: 'dataType',
+    label: '数据源填充方式',
     type: 'string',
     description: '数据源填充方式',
     required: true,
@@ -340,6 +378,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   dropdownTrigger: {
     name: 'dropdownTrigger',
+    label: '查询行为触发方式',
     type: 'string',
     description: '查询行为触发方式',
     required: false,
@@ -361,6 +400,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   dropdownMatchSelectWidth: {
     name: 'dropdownMatchSelectWidth',
+    label: '下拉框与输入框同宽',
     type: 'boolean',
     description: '下拉框与输入框同宽',
     required: false,
@@ -368,6 +408,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   dropdownMatchSelectWidthValue: {
     name: 'dropdownMatchSelectWidthValue',
+    label: '下拉输入框宽度',
     type: 'string',
     description: '下拉输入框宽度，一般为带 px 单位宽度',
     required: false,
@@ -375,6 +416,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   searchDelay: {
     name: 'searchDelay',
+    label: '延迟时间',
     type: 'number',
     description: '延迟时间，当 dropdownTrigger 属性值为 delay 时，此项必须，单位毫秒',
     required: true,
@@ -382,6 +424,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   titleList: {
     name: 'titleList',
+    label: '表头信息配置',
     type: 'Array',
     description:
         '需要展示的表头信息配置，为 JSON 格式的对象数组，对象只能包含 key 和 value 属性。支持配置多组。key 属性表示属性字段变量，value 表示字段名称，不支持其他属性格式',
@@ -399,6 +442,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   optionConfig: {
     name: 'optionConfig',
+    label: '选项配置',
     type: 'object',
     description:
         '配置选中后的实际值对应的字段和显示值对应的字段。格式固定，为 JSON 对象，只能包含 value 和 label 属性，与 titleList 属性 key 关联',
@@ -410,6 +454,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   data: {
     name: 'data',
+    label: '数据项',
     type: 'string',
     description:
         '组件的数据项。格式为经过转义的标准 JSON 格式对象数组字符串。对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联',
@@ -418,6 +463,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   cardHeadStyle: {
     name: 'cardHeadStyle',
+    label: '标题CSS',
     type: 'string',
     description: '标题CSS。标题的CSS样式',
     required: false,
@@ -425,12 +471,14 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   width: {
     name: 'width',
+    label: '宽度',
     type: 'number',
     description: '宽度。列宽度信息。',
     required: false,
   },
   size: {
     name: 'size',
+    label: '组件大小',
     type: 'string',
     description: '组件大小',
     required: false,
@@ -452,6 +500,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   labelText: {
     name: 'labelText',
+    label: 'Label展示方式',
     type: 'boolean',
     description: 'Label的展示方式，为true则表示label为纯文本展示，不能编辑组件的label',
     required: false,
@@ -459,6 +508,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   staticData: {
     name: 'staticData',
+    label: '静态数据源',
     type: 'string',
     description: '静态数据源，格式为经过转义标准的 JSON 格式对象数组字符串',
     required: false,
@@ -467,6 +517,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   // FIX ME
   format: {
     name: 'format',
+    label: '格式化格式',
     type: 'string',
     description: '格式化格式',
     required: false,
@@ -474,6 +525,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   validNowTime: {
     name: 'validNowTime',
+    label: '仅显示当前时间之后',
     type: 'boolean',
     description: '是否只显示当前时间之后的时间',
     required: false,
@@ -481,6 +533,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   childrenColumn: {
     name: 'children',
+    label: '子组件配置',
     type: 'object',
     description: '子组件配置，column为组件列表',
     required: true,
@@ -490,6 +543,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   childrenColumns: {
     name: 'children',
+    label: '子组件配置',
     type: 'object',
     description: '子组件配置，columns为组件列表',
     required: true,
@@ -499,6 +553,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   parentLabelCol: {
     name: 'parentLabelCol',
+    label: '容器标签栅格',
     type: 'number',
     description: '容器内部表单项组件的标签所占栅格',
     required: false,
@@ -506,6 +561,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   parentWrapperCol: {
     name: 'parentWrapperCol',
+    label: '容器控件栅格',
     type: 'number',
     description: '容器内部表单项组件的录入控件所占栅格',
     required: false,
@@ -513,6 +569,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   parentSpan: {
     name: 'parentSpan',
+    label: '容器占据栅格',
     type: 'number',
     description: '容器内部表单项的占据栅格',
     required: false,
@@ -520,6 +577,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
   },
   validNowTimeString:{
     'name': 'validNowTime',
+    'label': '禁用日期范围',
     'type': 'string',
     'description': '禁用日期范围',
     'required': false,
@@ -538,7 +596,7 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
         'label': '今日之后',
       },
     ],
-  }
+  },
 };
 
 const ComponentsProps:Record<string, ComponentProp> = {
@@ -577,6 +635,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         name: 'tabPosition',
+        label: '标签位置',
         type: 'string',
         description: '标签位置',
         required: true,
@@ -602,6 +661,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'tabType',
+        label: '标签页样式类型',
         type: 'string',
         description: '标签页样式类型',
         required: true,
@@ -623,6 +683,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'staticData',
+        label: '标签页数据源',
         type: 'Array',
         description: '标签页数据源，每个标签页项容器中的组件数据存储在children.column中，格式为标准的 JSON 格式对象数组',
         required: false,
@@ -649,6 +710,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.span,
       {
         name: 'bordered',
+        label: '是否显示边框',
         type: 'boolean',
         description: '是否显示边框',
         required: true,
@@ -657,6 +719,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         name: 'staticData',
+        label: '折叠面板数据源',
         type: 'Array',
         description: '折叠面板数据源，每个标折叠项容器中的组件数据存储在children.column中，格式为标准的 JSON 格式对象数组',
         required: false,
@@ -683,6 +746,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.childrenColumn,
       {
         name: 'formCardStyleFit',
+        label: '卡片自适应高度',
         type: 'boolean',
         description: '卡片自适应高度',
         required: true,
@@ -690,6 +754,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'formCardStyle',
+        label: '卡片容器样式',
         type: 'object',
         description: '卡片容器样式，当formCardStyleFit属性值为false时此项生效，否则失效',
         required: true,
@@ -699,6 +764,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'cardHeadStyle',
+        label: '卡片容器标题样式',
         type: 'string',
         description: '卡片容器标题样式字符串',
         required: false,
@@ -706,6 +772,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'cardStyle',
+        label: '卡片容器样式',
         type: 'string',
         description: '卡片容器样式字符串',
         required: false,
@@ -714,6 +781,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         name: 'headButtons',
+        label: '卡片容器标题栏按钮',
         type: 'Array',
         description: '卡片容器标题栏按钮,只能放置type为button的组件, JSON格式数组,',
         required: false,
@@ -749,6 +817,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.childrenColumn,
       {
         name: 'closable',
+        label: '显示关闭按钮',
         type: 'boolean',
         description: '是否显示关闭按钮',
         required: true,
@@ -763,6 +832,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'height',
+        label: '抽屉高度',
         type: 'string',
         description: '抽屉高度',
         required: false,
@@ -770,6 +840,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'footerHeight',
+        label: '抽屉底部高度',
         type: 'string',
         description: '抽屉底部高度',
         required: true,
@@ -777,6 +848,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'width',
+        label: '抽屉宽度',
         type: 'number',
         description: '抽屉宽度',
         required: true,
@@ -784,11 +856,13 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'title',
+        label: '抽屉标题',
         type: 'string',
         description: '抽屉标题',
       },
       {
         name: 'placement',
+        label: '抽屉位置',
         type: 'string',
         description: '抽屉位置',
         required: true,
@@ -830,6 +904,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.childrenColumn,
       {
         name: 'title',
+        label: '标题',
         type: 'string',
         description: '标题',
         required: true,
@@ -837,6 +912,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'width',
+        label: '宽度',
         type: 'number',
         description: '宽度',
         required: true,
@@ -844,6 +920,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'height',
+        label: '高度',
         type: 'number',
         description: '高度',
         required: true,
@@ -851,6 +928,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'okText',
+        label: '确定按钮文字',
         type: 'string',
         description: '确定按钮文字',
         required: true,
@@ -858,6 +936,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'okType',
+        label: '确定按钮类型',
         type: 'string',
         description: '确定按钮类型',
         required: true,
@@ -891,6 +970,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'cancelText',
+        label: '取消按钮文字',
         type: 'string',
         description: '取消按钮文字',
         required: true,
@@ -906,6 +986,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'destroyOnClose',
+        label: '关闭后销毁 Modal 里的子元素',
         type: 'boolean',
         description: '关闭后销毁 Modal 里的子元素',
         required: true,
@@ -913,6 +994,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'draggable',
+        label: '是否可拖拽',
         type: 'boolean',
         description: '是否可拖拽',
         required: false,
@@ -920,6 +1002,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'closeModalAfterOk',
+        label: '点击确定按钮后关闭 Modal',
         type: 'boolean',
         description: '点击确定按钮后关闭 Modal',
         required: true,
@@ -927,6 +1010,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'keyboard',
+        label: '是否支持键盘 esc 关闭',
         type: 'boolean',
         description: '是否支持键盘 esc 关闭',
         required: true,
@@ -934,6 +1018,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'hideSave',
+        label: '是否隐藏确定按钮',
         type: 'boolean',
         description: '是否隐藏确定按钮',
         required: false,
@@ -1421,6 +1506,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.autoShow,
       {
         name: 'decimalSeparator',
+        label: '小数点符号',
         type: 'string',
         description: '小数点符号',
         required: false,
@@ -1437,6 +1523,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.validateTrigger,
       {
         name: 'min',
+        label: '最小值',
         type: 'number',
         description: '最小可输入值',
         required: false,
@@ -1444,6 +1531,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'max',
+        label: '最大值',
         type: 'number',
         description: '最大可输入值',
         required: false,
@@ -1451,6 +1539,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'precision',
+        label: '数字精度',
         type: 'number',
         description: '数字精度,小数点后位数，比如2则为.00',
         required: false,
@@ -1459,6 +1548,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'step',
+        label: '步长',
         type: 'number',
         description: '值修改时的步长',
         required: false,
@@ -1466,18 +1556,21 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'asAmount',
+        label: '金额类型',
         type: 'boolean',
         description: '是否为金额类型',
         required: false,
       },
       {
         name: 'amountPre',
+        label: '金额前缀',
         type: 'string',
         description: '金额前缀。数值为金额类型时（asAmount 值为 true）此项生效，需要配置',
         required: false,
       },
       {
         name: 'alignRight',
+        label: '右对齐',
         type: 'boolean',
         description: '值是否右对齐',
         required: false,
@@ -1515,6 +1608,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         name: 'dropdownTrigger',
         type: 'string',
         description: '查询行为触发方式',
+        label: '查询行为触发方式',
         required: false,
         defaultValue: 'delay',
         options: [
@@ -1536,6 +1630,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         name: 'dropdownMatchSelectWidth',
         type: 'boolean',
         description: '下拉框与输入框同宽',
+        label: '下拉框与输入框同宽',
         required: false,
         defaultValue: false,
       },
@@ -1543,6 +1638,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         name: 'dropdownMatchSelectWidthValue',
         type: 'string',
         description: '下拉输入框宽度，一般为带 px 单位宽度',
+        label: '下拉输入框宽度',
         required: false,
         defaultValue: '500px',
       },
@@ -1550,6 +1646,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         name: 'searchDelay',
         type: 'number',
         description: '延迟时间，当 dropdownTrigger 属性值为 delay 时，此项必须，单位毫秒',
+        label: '延迟时间',
         required: true,
         defaultValue: 600,
       },
@@ -1557,6 +1654,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         name: 'titleList',
         type: 'Array',
         description: '需要展示的表头信息配置，为 JSON 格式的对象数组，对象只能包含 key 和 value 属性。支持配置多组。key 属性表示属性字段变量，value 表示字段名称，不支持其他属性格式',
+        label: '表头信息配置',
         required: true,
         defaultValue: [
           {
@@ -1573,6 +1671,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         name: 'optionConfig',
         type: 'object',
         description: '配置选中后的实际值对应的字段和显示值对应的字段。格式固定，为 JSON 对象，只能包含 value 和 label 属性，与 titleList 属性 key 关联',
+        label: '选项配置',
         required: true,
         defaultValue: {
           value: 'id',
@@ -1583,6 +1682,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         name: 'data',
         type: 'string',
         description: '组件的数据项。格式为经过转义的标准 JSON 格式对象数组字符串。对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联',
+        label: '数据项',
         required: true,
         example: '[{"name":"张三","id":"10010"}]',
       },
@@ -1645,6 +1745,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         name: 'radioButton',
+        label: '按钮样式单选框',
         type: 'boolean',
         description: '是否使用按钮样式的单选框',
         required: false,
@@ -1652,6 +1753,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'buttonStyle',
+        label: '按钮样式填充',
         type: 'boolean',
         description: '按钮样式选中是否填充',
         required: false,
@@ -1659,6 +1761,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'radioStyle',
+        label: '单选框样式',
         type: 'string',
         description: '单选框样式，格式为json',
         required: false,
@@ -1667,6 +1770,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.itemStyle,
       {
         name: 'cancelChecked',
+        label: '可取消选中',
         type: 'boolean',
         description: '可取消选中',
         required: false,
@@ -1734,6 +1838,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         name: 'mode',
+        label: '选择类型',
         type: 'string',
         description: '选择类型',
         required: false,
@@ -1766,6 +1871,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'showValue',
+        label: '显示选项值',
         type: 'boolean',
         description: '是否显示选项值',
         required: false,
@@ -1773,6 +1879,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'dropdownMatchSelectWidth',
+        label: '下拉菜单与选择器同宽',
         type: 'boolean',
         description: '下拉菜单与选择器同宽',
         required: false,
@@ -1780,6 +1887,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'defaultActiveFirstOption',
+        label: '默认高亮第一个选项',
         type: 'boolean',
         description: '默认高亮第一个选项',
         required: false,
@@ -1787,6 +1895,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'openOnFocus',
+        label: '获得焦点时打开下拉菜单',
         type: 'boolean',
         description: '获得焦点时打开下拉菜单',
         required: false,
@@ -1825,6 +1934,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         name: 'expandTrigger',
+        label: '展开方式',
         type: 'string',
         description: '展开方式',
         required: false,
@@ -1842,6 +1952,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'showSearch',
+        label: '显示搜索栏',
         type: 'boolean',
         description: '是否带搜索栏',
         required: false,
@@ -1849,6 +1960,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'changeOnSelect',
+        label: '点击即改变',
         type: 'boolean',
         description: '点击即改变',
         required: false,
@@ -1856,6 +1968,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'fieldNames',
+        label: '字段名称',
         type: 'string',
         description: '自定义options中label name children 的字段,格式要求json',
         required: false,
@@ -1893,12 +2006,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         name: 'dropheight',
+        label: '下拉菜单高度',
         type: 'number',
         description: '下拉菜单高度',
         required: false,
       },
       {
         name: 'multiple',
+        label: '支持多选',
         type: 'boolean',
         description: '是否支持多选',
         required: false,
@@ -1913,6 +2028,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'treeNodeFilterProp',
+        label: '节点过滤属性',
         type: 'string',
         description: '输入项过滤对应的 treeNode 属性,例如label,value',
         required: false,
@@ -1943,6 +2059,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         name: 'allowClear',
+        label: '允许清除',
         type: 'boolean',
         description: '点击清除',
         required: false,
@@ -1982,6 +2099,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.extra,
       {
         name: 'step',
+        label: '步长',
         type: 'number',
         description: '步长',
         required: false,
@@ -1989,6 +2107,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'min',
+        label: '最小值',
         type: 'number',
         description: '最小值',
         required: false,
@@ -1996,6 +2115,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         name: 'max',
+        label: '最大值',
         type: 'number',
         description: '最大值',
         required: false,
@@ -2009,6 +2129,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         name: 'range',
+        label: '范围选择',
         type: 'boolean',
         description: '范围选择',
         required: false,
@@ -2045,6 +2166,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.isLongLabel,
       {
         'name': 'panelPosition',
+        'label': '面板位置',
         'type': 'string',
         'description': '面板位置',
         'required': true,
@@ -2052,6 +2174,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'verticalPosition',
+        'label': '垂直位置',
         'type': 'string',
         'description': '垂直位置',
         'required': true,
@@ -2090,34 +2213,40 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'itemStyle',
         'type': 'string',
         'description': '相框样式',
+        'label': '相框样式',
         'required': false,
       },
       {
         'name': 'imgStyle',
         'type': 'string',
         'description': '图片样式',
+        'label': '图片样式',
         'required': false,
       },
       {
         'name': 'uploadUrl',
+        'label': '上传地址',
         'type': 'string',
         'description': '上传地址',
         'required': false,
       },
       {
         'name': 'imageUrl',
+        'label': '图片地址',
         'type': 'string',
         'description': '图片src',
         'required': false,
       },
       {
         'name': 'desc',
+        'label': '操作提示',
         'type': 'string',
         'description': '操作提示',
         'required': false,
       },
       {
         'name': 'maxType',
+        'label': '文件大小限制单位类型',
         'type': 'string',
         'description': '文件大小限制单位类型',
         'required': false,
@@ -2135,12 +2264,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'maxSize',
+        'label': '文件大小限制',
         'type': 'number',
         'description': '文件大小限制',
         'required': false,
       },
       {
         'name': 'widthType',
+        'label': '宽度限制类型',
         'type': 'string',
         'description': '宽度限制类型',
         'required': false,
@@ -2161,12 +2292,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'widthSize',
+        'label': '宽度限制值',
         'type': 'number',
         'description': '宽度限制值',
         'required': false,
       },
       {
         'name': 'heightType',
+        'label': '高度限制类型',
         'type': 'string',
         'description': '高度限制类型',
         'required': false,
@@ -2187,24 +2320,28 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'heightSize',
+        'label': '高度限制值',
         'type': 'number',
         'description': '高度限制值',
         'required': false,
       },
       {
         'name': 'uploadType',
+        'label': '文件类型限制',
         'type': 'string',
         'description': '文件类型限制',
         'required': false,
       },
       {
         'name': 'labelText',
+        'label': '隐藏标签',
         'type': 'boolean',
         'description': '隐藏标签',
         'required': false,
       },
       {
         'name': 'isView',
+        'label': '查看模式',
         'type': 'boolean',
         'description': '是否为查看模式',
         'required': false,
@@ -2242,36 +2379,42 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'isAuto',
         'type': 'boolean',
         'description': '自动上传',
+        'label': '自动上传',
         'required': false,
       },
       {
         'name': 'fileList',
         'type': 'Array',
         'description': '文件列表',
+        'label': '文件列表',
         'required': false,
       },
       {
         'name': 'uploadUrl',
         'type': 'string',
         'description': '上传地址',
+        'label': '上传地址',
         'required': false,
       },
       {
         'name': 'delUrl',
         'type': 'string',
         'description': '删除地址',
+        'label': '删除地址',
         'required': false,
       },
       {
         'name': 'host',
         'type': 'string',
         'description': '主机地址',
+        'label': '主机地址',
         'required': false,
       },
       {
         'name': 'labelText',
         'type': 'boolean',
         'description': '隐藏Label',
+        'label': '隐藏Label',
         'required': false,
       },
     ],
@@ -2322,6 +2465,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'staticData',
         'type': 'string',
         'description': '静态数据源，格式为经过转义标准的 JSON 格式对象数组字符串，对象中的变量名称与 titleList 中配置的 key 值对应，同时与 optionConfig 中的值关联',
+        'label': '静态数据源',
         'required': false,
         'example': '[{"name":"张三","id":"10010"}]',
       },
@@ -2335,12 +2479,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'rowKey',
         'type': 'string',
         'description': '用于指定数据的key属性的名字，默认为key属性的名字默认为key，若行数据中没有key属性，则必须要用rowKey指定对应的key属性名',
+        'label': '行键名',
         'required': false,
       },
       {
         'name': 'currentMode',
         'type': 'string',
         'description': '穿梭框预设模式',
+        'label': '穿梭框预设模式',
         'required': false,
         'defaultValue': 'normal',
         'options': [
@@ -2362,66 +2508,77 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'titles',
         'type': 'string',
         'description': "左右两侧标题，格式为'左侧标题,右侧标题'",
+        'label': '标题',
         'required': false,
       },
       {
         'name': 'titleToLeft',
         'type': 'boolean',
         'description': '标题和选择位置互换',
+        'label': '标题和选择位置互换',
         'required': false,
       },
       {
         'name': 'selectedKeys',
         'type': 'string',
         'description': '设置哪些项应该被选中，格式string[]。静态数据-示例:["1", "2"]。远程数据时请填写后端返回数据的映射字段名称，示例：selectedKeys',
+        'label': '选中项键名',
         'required': false,
       },
       {
         'name': 'targetKeys',
         'type': 'string',
         'description': '显示在右侧框数据的key集合，格式string[]。静态数据-示例:["1","2"]。远程数据时请填写后端返回数据的映射字段名称，示例：targetKeys',
+        'label': '目标键名',
         'required': false,
       },
       {
         'name': 'showSelectAll',
         'type': 'boolean',
         'description': '是否显示全选勾选框',
+        'label': '显示全选',
         'required': false,
       },
       {
         'name': 'showSearch',
         'type': 'boolean',
         'description': '是否显示搜索框',
+        'label': '显示搜索框',
         'required': false,
       },
       {
         'name': 'searchPlaceholder',
         'type': 'string',
         'description': '搜索框默认值',
+        'label': '搜索框占位符',
         'required': false,
       },
       {
         'name': 'operations',
         'type': 'string',
         'description': "左右移动按钮文字，格式为'右移按钮文字,左移按钮文字'",
+        'label': '操作按钮文字',
         'required': false,
       },
       {
         'name': 'render',
         'type': 'string',
         'description': '每行数据渲染函数',
+        'label': '渲染函数',
         'required': false,
       },
       {
         'name': 'listStyle',
         'type': 'string',
         'description': '穿梭框样式',
+        'label': '列表样式',
         'required': false,
       },
       {
         'name': 'oneWay',
         'type': 'string',
         'description': '单向模式',
+        'label': '单向模式',
         'required': false,
         'options': [
           {
@@ -2438,12 +2595,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'bigTableProps',
         'type': 'object',
         'description': '大表格模式下的配置属性',
+        'label': '大表格属性',
         'required': false,
       },
       {
         'name': 'treeProps',
         'type': 'object',
         'description': '树模式下的配置属性',
+        'label': '树属性',
         'required': false,
       },
     ],
@@ -2465,6 +2624,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'initialValue',
         'type': 'string',
         'description': '默认值，类型根据组件类型而定',
+        'label': '默认值',
         'required': false,
       },
       CommonProps.fieldsAlias,
@@ -2473,6 +2633,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'message',
         'type': 'string',
         'description': '验证提示信息',
+        'label': '验证提示信息',
         'required': false,
         'example': '请填写单行文本信息',
       },
@@ -2505,6 +2666,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'format',
         'type': 'string',
         'description': '格式化格式',
+        'label': '格式化格式',
         'required': false,
         'defaultValue': 'YYYY',
         'options': [
@@ -2590,6 +2752,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'initialValue',
         'type': 'string',
         'description': '默认值，类型根据组件类型而定',
+        'label': '默认值',
         'required': false,
       },
       CommonProps.fieldsAlias,
@@ -2598,6 +2761,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'message',
         'type': 'string',
         'description': '验证提示信息',
+        'label': '验证提示信息',
         'required': false,
         'example': '请填写单行文本信息',
       },
@@ -2605,6 +2769,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'rules_object',
         'type': 'object',
         'description': '自定义验证规则（转义的JSON字符串）',
+        'label': '自定义验证规则对象',
         'required': false,
         'example': "[{\n pattern: '(^\\d{15}$)|(^\\d{17}(\\d|X|x)$)',\n message: '需要输入身份证号'\n}]",
       },
@@ -2612,6 +2777,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'validateTrigger',
         'type': 'Array',
         'description': '触发验证的事件',
+        'label': '触发验证的事件',
         'required': false,
         'example': ['blur'],
         'options': [
@@ -2630,6 +2796,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'format',
         'type': 'string',
         'description': '格式化格式',
+        'label': '格式化格式',
         'required': false,
         'defaultValue': 'YYYY-第Q季度',
         'options': [
@@ -2666,18 +2833,21 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'showToday',
         'type': 'boolean',
         'description': '是否显示今天按钮（仅适用于date和datetime组件）',
+        'label': '显示今天按钮',
         'required': false,
       },
       {
         'name': 'allowOne',
         'type': 'boolean',
         'description': '是否允许逐个选择（仅适用于daterange和datetimerange组件）',
+        'label': '允许逐个选择',
         'required': false,
       },
       {
         'name': 'rangeType',
         'type': 'string',
         'description': '范围选择类型（仅适用于daterange组件且allowOne为true时）',
+        'label': '范围选择类型',
         'required': false,
         'options': [
           {
@@ -2706,6 +2876,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'allowInput',
         'type': 'boolean',
         'description': '是否支持输入',
+        'label': '支持输入',
         'required': false,
       },
     ],
@@ -2727,6 +2898,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'initialValue',
         'type': 'string',
         'description': '默认值，类型根据组件类型而定',
+        'label': '默认值',
         'required': false,
       },
       CommonProps.fieldsAlias,
@@ -2735,6 +2907,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'message',
         'type': 'string',
         'description': '验证提示信息',
+        'label': '验证提示信息',
         'required': false,
         'example': '请填写单行文本信息',
       },
@@ -2742,6 +2915,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'rules_object',
         'type': 'object',
         'description': '自定义验证规则（转义的JSON字符串）',
+        'label': '自定义验证规则对象',
         'required': false,
         'example': "[{\n pattern: '(^\\d{15}$)|(^\\d{17}(\\d|X|x)$)',\n message: '需要输入身份证号'\n}]",
       },
@@ -2767,6 +2941,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'format',
         'type': 'string',
         'description': '格式化格式',
+        'label': '格式化格式',
         'required': false,
         'defaultValue': 'YYYY/MM',
         'options': [
@@ -2795,18 +2970,21 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'showToday',
         'type': 'boolean',
         'description': '是否显示今天按钮（仅适用于date和datetime组件）',
+        'label': '显示今天按钮',
         'required': false,
       },
       {
         'name': 'allowOne',
         'type': 'boolean',
         'description': '是否允许逐个选择（仅适用于daterange和datetimerange组件）',
+        'label': '允许逐个选择',
         'required': false,
       },
       {
         'name': 'rangeType',
         'type': 'string',
         'description': '范围选择类型（仅适用于daterange组件且allowOne为true时）',
+        'label': '范围选择类型',
         'required': false,
         'options': [
           {
@@ -2835,6 +3013,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'allowInput',
         'type': 'boolean',
         'description': '是否支持输入',
+        'label': '支持输入',
         'required': false,
       },
     ],
@@ -2856,6 +3035,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'initialValue',
         'type': 'string',
         'description': '默认值，类型根据组件类型而定',
+        'label': '默认值',
         'required': false,
       },
       CommonProps.fieldsAlias,
@@ -2864,6 +3044,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'message',
         'type': 'string',
         'description': '验证提示信息',
+        'label': '验证提示信息',
         'required': false,
         'example': '请填写单行文本信息',
       },
@@ -2871,6 +3052,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'rules_object',
         'type': 'object',
         'description': '自定义验证规则（转义的JSON字符串）',
+        'label': '自定义验证规则对象',
         'required': false,
         'example': "[{\n pattern: '(^\\d{15}$)|(^\\d{17}(\\d|X|x)$)',\n message: '需要输入身份证号'\n}]",
       },
@@ -2896,6 +3078,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'format',
         'type': 'string',
         'description': '格式化格式',
+        'label': '格式化格式',
         'required': false,
         'defaultValue': 'YYYY-第ww周',
         'options': [
@@ -3613,6 +3796,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.span,
       {
         'name': 'content',
+        'label': '富文本内容',
         'type': 'string',
         'description': '富文本内容',
         'required': false,
@@ -3652,6 +3836,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'echarsType',
+        'label': '图表类型',
         'type': 'string',
         'description': '图表类型',
         'required': false,
@@ -3659,48 +3844,56 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'optionConfigType',
+        'label': '图表配置类型',
         'type': 'string',
         'description': '图表配置类型',
         'required': false,
       },
       {
         'name': 'optionJsCode',
+        'label': '自定义图表option属性的JavaScript代码',
         'type': 'string',
         'description': '自定义图表option属性的JavaScript代码',
         'required': false,
       },
       {
         'name': 'showType',
+        'label': '显示类型',
         'type': 'string',
         'description': '显示类型',
         'required': false,
       },
       {
         'name': 'showData',
+        'label': '显示数据',
         'type': 'string',
         'description': '显示数据',
         'required': false,
       },
       {
         'name': 'localData',
+        'label': '本地数据',
         'type': 'string',
         'description': '本地数据',
         'required': false,
       },
       {
         'name': 'seriesLabelPosition',
+        'label': '系列标签位置',
         'type': 'string',
         'description': '系列标签位置',
         'required': false,
       },
       {
         'name': 'loading',
+        'label': '加载动画配置',
         'type': 'object',
         'description': '加载动画配置',
         'required': false,
       },
       {
         'name': 'title',
+        'label': '图表标题配置',
         'type': 'object',
         'description': '图表标题配置',
         'required': false,
@@ -3713,60 +3906,70 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'colorConfigType',
+        'label': '颜色配置类型',
         'type': 'string',
         'description': '颜色配置类型',
         'required': false,
       },
       {
         'name': 'legend',
+        'label': '图例配置',
         'type': 'object',
         'description': '图例配置',
         'required': false,
       },
       {
         'name': 'tooltip',
+        'label': '提示框配置',
         'type': 'object',
         'description': '提示框配置',
         'required': false,
       },
       {
         'name': 'xAsis',
+        'label': 'X轴配置',
         'type': 'object',
         'description': 'X轴配置',
         'required': false,
       },
       {
         'name': 'yAsis',
+        'label': 'Y轴配置',
         'type': 'object',
         'description': 'Y轴配置',
         'required': false,
       },
       {
         'name': 'visualMap',
+        'label': '视觉映射组件配置',
         'type': 'object',
         'description': '视觉映射组件配置',
         'required': false,
       },
       {
         'name': 'toolbox',
+        'label': '工具箱配置',
         'type': 'object',
         'description': '工具箱配置',
         'required': false,
       },
       {
         'name': 'echartsEventList',
+        'label': 'ECharts事件列表',
         'type': 'Array',
         'description': 'ECharts事件列表',
         'required': false,
       },
       {
         'name': 'resName',
+        'label': '远程数据返回值的属性名',
         'type': 'string',
         'description': '远程数据返回值的属性名',
         'required': false,
       },
       {
         'name': 'treeData',
+        'label': '树图数据',
         'type': 'string',
         'description': '树图数据',
         'required': false,
@@ -3807,30 +4010,35 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         'name': 'rowKey',
+        'label': '行主键',
         'type': 'string',
         'description': '行主键，需要行选择功能时录入',
         'required': false,
       },
       {
         'name': 'rowEditable',
+        'label': '行编辑',
         'type': 'boolean',
         'description': '是否开启行编辑',
         'required': false,
       },
       {
         'name': 'showRowSelection',
+        'label': '显示行选择',
         'type': 'boolean',
         'description': '是否显示行选择',
         'required': false,
       },
       {
         'name': 'rowSelection',
+        'label': '行选择配置',
         'type': 'object',
         'description': '行选择配置',
         'required': false,
       },
       {
         'name': 'haveSn',
+        'label': '有序号列',
         'type': 'boolean',
         'description': '是否有序号列',
         'required': false,
@@ -3844,12 +4052,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'actionRight',
+        'label': '操作列右侧固定',
         'type': 'boolean',
         'description': '操作列是否右侧固定',
         'required': false,
       },
       {
         'name': 'actionWidth',
+        'label': '操作列宽度',
         'type': 'number',
         'description': '操作列宽度',
         'required': false,
@@ -3862,6 +4072,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'scroll',
+        'label': '滚动配置',
         'type': 'object',
         'description': '滚动配置',
         'required': false,
@@ -3874,6 +4085,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'children',
+        'label': '子组件配置',
         'type': 'object',
         'description': '子组件配置，column为组件列表',
         'required': true,
@@ -3889,42 +4101,49 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'rowClick',
+        'label': '行点击事件',
         'type': 'string',
         'description': '行点击事件处理函数',
         'required': false,
       },
       {
         'name': 'autoQs',
+        'label': 'JSON对象',
         'type': 'boolean',
         'description': '是否为JSON对象',
         'required': false,
       },
       {
         'name': 'isDeaultLoad',
+        'label': '初始化数据',
         'type': 'boolean',
         'description': '是否初始化数据',
         'required': false,
       },
       {
         'name': 'isPage',
+        'label': '分页',
         'type': 'boolean',
         'description': '是否分页',
         'required': false,
       },
       {
         'name': 'pageSize',
+        'label': '每页条数',
         'type': 'number',
         'description': '每页条数',
         'required': false,
       },
       {
         'name': 'pageSizeOptions',
+        'label': '分页选项',
         'type': 'string',
         'description': '分页选择选项',
         'required': false,
       },
       {
         'name': 'data',
+        'label': '静态数据源',
         'type': 'string',
         'description': '静态数据源',
         'required': false,
@@ -4001,6 +4220,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         'name': 'border',
+        'label': '边框类型',
         'type': 'string',
         'description': '边框类型',
         'required': false,
@@ -4029,6 +4249,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'height',
+        'label': '高度',
         'type': 'string',
         'description': '高度',
         'required': false,
@@ -4036,6 +4257,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'editType',
+        'label': '编辑类型',
         'type': 'string',
         'description': '编辑类型',
         'required': false,
@@ -4056,6 +4278,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'editTrigger',
+        'label': '编辑触发方式',
         'type': 'string',
         'description': '编辑触发方式',
         'required': false,
@@ -4076,12 +4299,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'rowId',
+        'label': '行主键',
         'type': 'string',
         'description': '行主键',
         'required': false,
       },
       {
         'name': 'rowSelectionType',
+        'label': '行选择类型',
         'type': 'string',
         'description': '行选择类型',
         'required': false,
@@ -4102,12 +4327,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'selectionFixed',
+        'label': '行选择固定',
         'type': 'boolean',
         'description': '行选择固定',
         'required': false,
       },
       {
         'name': 'rowSelectionTrigger',
+        'label': '行选择触发方式',
         'type': 'string',
         'description': '行选择触发方式',
         'required': false,
@@ -4129,72 +4356,84 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'checkStrictly',
+        'label': '父子不关联',
         'type': 'boolean',
         'description': '父子不关联（仅在树形展示且为多选时有效）',
         'required': false,
       },
       {
         'name': 'haveSn',
+        'label': '行序号',
         'type': 'boolean',
         'description': '行序号',
         'required': false,
       },
       {
         'name': 'snFixed',
+        'label': '行序号固定',
         'type': 'boolean',
         'description': '行序号固定',
         'required': false,
       },
       {
         'name': 'tooltip',
+        'label': '工具提示',
         'type': 'boolean',
         'description': '全表工具提示',
         'required': false,
       },
       {
         'name': 'isTree',
+        'label': '树形展示',
         'type': 'boolean',
         'description': '树形展示',
         'required': false,
       },
       {
         'name': 'expandAll',
+        'label': '默认展开',
         'type': 'boolean',
         'description': '默认展开（仅在树形展示时有效）',
         'required': false,
       },
       {
         'name': 'allowInputSearch',
+        'label': '允许输入搜索',
         'type': 'boolean',
         'description': '是否允许输入搜索',
         'required': false,
       },
       {
         'name': 'inputSearchVarName',
+        'label': '搜索框字段名',
         'type': 'string',
         'description': '搜索框字段名',
         'required': false,
       },
       {
         'name': 'inputSearchPlaceholder',
+        'label': '搜索框占位符',
         'type': 'string',
         'description': '搜索框占位符',
         'required': false,
       },
       {
         'name': 'inputSearchWidth',
+        'label': '搜索框宽度',
         'type': 'string',
         'description': '搜索框宽度',
         'required': false,
       },
       {
         'name': 'queryFieldsVarName',
+        'label': '搜索列字段名',
         'type': 'string',
         'description': '搜索列字段名',
         'required': false,
       },
       {
         'name': 'cellClick',
+        'label': '单元格点击事件',
         'type': 'string',
         'description': '单元格点击事件处理函数',
         'required': false,
@@ -4207,18 +4446,21 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'checkMethod',
+        'label': '行选择限制方法',
         'type': 'string',
         'description': '行选择限制方法',
         'required': false,
       },
       {
         'name': 'actionWidth',
+        'label': '操作列宽度',
         'type': 'string',
         'description': '操作列宽度',
         'required': false,
       },
       {
         'name': 'actionFixed',
+        'label': '操作列固定',
         'type': 'boolean',
         'description': '操作列固定',
         'required': false,
@@ -4237,72 +4479,84 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'column',
+        'label': '列配置',
         'type': 'Array',
         'description': '列配置',
         'required': false,
       },
       {
         'name': 'sumColumns',
+        'label': '统计和(整)',
         'type': 'Array',
         'description': '统计和(整)',
         'required': false,
       },
       {
         'name': 'avgColumns',
+        'label': '统计平均(整)',
         'type': 'Array',
         'description': '统计平均(整)',
         'required': false,
       },
       {
         'name': 'floatNum',
+        'label': '小数位数',
         'type': 'number',
         'description': '小数位数',
         'required': false,
       },
       {
         'name': 'topbarMenu',
+        'label': '工具栏菜单',
         'type': 'Array',
         'description': '工具栏菜单',
         'required': false,
       },
       {
         'name': 'topbarBaseConf',
+        'label': '工具栏基础配置',
         'type': 'object',
         'description': '工具栏基础配置',
         'required': false,
       },
       {
         'name': 'cell-style',
+        'label': '单元格样式',
         'type': 'string',
         'description': '单元格样式',
         'required': false,
       },
       {
         'name': 'header-cell-style',
+        'label': '表头单元格样式',
         'type': 'string',
         'description': '表头单元格样式',
         'required': false,
       },
       {
         'name': 'footer-cell-style',
+        'label': '表尾单元格样式',
         'type': 'string',
         'description': '表尾单元格样式',
         'required': false,
       },
       {
         'name': 'row-style',
+        'label': '行样式',
         'type': 'string',
         'description': '行样式',
         'required': false,
       },
       {
         'name': 'header-row-style',
+        'label': '表头行样式',
         'type': 'string',
         'description': '表头行样式',
         'required': false,
       },
       {
         'name': 'footer-row-style',
+        'label': '表尾行样式',
         'type': 'string',
         'description': '表尾行样式',
         'required': false,
@@ -4436,6 +4690,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         'name': 'direction',
+        'label': '步骤条方向',
         'type': 'string',
         'description': '步骤条方向',
         'required': false,
@@ -4453,6 +4708,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'current',
+        'label': '当前步骤',
         'type': 'number',
         'description': '当前步骤，从 0 开始',
         'required': false,
@@ -4460,6 +4716,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'stepType',
+        'label': '步骤条类型',
         'type': 'string',
         'description': '步骤条类型',
         'required': false,
@@ -4477,12 +4734,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'progressDot',
+        'label': '点状步骤条',
         'type': 'boolean',
         'description': '点状步骤条',
         'required': false,
       },
       {
         'name': 'titleField',
+        'label': '标题映射名称',
         'type': 'string',
         'description': '标题映射名称，步骤条标题在静态数据或远程数据中所映射的字段名',
         'required': false,
@@ -4490,6 +4749,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'descriptionField',
+        'label': '详情映射名称',
         'type': 'string',
         'description': '详情映射名称',
         'required': false,
@@ -4497,18 +4757,21 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'iconField',
+        'label': '图标映射名称',
         'type': 'string',
         'description': '图标映射名称',
         'required': false,
       },
       {
         'name': 'statusField',
+        'label': '状态映射名称',
         'type': 'string',
         'description': '状态映射名称，指定状态。当不配置该属性时，会使用 Steps 的 current 和 staus 来自动指定状态',
         'required': false,
       },
       {
         'name': 'subTitleField',
+        'label': '子标题映射名称',
         'type': 'string',
         'description': '子标题映射名称',
         'required': false,
@@ -4557,6 +4820,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         'name': 'mode',
+        'label': '时间轴位置',
         'type': 'string',
         'description': '时间轴位置',
         'required': false,
@@ -4578,6 +4842,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'color',
+        'label': '圆圈颜色',
         'type': 'string',
         'description': '圆圈颜色',
         'required': false,
@@ -4585,6 +4850,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'nameField',
+        'label': '节点映射名称',
         'type': 'string',
         'description': '节点映射名称，时间轴节点右侧显示的文本信息，在静态数据或远程数据中所映射的字段名',
         'required': false,
@@ -4592,18 +4858,21 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'showSubtitle',
+        'label': '显示副标题',
         'type': 'boolean',
         'description': '显示副标题',
         'required': false,
       },
       {
         'name': 'subtitleFields',
+        'label': '副标题映射名称',
         'type': 'string',
         'description': '副标题映射名称，多个副标题映射字段时，以,分割',
         'required': false,
       },
       {
         'name': 'subtitleStyle',
+        'label': '副标题样式',
         'type': 'string',
         'description': '副标题样式',
         'required': false,
@@ -4652,12 +4921,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         'name': 'height',
+        'label': '高度(px)',
         'type': 'number',
         'description': '高度(px)',
         'required': false,
       },
       {
         'name': 'inputDisplay',
+        'label': '搜索框显示',
         'type': 'boolean',
         'description': '搜索框显示',
         'required': false,
@@ -4670,18 +4941,21 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'idName',
+        'label': '返回数据项id的映射字段',
         'type': 'string',
         'description': '返回数据项id的映射字段',
         'required': false,
       },
       {
         'name': 'labelName',
+        'label': '返回数据项label的映射字段',
         'type': 'string',
         'description': '返回数据项label的映射字段',
         'required': false,
       },
       {
         'name': 'childrenName',
+        'label': '返回数据项children的映射字段',
         'type': 'string',
         'description': '返回数据项children的映射字段',
         'required': false,
@@ -4696,6 +4970,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.display,
       {
         'name': 'fitHeight',
+        'label': '填充高度',
         'type': 'string',
         'description': '填充高度',
         'required': true,
@@ -4704,6 +4979,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.itemStyle,
       {
         'name': 'src',
+        'label': 'iframe地址',
         'type': 'string',
         'description': 'iframe 的 src 属性',
         'required': false,
@@ -4742,6 +5018,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.style,
       {
         'name': 'width',
+        'label': '宽度',
         'type': 'number',
         'description': '宽度',
         'required': false,
@@ -4778,6 +5055,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         'name': 'title',
+        'label': '弹窗标题',
         'type': 'string',
         'description': '弹窗标题',
       },
@@ -4797,6 +5075,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'height',
+        'label': '弹窗高度',
         'type': 'number',
         'description': '弹窗高度',
         'required': true,
@@ -4804,16 +5083,19 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'hideFooter',
+        'label': '隐藏底部内容',
         'type': 'boolean',
         'description': '隐藏底部内容',
       },
       {
         'name': 'draggable',
+        'label': '弹窗可拖动',
         'type': 'boolean',
         'description': '弹窗可拖动',
       },
       {
         'name': 'keyboard',
+        'label': '键盘esc关闭',
         'type': 'boolean',
         'description': '是否支持键盘 esc 关闭',
         'required': true,
@@ -4821,6 +5103,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'destroyOnClose',
+        'label': '关闭后销毁',
         'type': 'boolean',
         'description': '关闭后销毁 Modal 里的子元素',
         'required': true,
@@ -4828,6 +5111,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'inputDisplay',
+        'label': '搜索框显示',
         'type': 'boolean',
         'description': '搜索框显示',
       },
@@ -4874,6 +5158,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.span,
       {
         'name': 'labelCol',
+        'label': '标签栅格',
         'type': 'object',
         'description': '标签所占栅格',
         'required': false,
@@ -4883,11 +5168,13 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.itemStyle,
       {
         'name': 'text',
+        'label': '展示文本',
         'type': 'string',
         'description': '展示文本',
       },
       {
         'name': 'labelAlign',
+        'label': '标签对齐方式',
         'type': 'string',
         'description': '标签对齐方式',
         'options': [
@@ -4907,6 +5194,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'colon',
+        'label': '显示冒号',
         'type': 'boolean',
         'description': '显示冒号',
       },
@@ -4925,6 +5213,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.style,
       {
         'name': 'size',
+        'label': '组件大小',
         'type': 'string',
         'description': '组件大小',
         'required': false,
@@ -4950,11 +5239,39 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'buttonType',
         'type': 'string',
         'description': '按钮类型',
+        'label': '按钮类型',
+        options: [
+          {
+            label: '主要',
+            value: 'primary',
+          },
+          {
+            label: '默认',
+            value: 'default',
+          },
+          {
+            label: '虚线',
+            value: 'dashed',
+          },
+          {
+            label: '链接',
+            value: 'link',
+          },
+          {
+            label: '文本',
+            value: 'text',
+          },
+          {
+            label: '危险',
+            value: 'danger',
+          },
+        ],
       },
       {
         'name': 'icon',
         'type': 'string',
         'description': '图标',
+        'label': '图标',
       },
     ],
   },
@@ -4966,12 +5283,14 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.labelWidth,
       {
         'name': 'longLabel',
+        'label': '是否为长标签',
         'type': 'boolean',
         'description': '是否为长标签',
         'required': false,
       },
       {
         'name': 'label-col',
+        'label': '标签栅格',
         'type': 'object',
         'description': '标签所占栅格，与 wrapperCol 属性合为 24，可选值：1-24',
         'required': false,
@@ -5006,6 +5325,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         'name': 'buttonLabel',
+        'label': '按钮文字',
         'type': 'string',
         'description': '按钮文字',
       },
@@ -5013,11 +5333,39 @@ const ComponentsProps:Record<string, ComponentProp> = {
         'name': 'buttonType',
         'type': 'string',
         'description': '按钮类型',
+        'label': '按钮类型',
+        options: [
+          {
+            label: '主要',
+            value: 'primary',
+          },
+          {
+            label: '默认',
+            value: 'default',
+          },
+          {
+            label: '虚线',
+            value: 'dashed',
+          },
+          {
+            label: '链接',
+            value: 'link',
+          },
+          {
+            label: '文本',
+            value: 'text',
+          },
+          {
+            label: '危险',
+            value: 'danger',
+          },
+        ],
       },
       {
         'name': 'icon',
         'type': 'string',
         'description': '图标',
+        'label': '图标',
       },
     ],
   },
@@ -5083,6 +5431,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         'name': 'groupType',
+        'label': '组合类型',
         'type': 'string',
         'description': '组合类型',
         'options': [
@@ -5098,6 +5447,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       },
       {
         'name': 'horizentalAlign',
+        'label': '水平对齐方式',
         'type': 'string',
         'description': '水平对齐方式',
         'options': [
@@ -5131,8 +5481,244 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.tools,
       {
         'name': 'formParams',
+        'label': '表单参数配置',
         'type': 'Array',
         'description': '表单参数配置',
+      },
+    ],
+  },
+  'form-container': {
+    type: 'form-container',
+    props: [
+      {
+        name: 'formConfig',
+        label: '表单配置',
+        type: 'object',
+        description: '表单配置,内部属性配置方式参考 formConfig.开头的属性定义',
+        required: true,
+        defaultValue: {
+          'layout': 'horizontal',
+          'layoutCol': 'auto',
+          'labelCol': 6,
+          'wrapperCol': 18,
+          'header': '0px',
+          'footer': '0px',
+          'left': '0px',
+          'right': '0px',
+          'gutter': 0,
+          'previewDrawerWidth': '95%',
+          'previewDrawerMinWidth': '',
+          'showButton': true,
+          'buttons': [],
+          'backgroundColor': 'white',
+          'initMethod': '',
+          'functions': '',
+          'isLabelWidth': true,
+          'labelWidth': 120,
+        },
+      },
+      {
+        name: 'formColumns',
+        label: '表单项配置',
+        type: 'Array',
+        description: '表单项配置，默认放置子组件的位置',
+        required: true,
+        defaultValue: [],
+      },
+      {
+        name: 'formHeader',
+        label: '表单头部配置',
+        type: 'Array',
+        description: '表单头部配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'formLeft',
+        label: '表单左侧配置',
+        type: 'Array',
+        description: '表单左侧配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'formRight',
+        label: '表单右侧配置',
+        type: 'Array',
+        description: '表单右侧配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'formFooter',
+        label: '表单底部配置',
+        type: 'Array',
+        description: '表单底部配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'version',
+        label: '版本信息',
+        type: 'object',
+        description: '版本信息',
+        required: true,
+        defaultValue: {
+          'updateTime': 1766025935700,
+        },
+      },
+      {
+        name: 'formConfig.layout',
+        label: '表单项布局',
+        type: 'string',
+        description: '表单项布局',
+        required: true,
+        options: [
+          {
+            value: 'horizontal',
+            label: '水平布局',
+          },
+          {
+            value: 'vertical',
+            label: '垂直布局',
+          },
+        ],
+      },
+      {
+        name: 'formConfig.layoutCol',
+        label: '表单项布局列数',
+        type: 'any',
+        description: '表单项布局列数,为数字或者"auto"',
+        required: true,
+        defaultValue: 'auto',
+      },
+      {
+        name: 'formConfig.labelCol',
+        label: '标签列宽',
+        type: 'number',
+        description: '标签列宽',
+        required: false,
+        defaultValue: 6,
+      },
+      {
+        name: 'formConfig.wrapperCol',
+        label: '控件列宽',
+        type: 'number',
+        description: '控件列宽',
+        required: false,
+        defaultValue: 18,
+      },
+      {
+        name: 'formConfig.header',
+        label: '头部间距',
+        type: 'string',
+        description: '头部间距',
+        required: false,
+        defaultValue: '0px',
+      },
+      {
+        name: 'formConfig.footer',
+        label: '底部间距',
+        type: 'string',
+        description: '底部间距',
+        required: false,
+        defaultValue: '0px',
+      },
+      {
+        name: 'formConfig.left',
+        label: '左侧间距',
+        type: 'string',
+        description: '左侧间距',
+        required: false,
+        defaultValue: '0px',
+      },
+      {
+        name: 'formConfig.right',
+        label: '右侧间距',
+        type: 'string',
+        description: '右侧间距',
+        required: false,
+        defaultValue: '0px',
+      },
+      {
+        name: 'formConfig.gutter',
+        label: '栅格间隔',
+        type: 'number',
+        description: '栅格间隔',
+        required: false,
+        defaultValue: 0,
+      },
+      {
+        name: 'formConfig.previewDrawerWidth',
+        label: '预览抽屉宽度',
+        type: 'string',
+        description: '预览抽屉宽度',
+        required: false,
+        defaultValue: '95%',
+      },
+      {
+        name: 'formConfig.previewDrawerMinWidth',
+        label: '预览抽屉最小宽度',
+        type: 'string',
+        description: '预览抽屉最小宽度',
+        required: false,
+        defaultValue: '',
+      },
+      {
+        name: 'formConfig.showButton',
+        label: '是否显示按钮',
+        type: 'boolean',
+        description: '是否显示按钮',
+        required: false,
+        defaultValue: true,
+      },
+      {
+        name: 'formConfig.buttons',
+        label: '按钮配置',
+        type: 'Array',
+        description: '按钮配置',
+        required: false,
+        defaultValue: [],
+      },
+      {
+        name: 'formConfig.backgroundColor',
+        label: '背景颜色',
+        type: 'string',
+        description: '背景颜色',
+        required: false,
+        defaultValue: 'white',
+      },
+      {
+        name: 'formConfig.initMethod',
+        label: '初始化方法',
+        type: 'string',
+        description: '自定义函数代码块，主要用于定义页面全局函数，优先级高于formConfig.functions',
+        required: false,
+        defaultValue: '',
+      },
+      {
+        name: 'formConfig.functions',
+        label: '函数定义',
+        type: 'string',
+        description: '自定义函数代码块，页面初始化后执行，执行优先级次于initMethod。',
+        required: false,
+        defaultValue: '',
+      },
+      {
+        name: 'formConfig.isLabelWidth',
+        label: '是否启用标签宽度',
+        type: 'boolean',
+        description: '是否启用标签宽度',
+        required: false,
+        defaultValue: true,
+      },
+      {
+        name: 'formConfig.labelWidth',
+        label: '标签宽度',
+        type: 'number',
+        description: '标签宽度',
+        required: false,
+        defaultValue: 120,
       },
     ],
   },
