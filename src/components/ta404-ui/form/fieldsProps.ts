@@ -541,16 +541,6 @@ export const CommonProps: { [key: string]: PropsDefinition } = {
       column: [],
     },
   },
-  childrenColumns: {
-    name: 'children',
-    label: '子组件配置',
-    type: 'object',
-    description: '子组件配置，columns为组件列表',
-    required: true,
-    defaultValue: {
-      columns: [],
-    },
-  },
   parentLabelCol: {
     name: 'parentLabelCol',
     label: '容器标签栅格',
@@ -611,7 +601,7 @@ const ComponentsProps:Record<string, ComponentProp> = {
       CommonProps.display,
       CommonProps.label,
       CommonProps.span,
-      CommonProps.childrenColumns,
+      CommonProps.childrenColumn,
       CommonProps.isRender,
       CommonProps.itemStyle,
       CommonProps.tools,
