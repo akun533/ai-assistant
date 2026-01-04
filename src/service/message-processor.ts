@@ -3,7 +3,7 @@ import { ComponentRegistry } from '../core/component-registry.js';
 import { FormRuleGenerator } from '../core/form-rule-generator.js';
 import { AgentManager } from './agent-manager.js';
 import { AgentMessage, AgentRequest, AgentTool, AgentType } from './agent/index.js';
-import { ToolRegistry } from './tools/index.js';
+import { ToolRegistry } from './tools.js';
 import type { ToolArgs } from '../types/index.js';
 import { ChatRequest } from './chat.js';
 

@@ -3,7 +3,7 @@ import { ComponentRegistry } from '../core/component-registry.js';
 import { FormRuleGenerator } from '../core/form-rule-generator.js';
 import { generateSessionId } from '../utils';
 import { AgentMessage, AgentType } from './agent';
-import { ToolRegistry } from './tools';
+import { ToolRegistry } from './tools.js';
 import { AgentManager } from './agent-manager.js';
 import { MessageProcessor } from './message-processor.js';
 import { PromptBuilder } from './prompt-builder.js';
@@ -84,7 +84,6 @@ export default class Chat {
   async initialize(): Promise<void> {}
 
 
-
   /**
    * 生成 OpenAI 兼容的响应 ID
    */
@@ -105,7 +104,6 @@ export default class Chat {
       tool_calls: msg.tool_calls,
     }));
   }
-
 
 
   /**

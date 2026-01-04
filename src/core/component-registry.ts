@@ -13,6 +13,13 @@ import {
   getAntDesignVuePrompt,
   getAntDesignVue2Prompt,
   getTa404uiPrompt,
+  getElementPlusUsages,
+  getElementUIUsages,
+  getVantUsages,
+  getVantVue2Usages,
+  getAntDesignVueUsages,
+  getAntDesignVue2Usages,
+  getTa404uiUsages,
 } from '../components';
 import { getElementPlusCategory, getElementPlusSections } from '../components/element-plus/vue3.js';
 import { getElementUICategory, getElementUISections } from '../components/element-plus/vue2.js';
@@ -21,7 +28,6 @@ import { getVantVue2Category, getVantVue2Sections } from '../components/vant/vue
 import { getAntDesignVueCategory, getAntDesignVueSections } from '../components/ant-design-vue/vue3.js';
 import { getAntDesignVue2Category, getAntDesignVue2Sections } from '../components/ant-design-vue/vue2.js';
 import { getTa404uiSections } from '../components/ta404-ui/vue2.js';
-import usages from '../components/usages';
 import { PropsDefinition } from '../components/ta404-ui/form/fieldsProps';
 import type { ToolRegistration } from '../types';
 import { formTools } from '../components/tools/index.js';
@@ -110,6 +116,27 @@ export class ComponentRegistry {
     });
   }
 
+  /**
+   * 获取组件使用说明
+   * @param uiFramework UI框架
+   * @param vueVersion Vue版本
+   * @returns 使用说明对象
+   */
+  private getComponentUsages(uiFramework: string, vueVersion: 'vue2' | 'vue3' | 'common'): Record<string, string> {
+    if (uiFramework === 'ta404-ui') {
+      return getTa404uiUsages();
+    } else if (uiFramework === 'element-plus') {
+      return getElementPlusUsages();
+    } else if (uiFramework === 'element-ui') {
+      return getElementUIUsages();
+    } else if (uiFramework === 'vant') {
+      return vueVersion === 'vue3' ? getVantUsages() : getVantVue2Usages();
+    } else if (uiFramework === 'ant-design-vue') {
+      return vueVersion === 'vue3' ? getAntDesignVueUsages() : getAntDesignVue2Usages();
+    }
+    return {};
+  }
+
   private registerComponent(type: string, component: ComponentInfo) {
     if (component.business && process.env.FORM_CREATE_BUSINESS !== 'true') {
       return;
@@ -117,6 +144,8 @@ export class ComponentRegistry {
     if (!this.components.has(type)) {
       this.components.set(type, []);
     }
+    // 根据 UI 框架和 Vue 版本获取对应的 usages
+    const usages = this.getComponentUsages(component.uiFramework, component.vueVersion);
     component.usage = usages[component.type];
     this.components.get(type)!.push(component);
   }

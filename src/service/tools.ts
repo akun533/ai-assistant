@@ -1,6 +1,6 @@
-import type { ToolRegistration, ToolDefinition, ToolContext, ToolHandler } from '../../types';
-import { ComponentRegistry } from '../../core/component-registry.js';
-export * from '../../types';
+import type { ToolRegistration, ToolDefinition, ToolContext, ToolHandler } from '../types';
+import { ComponentRegistry } from '../core/component-registry.js';
+export * from '../types';
 
 export class ToolRegistry {
   private componentRegistry: ComponentRegistry;
@@ -10,8 +10,8 @@ export class ToolRegistry {
   }
 
   /**
-   * 注册工具
-   */
+     * 注册工具
+     */
   registerTool(registration: ToolRegistration) {
     this.componentRegistry.registerTool(registration);
   }
@@ -21,15 +21,15 @@ export class ToolRegistry {
   }
 
   /**
-   * 获取工具处理器（已包装context）
-   */
+     * 获取工具处理器（已包装context）
+     */
   getToolHandler(name: string): ToolHandler | undefined {
     return this.componentRegistry.getToolHandler(name);
   }
 
   /**
-   * 获取所有工具定义
-   */
+     * 获取所有工具定义
+     */
   getAllToolDefinitions(): ToolDefinition[] {
     return this.componentRegistry.getAllToolDefinitions();
   }

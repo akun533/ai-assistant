@@ -88,6 +88,41 @@ export function getVantPrompt(): string {
   }
 }
 
+/**
+ * Vant 组件使用说明
+ */
+export function getVantUsages(): Record<string, string> {
+  return {
+    input: '用于输入单行文本信息的基本表单字段',
+    textarea: '支持输入和编辑多行文本内容的文本框',
+    password: '用于安全输入密码，输入内容默认会被隐藏',
+    stepper: '用于输入数字，可通过按钮增减或直接输入特定数值',
+    radio: '提供一组选项，用户只能从中选择一个选项',
+    checkbox: '提供一组选项，用户可以选择一个或多个选项',
+    select: '从多个选项中选择一个或多个，支持下拉展示形式',
+    switch: '用于表示两种相互对立状态间的切换，如开/关',
+    rate: '允许用户通过点击图标对内容进行评分',
+    slider: '通过滑动滑块在一个固定区间内选择数值',
+    calendar: '提供一个日历界面供用户选择单个日期',
+    calendarRange: '提供一个日历界面供用户选择一个日期范围',
+    uploader: '提供交互将本地文件上传到服务器的功能',
+    vanField: '表单中一个基本的构成单元，通常包含标签和输入控件',
+    vanNoticeBar: '用于显示辅助性说明、帮助或操作结果提示信息',
+    vanButton: '用户可点击的控件，用于触发相应的操作或命令',
+    vanDivider: '一条视觉上的分隔线，用于分隔不同内容区块',
+    vanTag: '用于标记和分类项目的小型标签，可包含关闭等功能',
+    vanImage: '用于在页面中展示图片',
+    vanIcon: '用于展示图标的组件，提供丰富的图标库',
+    vanTabs: '将内容分组放在不同面板，通过标签头切换显示',
+    vanTab: '标签页的内容面板，与标签页组件配合使用',
+    vanCollapse: '提供可折叠/展开的内容区域，节省空间并分组信息',
+    vanCollapseItem: '折叠面板的单个面板项，可展开或折叠',
+    vanCellGroup: '单元格组，用于将多个单元格组合在一起',
+    vanCell: '单元格组件，用于展示列表信息或作为可点击的项',
+    fcPopup: '弹出层组件，用于展示浮层内容',
+  };
+}
+
 export const vantComponents: ComponentInfo[] = [
   {
     type: 'input',
