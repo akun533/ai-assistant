@@ -1,4 +1,92 @@
-import { ComponentInfo } from '../../core/component-registry.js';
+import { ComponentInfo, ComponentCategory } from '../../core/component-registry.js';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+/**
+ * Vant (Vue3) 组件分类规则
+ * 定义每个组件类型对应的分类
+ */
+export function getVantCategory(componentType: string): ComponentCategory | undefined {
+  const categoryMap: Record<string, ComponentCategory> = {
+    // 表单输入类
+    'input': 'form',
+    'textarea': 'form',
+    'password': 'form',
+    'inputNumber': 'form',
+    'stepper': 'form',
+    
+    // 选择类
+    'radio': 'form',
+    'checkbox': 'form',
+    'picker': 'form',
+    'cascader': 'form',
+    'switch': 'form',
+    'rate': 'form',
+    'slider': 'form',
+    
+    // 日期时间类
+    'datePicker': 'form',
+    'timePicker': 'form',
+    
+    // 上传类
+    'upload': 'form',
+    'uploader': 'form',
+    
+    // 布局容器类
+    'row': 'layout',
+    'col': 'layout',
+    'card': 'layout',
+    'collapse': 'layout',
+    'tabs': 'layout',
+    'form': 'layout',
+    'cell': 'layout',
+    'cellGroup': 'layout',
+    
+    // 辅助展示类
+    'button': 'assist',
+    'span': 'assist',
+    'divider': 'assist',
+    'html': 'assist',
+  };
+  
+  return categoryMap[componentType];
+}
+
+/**
+ * Vant (Vue3) 组件分组展示配置
+ */
+export function getVantSections() {
+  return [
+    {
+      title: 'Field 表单组件',
+      categoryKey: 'formComponents' as const,
+    },
+    {
+      title: 'Container 布局组件',
+      categoryKey: 'layoutComponents' as const,
+    },
+    {
+      title: 'Assist 辅助组件',
+      categoryKey: 'assistComponents' as const,
+    },
+  ];
+}
+
+/**
+ * 读取 Vant 的系统提示词
+ */
+export function getVantPrompt(): string {
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const promptPath = join(__dirname, '..', 'prompts', 'common-prompt.md');
+    return readFileSync(promptPath, 'utf-8');
+  } catch (error) {
+    console.error('❌ 读取 Vant 提示词失败:', error);
+    return '';
+  }
+}
 
 export const vantComponents: ComponentInfo[] = [
   {

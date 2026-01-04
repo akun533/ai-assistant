@@ -6,15 +6,37 @@ import {
   vantComponents,
   vantVue2Components,
   ta404uiComponents,
+  getElementPlusPrompt,
+  getElementUIPrompt,
+  getVantPrompt,
+  getVantVue2Prompt,
+  getAntDesignVuePrompt,
+  getAntDesignVue2Prompt,
+  getTa404uiPrompt,
 } from '../components';
+import { getElementPlusCategory, getElementPlusSections } from '../components/element-plus/vue3.js';
+import { getElementUICategory, getElementUISections } from '../components/element-plus/vue2.js';
+import { getVantCategory, getVantSections } from '../components/vant/vue3.js';
+import { getVantVue2Category, getVantVue2Sections } from '../components/vant/vue2.js';
+import { getAntDesignVueCategory, getAntDesignVueSections } from '../components/ant-design-vue/vue3.js';
+import { getAntDesignVue2Category, getAntDesignVue2Sections } from '../components/ant-design-vue/vue2.js';
+import { getTa404uiSections } from '../components/ta404-ui/vue2.js';
 import usages from '../components/usages';
 import { PropsDefinition } from '../components/ta404-ui/form/fieldsProps';
+import type { ToolRegistration } from '../types';
+import { formTools } from '../components/tools/index.js';
+
+// 组件分类类型
+export type ComponentCategory = 'form' | 'layout' | 'assist' | 'input' | 'select' | 'date' | 'display';
 
 export interface ComponentInfo {
   type: string;
   label: string;
   uiFramework: string;
   vueVersion: 'vue2' | 'vue3' | 'common';
+  // 新增：组件所属分类，优先使用此字段进行分类
+  category?: ComponentCategory;
+  // 保留兼容性字段
   fieldType?: 'input' | 'layout' | 'date' | 'select' | 'display' | 'assist',
   business?: true; // 是否是高级版组件
   isAssist?: boolean; // 标识是否为辅助组件（不需要field和title）
@@ -43,9 +65,11 @@ export interface ComponentInfo {
 
 export class ComponentRegistry {
   private components: Map<string, ComponentInfo[]> = new Map();
+  private tools: Map<string, ToolRegistration> = new Map();
 
   constructor() {
     this.initializeComponents();
+    this.initializeTools();
   }
 
   private initializeComponents() {
@@ -156,6 +180,74 @@ export class ComponentRegistry {
     return Array.from(uniqueComponents.values());
   }
 
+  /**
+   * 根据UI框架和组件类型获取分类
+   * 调用各UI框架组件文件中定义的分类函数
+   */
+  private getComponentCategoryByType(
+    componentType: string,
+    uiFramework: string,
+  ): ComponentCategory | undefined {
+    // 根据不同UI框架调用对应的分类函数
+    switch (uiFramework) {
+      case 'element-plus':
+        return getElementPlusCategory(componentType);
+      
+      case 'element-ui':
+        return getElementUICategory(componentType);
+      
+      case 'ant-design-vue':
+        return getAntDesignVueCategory(componentType) || getAntDesignVue2Category(componentType);
+      
+      case 'vant':
+        return getVantCategory(componentType) || getVantVue2Category(componentType);
+      
+      case 'ta404-ui':
+        // ta404-ui 使用 fieldType 字段，不需要额外的分类配置
+        return undefined;
+      
+      default:
+        return undefined;
+    }
+  }
+
+  /**
+   * 获取组件分类
+   * 优先级：
+   * 1. 组件定义中的 category 字段
+   * 2. 配置文件中定义的分类规则
+   * 3. ta404-ui 的 fieldType 字段
+   * 4. 根据 isField、isContainer 等字段判断
+   */
+  private getComponentCategory(comp: ComponentInfo): ComponentCategory {
+    // 1. 优先使用显式定义的 category 字段
+    if (comp.category) {
+      return comp.category;
+    }
+
+    // 2. 使用配置文件中的分类规则
+    const configCategory = this.getComponentCategoryByType(comp.type, comp.uiFramework);
+    if (configCategory) {
+      return configCategory;
+    }
+
+    // 3. ta404-ui: 使用 fieldType 字段
+    if (comp.uiFramework === 'ta404-ui' && comp.fieldType) {
+      return comp.fieldType;
+    }
+
+    // 4. 其他UI框架: 根据 isField、isContainer 等字段判断（兼容旧逻辑）
+    if (comp.isField) {
+      return 'form';
+    }
+    if (comp.isContainer) {
+      return 'layout';
+    }
+    
+    // 5. 默认归类为辅助组件
+    return 'assist';
+  }
+
   categorizeComponents(components: ComponentInfo[]) {
     const layoutComponents: ComponentInfo[] = [];
     const inputComponents: ComponentInfo[] = [];
@@ -177,41 +269,33 @@ export class ComponentRegistry {
         ...comp,
       };
 
-      if (comp.uiFramework === 'ta404-ui') {
-        // 判断组件类型
-        if (comp.fieldType === 'input') {
-          // 表单组件：用于数据输入和收集
-          inputComponents.push(componentInfo);
-        } else if (comp.fieldType === 'layout') {
-          // 布局组件：用于页面布局和结构
-          layoutComponents.push(componentInfo);
-        } else if (comp.fieldType === 'date') {
-          // 日期时间组件：用于用户录入时间类型的字段
-          dateComponents.push(componentInfo);
-        } else if (comp.fieldType === 'select') {
-          // 选择组件：用户选择预定义选择项的组件
-          selectComponents.push(componentInfo);
-        } else if (comp.fieldType === 'assist') {
-          // 辅助组件
-          assistComponents.push(componentInfo);
-        } else if (comp.fieldType === 'display') {
-          // 辅助组件
-          displayComponents.push(componentInfo);
-        }
-      } else {
-        // 判断组件类型
-        if (comp.isField) {
-          // 表单组件：用于数据输入和收集
-          formComponents.push(componentInfo);
-        } else if (comp.isContainer) {
-          // 布局组件：用于页面布局和结构
-          layoutComponents.push(componentInfo);
-        } else {
-          // 辅助组件：其他功能组件
-          assistComponents.push(componentInfo);
-        }
-      }
+      // 使用统一的分类方法
+      const category = this.getComponentCategory(comp);
 
+      switch (category) {
+        case 'input':
+          inputComponents.push(componentInfo);
+          break;
+        case 'layout':
+          layoutComponents.push(componentInfo);
+          break;
+        case 'date':
+          dateComponents.push(componentInfo);
+          break;
+        case 'select':
+          selectComponents.push(componentInfo);
+          break;
+        case 'display':
+          displayComponents.push(componentInfo);
+          break;
+        case 'form':
+          formComponents.push(componentInfo);
+          break;
+        case 'assist':
+        default:
+          assistComponents.push(componentInfo);
+          break;
+      }
     });
 
     return {
@@ -283,5 +367,121 @@ export class ComponentRegistry {
 
     // 默认返回 element-plus
     return 'element-plus';
+  }
+
+  /**
+   * 获取系统提示词
+   * 根据UI框架和Vue版本返回对应的提示词
+   */
+  getSystemPrompt(uiFramework: string, vueVersion: 'vue2' | 'vue3'): string {
+    console.log('开始读取系统提示词文件...');
+    
+    try {
+      let prompt = '';
+      
+      // 根据UI框架调用对应的提示词函数
+      if (uiFramework === 'ta404-ui') {
+        prompt = getTa404uiPrompt();
+      } else if (uiFramework === 'element-plus') {
+        prompt = getElementPlusPrompt();
+      } else if (uiFramework === 'element-ui') {
+        prompt = getElementUIPrompt();
+      } else if (uiFramework === 'vant') {
+        prompt = vueVersion === 'vue3' ? getVantPrompt() : getVantVue2Prompt();
+      } else if (uiFramework === 'ant-design-vue') {
+        prompt = vueVersion === 'vue3' ? getAntDesignVuePrompt() : getAntDesignVue2Prompt();
+      } else {
+        // 默认使用 element-plus 的提示词
+        prompt = getElementPlusPrompt();
+      }
+      
+      if (prompt) {
+        console.log('✅ 成功读取系统提示词文件');
+      }
+      
+      return prompt;
+    } catch (error) {
+      console.error('❌ 读取系统提示词失败:', error);
+      return '';
+    }
+  }
+
+  /**
+   * 获取组件分组展示配置
+   * 根据不同UI框架调用对应的sections函数
+   */
+  getSections(
+    categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents']>,
+    uiFramework: string,
+    vueVersion: 'vue2' | 'vue3',
+  ) {
+    // 根据UI框架获取对应的sections配置
+    let sectionsConfig;
+    
+    if (uiFramework === 'ta404-ui') {
+      sectionsConfig = getTa404uiSections();
+    } else if (uiFramework === 'element-plus') {
+      sectionsConfig = getElementPlusSections();
+    } else if (uiFramework === 'element-ui') {
+      sectionsConfig = getElementUISections();
+    } else if (uiFramework === 'vant') {
+      sectionsConfig = vueVersion === 'vue3' ? getVantSections() : getVantVue2Sections();
+    } else if (uiFramework === 'ant-design-vue') {
+      sectionsConfig = vueVersion === 'vue3' ? getAntDesignVueSections() : getAntDesignVue2Sections();
+    } else {
+      // 默认使用element-plus的配置
+      sectionsConfig = getElementPlusSections();
+    }
+
+    // 将sections配置和实际的组件数据结合
+    return sectionsConfig.map(section => ({
+      title: section.title,
+      category: categorizedComponents[section.categoryKey],
+    }));
+  }
+
+  /**
+   * 初始化工具注册
+   */
+  private initializeTools() {
+    // 注册表单工具
+    this.registerTools(formTools);
+  }
+
+  /**
+   * 注册工具
+   */
+  registerTool(registration: ToolRegistration) {
+    this.tools.set(registration.definition.name, registration);
+  }
+
+  /**
+   * 批量注册工具
+   */
+  registerTools(registrations: ToolRegistration[]) {
+    registrations.forEach((registration) => {
+      this.registerTool(registration);
+    });
+  }
+
+  /**
+   * 获取工具处理器
+   */
+  getToolHandler(name: string) {
+    return this.tools.get(name)?.handler;
+  }
+
+  /**
+   * 获取所有工具定义
+   */
+  getAllToolDefinitions() {
+    return Array.from(this.tools.values()).map(reg => reg.definition);
+  }
+
+  /**
+   * 获取所有已注册的工具
+   */
+  getAllTools(): ToolRegistration[] {
+    return Array.from(this.tools.values());
   }
 }

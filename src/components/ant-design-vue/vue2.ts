@@ -1,4 +1,57 @@
-import { ComponentInfo } from '../../core/component-registry.js';
+import { ComponentInfo, ComponentCategory } from '../../core/component-registry.js';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+/**
+ * Ant Design Vue (Vue2) 组件分类规则 - 与Vue3版本相同
+ */
+export function getAntDesignVue2Category(componentType: string): ComponentCategory | undefined {
+  const categoryMap: Record<string, ComponentCategory> = {
+    'input': 'form', 'textarea': 'form', 'password': 'form', 'inputNumber': 'form',
+    'radio': 'form', 'checkbox': 'form', 'select': 'form', 'cascader': 'form', 'switch': 'form', 'rate': 'form', 'slider': 'form',
+    'datePicker': 'form', 'timePicker': 'form', 'rangePicker': 'form',
+    'upload': 'form', 'transfer': 'form',
+    'row': 'layout', 'col': 'layout', 'card': 'layout', 'collapse': 'layout', 'tabs': 'layout', 'table': 'layout', 'tree': 'layout', 'form': 'layout',
+    'button': 'assist', 'alert': 'assist', 'span': 'assist', 'divider': 'assist', 'html': 'assist',
+  };
+  return categoryMap[componentType];
+}
+
+/**
+ * Ant Design Vue (Vue2) 组件分组展示配置
+ */
+export function getAntDesignVue2Sections() {
+  return [
+    {
+      title: 'Field 表单组件',
+      categoryKey: 'formComponents' as const,
+    },
+    {
+      title: 'Container 布局组件',
+      categoryKey: 'layoutComponents' as const,
+    },
+    {
+      title: 'Assist 辅助组件',
+      categoryKey: 'assistComponents' as const,
+    },
+  ];
+}
+
+/**
+ * 读取 Ant Design Vue2 的系统提示词
+ */
+export function getAntDesignVue2Prompt(): string {
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const promptPath = join(__dirname, '..', 'prompts', 'common-prompt.md');
+    return readFileSync(promptPath, 'utf-8');
+  } catch (error) {
+    console.error('❌ 读取 Ant Design Vue2 提示词失败:', error);
+    return '';
+  }
+}
 
 export const antDesignVue2Components: ComponentInfo[] = [
   {

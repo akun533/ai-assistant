@@ -1,4 +1,94 @@
-import { ComponentInfo } from '../../core/component-registry.js';
+import { ComponentInfo, ComponentCategory } from '../../core/component-registry.js';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+/**
+ * Element UI (Vue2) 组件分类规则
+ * 定义每个组件类型对应的分类
+ */
+export function getElementUICategory(componentType: string): ComponentCategory | undefined {
+  const categoryMap: Record<string, ComponentCategory> = {
+    // 表单输入类
+    'input': 'form',
+    'textarea': 'form',
+    'password': 'form',
+    'inputNumber': 'form',
+    
+    // 选择类
+    'radio': 'form',
+    'checkbox': 'form',
+    'select': 'form',
+    'cascader': 'form',
+    'switch': 'form',
+    'rate': 'form',
+    'slider': 'form',
+    'colorPicker': 'form',
+    'transfer': 'form',
+    
+    // 日期时间类
+    'datePicker': 'form',
+    'timePicker': 'form',
+    'timeSelect': 'form',
+    
+    // 上传类
+    'upload': 'form',
+    
+    // 布局容器类
+    'row': 'layout',
+    'col': 'layout',
+    'card': 'layout',
+    'collapse': 'layout',
+    'tabs': 'layout',
+    'table': 'layout',
+    'tree': 'layout',
+    'form': 'layout',
+    
+    // 辅助展示类
+    'button': 'assist',
+    'alert': 'assist',
+    'span': 'assist',
+    'divider': 'assist',
+    'html': 'assist',
+  };
+  
+  return categoryMap[componentType];
+}
+
+/**
+ * Element UI (Vue2) 组件分组展示配置
+ */
+export function getElementUISections() {
+  return [
+    {
+      title: 'Field 表单组件',
+      categoryKey: 'formComponents' as const,
+    },
+    {
+      title: 'Container 布局组件',
+      categoryKey: 'layoutComponents' as const,
+    },
+    {
+      title: 'Assist 辅助组件',
+      categoryKey: 'assistComponents' as const,
+    },
+  ];
+}
+
+/**
+ * 读取 Element UI 的系统提示词
+ */
+export function getElementUIPrompt(): string {
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const promptPath = join(__dirname, '..', 'prompts', 'common-prompt.md');
+    return readFileSync(promptPath, 'utf-8');
+  } catch (error) {
+    console.error('❌ 读取 Element UI 提示词失败:', error);
+    return '';
+  }
+}
 
 export const elementUIComponents: ComponentInfo[] = [
   {

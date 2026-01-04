@@ -1,4 +1,7 @@
 import { ComponentInfo } from '../../core/component-registry';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 
 interface TaComponent extends Omit<ComponentInfo, 'events' | 'props' | 'fieldType' | 'uiFramework' | 'vueVersion' | 'label'> {
   type: string;
@@ -103,5 +106,52 @@ const getTaComponents = (): ComponentInfo[] => {
     }),
   );
 };
+
+/**
+ * ta404-ui 组件分组展示配置
+ */
+export function getTa404uiSections() {
+  return [
+    {
+      title: '容器布局组件',
+      categoryKey: 'layoutComponents' as const,
+    },
+    {
+      title: '输入组件',
+      categoryKey: 'inputComponents' as const,
+    },
+    {
+      title: '选择组件',
+      categoryKey: 'selectComponents' as const,
+    },
+    {
+      title: '日期时间组件',
+      categoryKey: 'dateComponents' as const,
+    },
+    {
+      title: '数据展示组件',
+      categoryKey: 'displayComponents' as const,
+    },
+    {
+      title: '辅助组件',
+      categoryKey: 'assistComponents' as const,
+    },
+  ];
+}
+
+/**
+ * 读取 ta404-ui 的系统提示词
+ */
+export function getTa404uiPrompt(): string {
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const promptPath = join(__dirname, '..', 'prompts', 'ta404-ui-prompt.md');
+    return readFileSync(promptPath, 'utf-8');
+  } catch (error) {
+    console.error('❌ 读取 ta404-ui 提示词失败:', error);
+    return '';
+  }
+}
 
 export const ta404uiComponents: ComponentInfo[] = getTaComponents();
