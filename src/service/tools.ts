@@ -23,14 +23,14 @@ export class ToolRegistry {
   /**
      * 获取工具处理器（已包装context）
      */
-  getToolHandler(name: string): ToolHandler | undefined {
-    return this.componentRegistry.getToolHandler(name);
+  getToolHandler(name: string, uiFramework?: string): ToolHandler | undefined {
+    return this.componentRegistry.getToolHandler(name, uiFramework);
   }
 
   /**
      * 获取所有工具定义
      */
-  getAllToolDefinitions(): ToolDefinition[] {
-    return this.componentRegistry.getAllToolDefinitions();
+  getAllToolDefinitions(uiFramework?: string): ToolDefinition[] {
+    return this.componentRegistry.getAllToolDefinitions(uiFramework);
   }
 }

@@ -168,8 +168,8 @@ export default class Chat {
       const currentSessionId = generateSessionId();
       console.log('📋 会话 ID:', currentSessionId);
 
-      // 动态获取 MCP 工具
-      const tools = await this.messageProcessor.getMCPTools();
+      // 动态获取 MCP 工具，传入UI框架
+      const tools = await this.messageProcessor.getMCPTools(request.ui);
 
       // 构建消息数组
       const messages = this.convertToAgentMessages(request.messages);
@@ -205,6 +205,7 @@ export default class Chat {
           1,
           currentSessionId,
           signal,
+          request.ui,
         );
       } else {
         // 调用原有的递归处理方法
@@ -218,6 +219,7 @@ export default class Chat {
           request.context,
           currentSessionId,
           signal,
+          request.ui,
         );
       }
 

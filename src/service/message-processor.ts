@@ -32,10 +32,10 @@ export class MessageProcessor {
   /**
    * 动态获取 MCP 工具定义
    */
-  async getMCPTools(): Promise<AgentTool[]> {
+  async getMCPTools(uiFramework?: string): Promise<AgentTool[]> {
     try {
       // 直接从 ToolRegistry 获取完整的工具定义
-      const mcpTools = this.toolRegistry.getAllToolDefinitions();
+      const mcpTools = this.toolRegistry.getAllToolDefinitions(uiFramework);
       if (mcpTools.length === 0) {
         return [];
       }
@@ -72,8 +72,8 @@ export class MessageProcessor {
   /**
    * 获取工具标题
    */
-  private getToolTitle(name: string): string | undefined {
-    const tools = this.toolRegistry.getAllToolDefinitions();
+  private getToolTitle(name: string, uiFramework?: string): string | undefined {
+    const tools = this.toolRegistry.getAllToolDefinitions(uiFramework);
     for (const tool of tools) {
       if (tool.name === name) {
         return tool.title;
@@ -84,9 +84,9 @@ export class MessageProcessor {
   /**
    * 处理工具调用
    */
-  private async handleToolCall(toolName: string, arguments_: any, context: Record<string, any>): Promise<any> {
+  private async handleToolCall(toolName: string, arguments_: any, context: Record<string, any>, uiFramework?: string): Promise<any> {
     try {
-      const handler = this.toolRegistry.getToolHandler(toolName);
+      const handler = this.toolRegistry.getToolHandler(toolName, uiFramework);
       if (!handler) {
         throw new Error(`未知的工具: ${toolName}`);
       }
@@ -119,6 +119,7 @@ export class MessageProcessor {
     context: Record<string, any>,
     sessionId?: string,
     signal?: AbortSignal,
+    uiFramework?: string,
   ): AsyncGenerator<string | { content: string; usage?: any }, void, unknown> {
     // 获取或创建 agent
     const agent = this.agentManager.getAgent(agentType, apiKey, model);
@@ -196,8 +197,9 @@ export class MessageProcessor {
                     toolCall.function.name,
                     { ...JSON.parse(toolCall.function.arguments), sessionId },
                     context,
+                    uiFramework,
                   );
-                  const title = this.getToolTitle(toolCall.function.name);
+                  const title = this.getToolTitle(toolCall.function.name, uiFramework);
                   if (title) {
                     yield`[FC_TOOL]{"title":"${title}","id":"${toolCall.id}","status":"end"}`;
                   }
@@ -232,6 +234,7 @@ export class MessageProcessor {
                   context,
                   sessionId,
                   signal,
+                  uiFramework,
                 );
               } else {
                 console.log(`达到最大递归深度 (${maxDepth})，停止递归`);
@@ -281,7 +284,7 @@ export class MessageProcessor {
 
                   if (deltaToolCall.function?.name) {
                     toolCalls[deltaToolCall.index].function.name += deltaToolCall.function.name;
-                    const title = this.getToolTitle(deltaToolCall.function.name);
+                    const title = this.getToolTitle(deltaToolCall.function.name, uiFramework);
                     if (title) {
                       yield `[FC_TOOL]{"title":"${title}","id":"${deltaToolCall.id}","status":"loading"}`;
                     }
@@ -313,6 +316,7 @@ export class MessageProcessor {
     maxDepth: number = 1,
     sessionId?: string,
     signal?: AbortSignal,
+    uiFramework?: string,
   ): AsyncGenerator<string | { content: string; usage?: any }, void, unknown> {
     // 常量定义
     const MAX_RECURSION_DEPTH = 6;
@@ -364,7 +368,7 @@ export class MessageProcessor {
 
     // 辅助函数：发送工具状态更新
     const sendToolStatus = (toolName: string, sessionId: string, status: string) => {
-      const title = this.getToolTitle(toolName);
+      const title = this.getToolTitle(toolName, uiFramework);
       if (title) {
         return `[FC_TOOL]{"title":"${title}","id":"${sessionId}","status":"${status}"}`;
       }
@@ -444,6 +448,7 @@ export class MessageProcessor {
                       toolCall.name,
                       { ...(toolCall.arguments || {}), sessionId },
                       request.context,
+                      uiFramework,
                     );
 
                     const statusMessage = sendToolStatus(toolCall.name, toolCall.arguments?.sessionId, 'end');
@@ -485,6 +490,7 @@ export class MessageProcessor {
                     maxDepth + 1,
                     sessionId,
                     signal,
+                    uiFramework,
                   );
                 } else {
                   console.log(`达到最大递归深度 (${maxDepth})，停止递归`);

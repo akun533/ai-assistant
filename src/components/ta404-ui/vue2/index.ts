@@ -26,6 +26,7 @@ import fieldsProps, { PropsDefinition } from './form/fieldsProps.js';
 import sections from './sections.js'
 import usage from './usage.js';
 import { ComponentProps, ValidationResult, validatorMap } from './form/fieldsPropsValidators';
+import ta404uiFormToolsArray from '../tools/form/index.js';
 
 /**
  * 解析组件事件配置
@@ -144,3 +145,5 @@ export function getTa404uiVue2Validators(): Record<string, (componentProps: Comp
 }
 
 export const ta404uiVue2Components: ComponentInfo[] = getTaComponents();
+
+export const ta404uiFormTools = ta404uiFormToolsArray;

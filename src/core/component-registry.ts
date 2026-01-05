@@ -33,6 +33,7 @@ import {
   getTa404uiVue2Usages,
   getTa404uiVue2Sections,
   getTa404uiVue2Validators,
+  ta404uiFormTools,
 } from '../components';
 import { PropsDefinition } from '../components/ta404-ui/vue2/form/fieldsProps';
 import type { ToolRegistration } from '../types';
@@ -78,6 +79,8 @@ export interface ComponentInfo {
 export class ComponentRegistry {
   private components: Map<string, ComponentInfo[]> = new Map();
   private tools: Map<string, ToolRegistration> = new Map();
+  // 存储每个UI框架的自定义工具
+  private frameworkTools: Map<string, Map<string, ToolRegistration>> = new Map();
 
   constructor() {
     this.initializeComponents();
@@ -479,8 +482,11 @@ export class ComponentRegistry {
    * 初始化工具注册
    */
   private initializeTools() {
-    // 注册表单工具
+    // 注册公共表单工具
     this.registerTools(formTools);
+    
+    // 注册 ta404-ui 框架的自定义工具
+    this.registerFrameworkTools('ta404-ui', ta404uiFormTools);
   }
 
   /**
@@ -500,24 +506,82 @@ export class ComponentRegistry {
   }
 
   /**
-   * 获取工具处理器
+   * 为特定UI框架注册自定义工具
    */
-  getToolHandler(name: string) {
+  registerFrameworkTools(uiFramework: string, registrations: ToolRegistration[]) {
+    if (!this.frameworkTools.has(uiFramework)) {
+      this.frameworkTools.set(uiFramework, new Map());
+    }
+    const frameworkToolsMap = this.frameworkTools.get(uiFramework)!;
+    registrations.forEach((registration) => {
+      frameworkToolsMap.set(registration.definition.name, registration);
+    });
+  }
+
+  /**
+   * 获取工具处理器
+   * 优先使用组件自定义的工具，没有则使用公共工具
+   */
+  getToolHandler(name: string, uiFramework?: string) {
+    // 如果指定了UI框架，先查找该框架的自定义工具
+    if (uiFramework) {
+      const frameworkToolsMap = this.frameworkTools.get(uiFramework);
+      if (frameworkToolsMap?.has(name)) {
+        return frameworkToolsMap.get(name)?.handler;
+      }
+    }
+    // 如果没有自定义工具，使用公共工具
     return this.tools.get(name)?.handler;
   }
 
   /**
    * 获取所有工具定义
+   * 优先使用组件自定义工具，公共工具作为默认
    */
-  getAllToolDefinitions() {
-    return Array.from(this.tools.values()).map(reg => reg.definition);
+  getAllToolDefinitions(uiFramework?: string) {
+    const toolsMap = new Map<string, any>();
+    
+    // 先添加公共工具
+    Array.from(this.tools.values()).forEach(reg => {
+      toolsMap.set(reg.definition.name, reg.definition);
+    });
+    
+    // 如果指定了UI框架，用该框架的自定义工具覆盖同名公共工具
+    if (uiFramework) {
+      const frameworkToolsMap = this.frameworkTools.get(uiFramework);
+      if (frameworkToolsMap) {
+        Array.from(frameworkToolsMap.values()).forEach(reg => {
+          toolsMap.set(reg.definition.name, reg.definition);
+        });
+      }
+    }
+    
+    return Array.from(toolsMap.values());
   }
 
   /**
    * 获取所有已注册的工具
+   * 优先使用组件自定义工具，公共工具作为默认
    */
-  getAllTools(): ToolRegistration[] {
-    return Array.from(this.tools.values());
+  getAllTools(uiFramework?: string): ToolRegistration[] {
+    const toolsMap = new Map<string, ToolRegistration>();
+    
+    // 先添加公共工具
+    Array.from(this.tools.values()).forEach(reg => {
+      toolsMap.set(reg.definition.name, reg);
+    });
+    
+    // 如果指定了UI框架，用该框架的自定义工具覆盖同名公共工具
+    if (uiFramework) {
+      const frameworkToolsMap = this.frameworkTools.get(uiFramework);
+      if (frameworkToolsMap) {
+        Array.from(frameworkToolsMap.values()).forEach(reg => {
+          toolsMap.set(reg.definition.name, reg);
+        });
+      }
+    }
+    
+    return Array.from(toolsMap.values());
   }
 
   /**

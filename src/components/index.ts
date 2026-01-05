@@ -35,5 +35,6 @@ export {
   getTa404uiVue2Usages,
   getTa404uiVue2Prompt,
   ta404uiVue2Components,
-  getTa404uiVue2Validators
-} from './ta404-ui/index.js'
+  getTa404uiVue2Validators,
+  ta404uiFormTools,
+} from './ta404-ui/index.js';
