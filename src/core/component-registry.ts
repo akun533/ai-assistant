@@ -1,33 +1,36 @@
 import {
-  antDesignVue2Components,
-  antDesignVueComponents,
+  // element-plus | element-ui
   elementPlusComponents,
   elementUIComponents,
-  vantComponents,
-  vantVue2Components,
-  ta404uiComponents,
   getElementPlusPrompt,
   getElementUIPrompt,
-  getVantPrompt,
-  getVantVue2Prompt,
-  getAntDesignVuePrompt,
-  getAntDesignVue2Prompt,
-  getTa404uiPrompt,
   getElementPlusUsages,
   getElementUIUsages,
-  getVantUsages,
-  getVantVue2Usages,
+
+  // ant-design-vue
+  antDesignVue2Components,
+  antDesignVueComponents,
   getAntDesignVueUsages,
-  getAntDesignVue2Usages,
-  getTa404uiUsages,
+  getAntDesignVueSections,
+  getAntDesignVueCategory,
+  getAntDesignVuePrompt,
+
+  // vant UI
+  vantComponents,
+  vantVue2Components,
+  getVantPrompt,
+  getVantUsages,
+  getVantSections,
+  getVantCategory,
+
+  // ta404-ui
+  ta404uiVue2Components,
+  getTa404uiVue2Prompt,
+  getTa404uiVue2Usages,
+  getTa404uiVue2Sections,
 } from '../components';
 import { getElementPlusCategory, getElementPlusSections } from '../components/element-plus/vue3.js';
 import { getElementUICategory, getElementUISections } from '../components/element-plus/vue2.js';
-import { getVantCategory, getVantSections } from '../components/vant/vue3.js';
-import { getVantVue2Category, getVantVue2Sections } from '../components/vant/vue2.js';
-import { getAntDesignVueCategory, getAntDesignVueSections } from '../components/ant-design-vue/vue3.js';
-import { getAntDesignVue2Category, getAntDesignVue2Sections } from '../components/ant-design-vue/vue2.js';
-import { getTa404uiSections } from '../components/ta404-ui/vue2.js';
 import { PropsDefinition } from '../components/ta404-ui/form/fieldsProps';
 import type { ToolRegistration } from '../types';
 import { formTools } from '../components/tools/index.js';
@@ -111,7 +114,7 @@ export class ComponentRegistry {
     });
 
     // 注册 ta404-ui 组件
-    ta404uiComponents.forEach((component: ComponentInfo) => {
+    ta404uiVue2Components.forEach((component: ComponentInfo) => {
       this.registerComponent(component.type, component);
     });
   }
@@ -124,15 +127,15 @@ export class ComponentRegistry {
    */
   private getComponentUsages(uiFramework: string, vueVersion: 'vue2' | 'vue3' | 'common'): Record<string, string> {
     if (uiFramework === 'ta404-ui') {
-      return getTa404uiUsages();
+      return getTa404uiVue2Usages();
     } else if (uiFramework === 'element-plus') {
       return getElementPlusUsages();
     } else if (uiFramework === 'element-ui') {
       return getElementUIUsages();
     } else if (uiFramework === 'vant') {
-      return vueVersion === 'vue3' ? getVantUsages() : getVantVue2Usages();
+      return getVantUsages();
     } else if (uiFramework === 'ant-design-vue') {
-      return vueVersion === 'vue3' ? getAntDesignVueUsages() : getAntDesignVue2Usages();
+      return getAntDesignVueUsages();
     }
     return {};
   }
@@ -226,10 +229,10 @@ export class ComponentRegistry {
         return getElementUICategory(componentType);
       
       case 'ant-design-vue':
-        return getAntDesignVueCategory(componentType) || getAntDesignVue2Category(componentType);
+        return getAntDesignVueCategory(componentType);
       
       case 'vant':
-        return getVantCategory(componentType) || getVantVue2Category(componentType);
+        return getVantCategory(componentType);
       
       case 'ta404-ui':
         // ta404-ui 使用 fieldType 字段，不需要额外的分类配置
@@ -410,15 +413,15 @@ export class ComponentRegistry {
       
       // 根据UI框架调用对应的提示词函数
       if (uiFramework === 'ta404-ui') {
-        prompt = getTa404uiPrompt();
+        prompt = getTa404uiVue2Prompt();
       } else if (uiFramework === 'element-plus') {
         prompt = getElementPlusPrompt();
       } else if (uiFramework === 'element-ui') {
         prompt = getElementUIPrompt();
       } else if (uiFramework === 'vant') {
-        prompt = vueVersion === 'vue3' ? getVantPrompt() : getVantVue2Prompt();
+        prompt = getVantPrompt();
       } else if (uiFramework === 'ant-design-vue') {
-        prompt = vueVersion === 'vue3' ? getAntDesignVuePrompt() : getAntDesignVue2Prompt();
+        prompt = getAntDesignVuePrompt();
       } else {
         // 默认使用 element-plus 的提示词
         prompt = getElementPlusPrompt();
@@ -448,15 +451,15 @@ export class ComponentRegistry {
     let sectionsConfig;
     
     if (uiFramework === 'ta404-ui') {
-      sectionsConfig = getTa404uiSections();
+      sectionsConfig = getTa404uiVue2Sections();
     } else if (uiFramework === 'element-plus') {
       sectionsConfig = getElementPlusSections();
     } else if (uiFramework === 'element-ui') {
       sectionsConfig = getElementUISections();
     } else if (uiFramework === 'vant') {
-      sectionsConfig = vueVersion === 'vue3' ? getVantSections() : getVantVue2Sections();
+      sectionsConfig = getVantSections();
     } else if (uiFramework === 'ant-design-vue') {
-      sectionsConfig = vueVersion === 'vue3' ? getAntDesignVueSections() : getAntDesignVue2Sections();
+      sectionsConfig = getAntDesignVueSections();
     } else {
       // 默认使用element-plus的配置
       sectionsConfig = getElementPlusSections();

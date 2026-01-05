@@ -1,5 +1,5 @@
 import fieldsConfig from './fieldsConfig.js';
-import { TaComponent, TaComponentGroup } from '../vue2.js';
+import { TaComponent, TaComponentGroup } from '../vue2/vue2.js';
 
 
 const cloneFieldsConfig: TaComponentGroup[] = JSON.parse(JSON.stringify(fieldsConfig));

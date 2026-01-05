@@ -326,13 +326,13 @@ interface ComponentInfo {
 
 根据 UI 框架和 Vue 版本，选择对应的组件文件：
 
-- **Element Plus (Vue3)**: `src/components/element-plus/vue3.ts`
-- **Element UI (Vue2)**: `src/components/element-plus/vue2.ts`
-- **Ant Design Vue (Vue3)**: `src/components/ant-design-vue/vue3.ts`
-- **Ant Design Vue (Vue2)**: `src/components/ant-design-vue/vue2.ts`
-- **Vant (Vue3)**: `src/components/vant/vue3.ts`
-- **Vant (Vue2)**: `src/components/vant/vue2.ts`
-- **TA404-UI (Vue2)**: `src/components/ta404-ui/vue2.ts`
+- **Element Plus (Vue3)**: `src/components/element-plus/vue3/index.ts`
+- **Element UI (Vue2)**: `src/components/element-plus/vue2/index.ts`
+- **Ant Design Vue (Vue3)**: `src/components/ant-design-vue/vue3/index.ts`
+- **Ant Design Vue (Vue2)**: `src/components/ant-design-vue/vue2/index.ts`
+- **Vant (Vue3)**: `src/components/vant/vue3/index.ts`
+- **Vant (Vue2)**: `src/components/vant/vue2/index.ts`
+- **TA404-UI (Vue2)**: `src/components/ta404-ui/vue2/index.ts`
 - **通用组件**: `src/components/common/index.ts`（所有框架支持）
 
 #### 2. 定义组件信息
@@ -411,7 +411,7 @@ export const elementPlusComponents: ComponentInfo[] = [
 如果需要添加全新的 UI 框架支持：
 
 1. **创建组件目录**：`src/components/new-framework/`
-2. **创建组件文件**：`vue2.ts` 和/或 `vue3.ts`
+2. **创建组件文件**：`vue2/index.ts` 和/或 `vue3/index.ts`
 3. **导出组件**：在 `src/components/index.ts` 中导出
 4. **注册组件**：在 `src/core/component-registry.ts` 的 `initializeComponents()` 中注册
 5. **更新框架检测**：在 `src/service/chat.ts` 的 `getUiVersion()` 方法中添加框架别名
