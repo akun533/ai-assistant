@@ -1,5 +1,5 @@
-import type { ComponentRegistry } from '../../../core/component-registry.js';
-import type { FormRuleGenerator } from '../../../core/form-rule-generator.js';
+import type { ComponentRegistry } from '../core/component-registry.js';
+import type { FormRuleGenerator } from '../core/form-rule-generator.js';
 
 // 工具注册接口
 export interface ToolRegistration {
@@ -59,15 +59,5 @@ export interface ToolArgs {
   data?: Record<string, any>;
 }
 
-// 验证详情接口
-export interface ValidateDetails {
-  isValid: boolean;
-  answer: boolean;
-  errors: string[];
-  warnings: string[];
-  suggestions: string[];
-  framework: string;
-  availableComponents: string[];
-  improvedRule?: any;
-  changes?: string[];
-}
+// 从 components/tools 导入 ValidateDetails
+export type { ValidateDetails } from '../components/tools';

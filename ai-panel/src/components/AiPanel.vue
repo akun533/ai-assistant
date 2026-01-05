@@ -190,7 +190,7 @@ export default {
           rule: '[]',
         },
         messages: [],
-        agentMessageType: 'openai'
+        agentMessageType: 'openai',
       }),
     },
     // 配置选项，支持国际化和自定义文本
@@ -224,11 +224,11 @@ export default {
   computed: {
     api() {
       // 兼容多种环境的环境变量访问方式，避免直接使用 import.meta
-      return  process.env.VUE_APP_AI_SERVER_URL;
+      return  'http://localhost:3001/api/chat/completions';
     },
     token() {
       // 从环境变量获取 API 令牌，兼容多种环境，避免直接使用 import.meta
-      let token = process.env.VUE_APP_AI_API_KEY;
+      let token = 'sk-7ec2b7876c7c4e2796ee986364fdfde9';
       if (token && token.indexOf('Bearer') === -1) {
         token = `Bearer ${token}`;
       }
