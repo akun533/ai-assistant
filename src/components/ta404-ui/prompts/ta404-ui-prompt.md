@@ -4,7 +4,7 @@
 
 <core_principle>  
 - workflow_sequences 拥有最高优先级，一旦匹配，必须立刻高效执行，禁止进入其他序列
-- 执行 form_creation_sequence 和 form_modification_sequence 时表单容器组件(form-container)必须使用且只能使用一次，必须放置在规则第一层,后续组件必须配置在表单容器组件中 （强制）
+- 执行 form_creation_sequence 和 form_modification_sequence 时 **表单容器组件** 必须是整个规则对象的根节点，type为'form-container',存在且唯一（强制）
 - 获取工具结果后 → 先反思质量 → 再决定下一步
 - 更新时仅改动必要部分，其余保持不变
 - 表单既美观又实用
@@ -146,7 +146,7 @@ type ComponentRule = {
 对每个组件的要求：
 
 - 必须包含 type
-- 表单组件必须包含 fieldDecoratorId 和 label 和 renderId
+- 除了根节点组件，其他所有组件必须包含 fieldDecoratorId 和 label 和 renderId 属性
 - staticData: 选择组件需 3–8 个选项
 - 容器组件: 必须包含子组件, 其他类型组件禁止
 - 不要生成提交按钮和重置按钮
@@ -177,7 +177,7 @@ type ComponentRule = {
 完整的表单规则结构，包含所有常用配置
 
 ```json
-{"formConfig":{"layout":"horizontal","layoutCol":"auto","labelCol":6,"wrapperCol":18,"header":"0px","footer":"0px","left":"0px","right":"0px","gutter":0,"previewDrawerWidth":"95%","previewDrawerMinWidth":"","showButton":true,"buttons":[{"fieldDecoratorId":"PA174LA3","buttonName":"提交表单","type":"primary","display":true,"disabled":false,"icon":"save","css":"","onclick":"const formDate = this_.getValuesWithValid()\n\nconsole.log(formDate)","key":1,"index":0}],"backgroundColor":"white","isLabelWidth":true,"labelWidth":100},"formColumns":[{"type":"card","label":"建议收集表单","span":24,"display":"true","formCardStyleFit":false,"formCardStyle":{"height":"auto"},"children":{"align":"left","headerAlign":"left","addBtn":false,"delBtn":false,"column":[{"type":"single-input","label":"联系人","span":12,"display":"true","autoShow":false,"tools":{},"fieldDecoratorId":"contactPerson","renderId":"contactPerson_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请输入联系人姓名"},{"type":"single-input","label":"联系邮箱","span":12,"display":"true","autoShow":false,"tools":{},"fieldDecoratorId":"contactEmail","renderId":"contactEmail_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请输入联系邮箱"},{"type":"select","label":"分类","span":12,"display":"true","autoShow":false,"allowDataMapping":true,"icon":"icon-select","dataType":"static","staticData":[{"label":"产品建议","value":"product"},{"label":"功能建议","value":"feature"},{"label":"界面优化","value":"ui"},{"label":"性能优化","value":"performance"},{"label":"Bug反馈","value":"bug"},{"label":"其他建议","value":"other"}],"fieldDecoratorId":"category","renderId":"category_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请选择建议分类"},{"type":"multi-input","label":"建议内容","span":24,"display":"true","autoShow":false,"autoSize":true,"icon":"icon-textarea","tools":{},"fieldDecoratorId":"suggestionContent","renderId":"suggestionContent_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请详细描述您的建议内容"}]},"tools":{"showClear":false},"fieldDecoratorId":"suggestionFormCard","renderId":"suggestionFormCard_render","disabled":"false","required":false}],"formHeader":[],"formLeft":[],"formRight":[],"formFooter":[],"version":{"updateTime":1765864674334}}
+{"type":"form-container","formConfig":{"layout":"horizontal","layoutCol":"auto","labelCol":6,"wrapperCol":18,"header":"0px","footer":"0px","left":"0px","right":"0px","gutter":0,"previewDrawerWidth":"95%","previewDrawerMinWidth":"","showButton":true,"buttons":[{"fieldDecoratorId":"PA174LA3","buttonName":"提交表单","type":"primary","display":true,"disabled":false,"icon":"save","css":"","onclick":"const formDate = this_.getValuesWithValid()\n\nconsole.log(formDate)","key":1,"index":0}],"backgroundColor":"white","isLabelWidth":true,"labelWidth":100},"formColumns":[{"type":"card","label":"建议收集表单","span":24,"display":"true","formCardStyleFit":false,"formCardStyle":{"height":"auto"},"children":{"align":"left","headerAlign":"left","addBtn":false,"delBtn":false,"column":[{"type":"single-input","label":"联系人","span":12,"display":"true","autoShow":false,"tools":{},"fieldDecoratorId":"contactPerson","renderId":"contactPerson_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请输入联系人姓名"},{"type":"single-input","label":"联系邮箱","span":12,"display":"true","autoShow":false,"tools":{},"fieldDecoratorId":"contactEmail","renderId":"contactEmail_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请输入联系邮箱"},{"type":"select","label":"分类","span":12,"display":"true","autoShow":false,"allowDataMapping":true,"icon":"icon-select","dataType":"static","staticData":[{"label":"产品建议","value":"product"},{"label":"功能建议","value":"feature"},{"label":"界面优化","value":"ui"},{"label":"性能优化","value":"performance"},{"label":"Bug反馈","value":"bug"},{"label":"其他建议","value":"other"}],"fieldDecoratorId":"category","renderId":"category_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请选择建议分类"},{"type":"multi-input","label":"建议内容","span":24,"display":"true","autoShow":false,"autoSize":true,"icon":"icon-textarea","tools":{},"fieldDecoratorId":"suggestionContent","renderId":"suggestionContent_render","labelStyle":"{}","disabled":false,"required":true,"placeholder":"请详细描述您的建议内容"}]},"tools":{"showClear":false},"fieldDecoratorId":"suggestionFormCard","renderId":"suggestionFormCard_render","disabled":"false","required":false}],"formHeader":[],"formLeft":[],"formRight":[],"formFooter":[],"version":{"updateTime":1767585960512}}
 ```
 
 ## 参考示例

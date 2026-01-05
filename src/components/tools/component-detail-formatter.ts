@@ -3,8 +3,6 @@
  * 用于查询组件的配置项、示例代码等详细信息
  */
 
-import { createResponse } from '../../utils/index.js';
-
 /**
  * 格式化组件详细信息
  */
