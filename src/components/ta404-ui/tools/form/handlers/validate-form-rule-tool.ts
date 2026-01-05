@@ -1,13 +1,14 @@
 import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
-import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
+import { SUPPORTED_UI_FRAMEWORKS } from '../../../../common/tools/form/constants';
+import { DEFAULT_UI_FRAMEWORK } from '../../../../../core/form-rule-generator';
 import { createResponse } from '../../../../../utils';
-import { getDefaultFormOptions } from './form-config.js';
-import { createDetailedValidate } from '../../form-validator';
+import { getDefaultFormConfig } from './form-config.js';
+import { createDetailedValidate } from '../../../../common/tools/index.js';
 
 /**
  * 检查表单规则有效性工具
  */
- export const validateFormRuleTool: ToolRegistration = {
+export const validateFormRuleTool: ToolRegistration = {
   definition: {
     name: 'validate_form_rule',
     title: '检查表单规则有效性',
@@ -57,8 +58,7 @@ import { createDetailedValidate } from '../../form-validator';
     const formRule: any = {
       rule: rule,
     };
-
-    formRule.option = option || getDefaultFormOptions();
+    formRule.formConfig = getDefaultFormConfig();
 
     // 验证并改进规则
     const validateAndImproveResult = request.formGenerator.validateRule(formRule, uiFramework, request.componentRegistry);

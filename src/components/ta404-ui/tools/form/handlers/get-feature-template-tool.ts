@@ -1,6 +1,8 @@
+import yinhaiFeaturesMap from '../yinhai-features';
 import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
-import featuresMap, { features } from '../features';
-import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
+import { features } from '../../../../common/tools/form/features';
+import { SUPPORTED_UI_FRAMEWORKS } from '../../../../common/tools/form/constants';
+import { DEFAULT_UI_FRAMEWORK } from '../../../../../core/form-rule-generator';
 import { createResponse } from '../../../../../utils';
 
 /**
@@ -10,8 +12,8 @@ function formatFeatureTemplateResponse(data: { uiFramework: string }): string {
   let response = '';
   const { uiFramework } = data;
 
-  Object.keys(featuresMap).forEach((type: string) => {
-    const featureData = featuresMap[type];
+  Object.keys(yinhaiFeaturesMap).forEach((type: string) => {
+    const featureData = yinhaiFeaturesMap[type];
     if (featureData.business && process.env.FORM_CREATE_BUSINESS !== 'true') {
       return;
     }

@@ -17,12 +17,6 @@ export {
   formatValidationErrors,
 } from './form-validator.js';
 
-// 表单配置工具
-export {
-  getDefaultFormOptions,
-  getDefaultFormConfig,
-} from './form-config.js';
-
 // 表单工具MCP定义
 export {
   default as formTools,
