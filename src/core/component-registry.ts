@@ -6,6 +6,10 @@ import {
   getElementUIPrompt,
   getElementPlusUsages,
   getElementUIUsages,
+  getElementPlusCategory,
+  getElementPlusSections,
+  getElementUICategory,
+  getElementUISections,
 
   // ant-design-vue
   antDesignVue2Components,
@@ -28,10 +32,9 @@ import {
   getTa404uiVue2Prompt,
   getTa404uiVue2Usages,
   getTa404uiVue2Sections,
+  getTa404uiVue2Validators,
 } from '../components';
-import { getElementPlusCategory, getElementPlusSections } from '../components/element-plus/vue3.js';
-import { getElementUICategory, getElementUISections } from '../components/element-plus/vue2.js';
-import { PropsDefinition } from '../components/ta404-ui/form/fieldsProps';
+import { PropsDefinition } from '../components/ta404-ui/vue2/form/fieldsProps';
 import type { ToolRegistration } from '../types';
 import { formTools } from '../components/tools/index.js';
 
@@ -224,20 +227,20 @@ export class ComponentRegistry {
     switch (uiFramework) {
       case 'element-plus':
         return getElementPlusCategory(componentType);
-      
+
       case 'element-ui':
         return getElementUICategory(componentType);
-      
+
       case 'ant-design-vue':
         return getAntDesignVueCategory(componentType);
-      
+
       case 'vant':
         return getVantCategory(componentType);
-      
+
       case 'ta404-ui':
         // ta404-ui 使用 fieldType 字段，不需要额外的分类配置
         return undefined;
-      
+
       default:
         return undefined;
     }
@@ -275,7 +278,7 @@ export class ComponentRegistry {
     if (comp.isContainer) {
       return 'layout';
     }
-    
+
     // 5. 默认归类为辅助组件
     return 'assist';
   }
@@ -407,10 +410,10 @@ export class ComponentRegistry {
    */
   getSystemPrompt(uiFramework: string, vueVersion: 'vue2' | 'vue3'): string {
     console.log('开始读取系统提示词文件...');
-    
+
     try {
       let prompt = '';
-      
+
       // 根据UI框架调用对应的提示词函数
       if (uiFramework === 'ta404-ui') {
         prompt = getTa404uiVue2Prompt();
@@ -426,11 +429,11 @@ export class ComponentRegistry {
         // 默认使用 element-plus 的提示词
         prompt = getElementPlusPrompt();
       }
-      
+
       if (prompt) {
         console.log('✅ 成功读取系统提示词文件');
       }
-      
+
       return prompt;
     } catch (error) {
       console.error('❌ 读取系统提示词失败:', error);
@@ -449,7 +452,7 @@ export class ComponentRegistry {
   ) {
     // 根据UI框架获取对应的sections配置
     let sectionsConfig;
-    
+
     if (uiFramework === 'ta404-ui') {
       sectionsConfig = getTa404uiVue2Sections();
     } else if (uiFramework === 'element-plus') {
@@ -466,9 +469,9 @@ export class ComponentRegistry {
     }
 
     // 将sections配置和实际的组件数据结合
-    return sectionsConfig.map(section => ({
+    return sectionsConfig.map((section: { title: string; categoryKey: string }) => ({
       title: section.title,
-      category: categorizedComponents[section.categoryKey],
+      category: categorizedComponents[section.categoryKey as keyof typeof categorizedComponents],
     }));
   }
 
@@ -515,5 +518,16 @@ export class ComponentRegistry {
    */
   getAllTools(): ToolRegistration[] {
     return Array.from(this.tools.values());
+  }
+
+  /**
+   * 获取所有已注册的验证器
+   * @param uiFramework
+   */
+  getValidators(uiFramework: string) {
+    if (uiFramework === 'ta404-ui') {
+      return getTa404uiVue2Validators();
+    }
+    return null;
   }
 }

@@ -8,18 +8,18 @@ import fieldsConfig from './fieldsConfig.js';
 import ComponentsProps from './fieldsProps.js';
 
 // 类型定义
-interface ValidationSchema {
+export interface ValidationSchema {
   required?: string[];
   types?: Record<string, string>;
   enums?: Record<string, any[]>;
 }
 
-interface ValidationResult {
+export interface ValidationResult {
   isValid: boolean;
   errors: string[];
 }
 
-interface ComponentProps {
+export interface ComponentProps {
   [key: string]: any;
 }
 

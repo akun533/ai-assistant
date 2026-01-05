@@ -1,5 +1,4 @@
 import { ComponentRegistry } from './component-registry.js';
-import { validatorMap } from '../components/ta404-ui/form/fieldsPropsValidators.js';
 
 // 常量定义
 export const ASSIST_COMPONENT_TYPES = ['fcRow', 'col'] as const;
@@ -152,7 +151,21 @@ export class FormRuleGenerator {
       // 使用 JSONPath 格式：$ 表示根节点，[] 表示数组索引
       const fieldPath = path ? `${path}.rule[${index}]` : `$.rule[${index}]`;
 
-      if (!Object.is(uiFramework, 'ta404-ui')) {
+      const validatorMap = this.componentRegistry.getValidators(uiFramework);
+
+      if (validatorMap) {
+        console.log(`调用了${uiFramework}的组件校验函数`);
+        const validator = validatorMap[field.type];
+
+        if (validator) {
+          // 验证组件属性
+          const result = validator(field);
+
+          if (!result.isValid) {
+            errors.push(...result.errors.map((error: any) => `${fieldPath} ${error}`));
+          }
+        }
+      } else {
         if (!field.props) {
           field.props = {};
         } else {
@@ -248,20 +261,7 @@ export class FormRuleGenerator {
             validateAndImproveField(child, childIndex, childPath);
           });
         }
-      } else {
-        console.log('调用了ta404-ui的组件校验函数');
-        const validator = validatorMap[field.type];
-
-        if (validator) {
-          // 验证组件属性
-          const result = validator(field);
-
-          if (!result.isValid) {
-            errors.push(...result.errors.map((error: any) => `${fieldPath} ${error}`));
-          }
-        }
       }
-
     };
 
     // 处理所有字段

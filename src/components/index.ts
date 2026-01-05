@@ -1,5 +1,15 @@
-export { elementPlusComponents, getElementPlusCategory, getElementPlusSections, getElementPlusPrompt, getElementPlusUsages } from './element-plus/vue3.js';
-export { elementUIComponents, getElementUICategory, getElementUISections, getElementUIPrompt, getElementUIUsages } from './element-plus/vue2.js';
+export { 
+  elementPlusComponents, 
+  elementUIComponents,
+  getElementPlusCategory, 
+  getElementPlusSections, 
+  getElementPlusPrompt, 
+  getElementPlusUsages,
+  getElementUICategory,
+  getElementUISections,
+  getElementUIPrompt,
+  getElementUIUsages
+} from './element-plus/index.js';
 
 export { commonComponents } from './common/index.js';
 
@@ -24,7 +34,8 @@ export {
   getTa404uiVue2Sections,
   getTa404uiVue2Usages,
   getTa404uiVue2Prompt,
-  ta404uiVue2Components
+  ta404uiVue2Components,
+  getTa404uiVue2Validators
 } from './ta404-ui/index.js'
 
 // 导出组件工具函数

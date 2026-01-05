@@ -21,10 +21,11 @@ interface TaComponentGroup {
   list: TaComponent[];
 }
 
-import taComponents from '../form/fieldsConfig.js';
-import fieldsProps, { PropsDefinition } from '../form/fieldsProps.js';
+import taComponents from './form/fieldsConfig.js';
+import fieldsProps, { PropsDefinition } from './form/fieldsProps.js';
 import sections from './sections.js'
 import usage from './usage.js';
+import { ComponentProps, ValidationResult, validatorMap } from './form/fieldsPropsValidators';
 
 /**
  * 解析组件事件配置
@@ -136,6 +137,10 @@ export function getTa404uiVue2Prompt(): string {
  */
 export function getTa404uiVue2Usages(): Record<string, string> {
   return usage;
+}
+
+export function getTa404uiVue2Validators(): Record<string, (componentProps: ComponentProps | null | undefined) => ValidationResult> | null {
+  return validatorMap
 }
 
 export const ta404uiVue2Components: ComponentInfo[] = getTaComponents();
