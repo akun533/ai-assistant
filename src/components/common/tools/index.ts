@@ -25,13 +25,5 @@ export {
 
 // 表单工具MCP定义
 export {
-  getComponentsDetailTool,
-  validateFormRuleTool,
-  applyPatchFormRuleTool,
-  getFeatureTemplateTool,
-  pushCurrentRuleTool,
   default as formTools,
 } from './form/index.js';
-
-// 导出常量
-export * from './form/constants.js';

@@ -1,4 +1,4 @@
-import type { ToolRegistration, ToolDefinition, ToolContext, ToolHandler } from '../types';
+import type { ToolRegistration, ToolDefinition, ToolHandler } from '../types/index.js';
 import { ComponentRegistry } from '../core/component-registry.js';
 export * from '../types';
 

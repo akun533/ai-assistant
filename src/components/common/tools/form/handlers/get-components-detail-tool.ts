@@ -1,7 +1,7 @@
-import { createResponse } from '../../../../utils/index.js';
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../types/index.js';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
 import { DEFAULT_UI_FRAMEWORK, DEFAULT_VUE_VERSION, SUPPORTED_UI_FRAMEWORKS, SUPPORTED_VUE_VERSIONS } from '../constants.js';
-import { filterComponentsByNames, formatComponentsDetail } from '../../index.js';
+import { createResponse } from '../../../../../utils';
+import { filterComponentsByNames, formatComponentsDetail } from '../../component-detail-formatter';
 
 /**
  * 查看组件详细信息工具
@@ -52,10 +52,7 @@ export const getComponentsDetailTool: ToolRegistration = {
     const allComponents = request.componentRegistry.getComponents(uiFramework, detectedVueVersion);
 
     // 使用工具函数筛选组件
-    const { found: requestedComponents, notFound: notFoundComponents } = filterComponentsByNames(
-      allComponents,
-      componentNames
-    );
+    const { found: requestedComponents, notFound: notFoundComponents } = filterComponentsByNames(allComponents, componentNames);
 
     if (notFoundComponents.length > 0) {
       return createResponse(`错误: 不支持以下组件: ${notFoundComponents.join(', ')}，通过 get_component_specs 重新获取完整组件列表`);

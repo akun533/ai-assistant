@@ -1,16 +1,18 @@
-import { createResponse } from '../../../../utils/index.js';
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../types/index.js';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
 import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
-import { createDetailedValidate, getDefaultFormConfig, getDefaultFormOptions } from '../../index.js';
+import { createResponse } from '../../../../../utils';
+import { getDefaultFormConfig, getDefaultFormOptions } from '../../form-config';
+import { createDetailedValidate } from '../../form-validator';
 
 /**
  * 检查表单规则有效性工具
  */
-export const validateFormRuleTool: ToolRegistration = {
+ export const validateFormRuleTool: ToolRegistration = {
   definition: {
     name: 'validate_form_rule',
     title: '检查表单规则有效性',
-    description: '根据规范校验表单规则，不对操作计划负责。支持全量与增量，增量校验时仅传入发生变化的组件规则`ComponentRule[]`，无需携带未变更部分\n输出包含错误、警告、修复建议与优化后的规则',
+    description:
+      '根据规范校验表单规则，不对操作计划负责。支持全量与增量，增量校验时仅传入发生变化的组件规则`ComponentRule[]`，无需携带未变更部分\n输出包含错误、警告、修复建议与优化后的规则',
     inputSchema: {
       type: 'object',
       properties: {
@@ -85,11 +87,19 @@ ${JSON.stringify(detailedValidate.improvedRule, null, 2)}
 **需要修复的错误：**
 ${detailedValidate.errors.map((error: string, index: number) => `${index + 1}. ${error}`).join('\n')}
 
-${detailedValidate.warnings && detailedValidate.warnings.length > 0 ? `**警告信息：**
-${detailedValidate.warnings.map((warning: string, index: number) => `${index + 1}. ${warning}`).join('\n')}` : ''}
+${
+  detailedValidate.warnings && detailedValidate.warnings.length > 0
+    ? `**警告信息：**
+${detailedValidate.warnings.map((warning: string, index: number) => `${index + 1}. ${warning}`).join('\n')}`
+    : ''
+}
 
-${detailedValidate.suggestions && detailedValidate.suggestions.length > 0 ? `**修复建议：**
-${detailedValidate.suggestions.map((suggestion: string, index: number) => `${index + 1}. ${suggestion}`).join('\n')}` : ''}
+${
+  detailedValidate.suggestions && detailedValidate.suggestions.length > 0
+    ? `**修复建议：**
+${detailedValidate.suggestions.map((suggestion: string, index: number) => `${index + 1}. ${suggestion}`).join('\n')}`
+    : ''
+}
 
 请根据以上建议修改表单规则，然后重新验证。`);
     }

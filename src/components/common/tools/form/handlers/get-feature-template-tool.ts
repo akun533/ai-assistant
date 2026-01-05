@@ -1,9 +1,8 @@
-import { createResponse } from '../../../../utils/index.js';
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../types/index.js';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
+import featuresMap, { features } from '../features';
 import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
-import { features } from '../features/index.js';
-import featuresMap from '../features/index.js';
-import yinhaiFeaturesMap from '../yinhai-features/index.js';
+import { createResponse } from '../../../../../utils';
+import yinhaiFeaturesMap from '../../../../ta404-ui/tools/form/yinhai-features';
 
 /**
  * 格式化功能模板响应
@@ -12,13 +11,13 @@ function formatFeatureTemplateResponse(data: { uiFramework: string }): string {
   let response = '';
   let featuresMapTemp;
   const { uiFramework } = data;
-  
+
   if (uiFramework === 'ta404-ui') {
     featuresMapTemp = yinhaiFeaturesMap;
   } else {
     featuresMapTemp = featuresMap;
   }
-  
+
   Object.keys(featuresMapTemp).forEach((type: string) => {
     const featureData = featuresMapTemp[type];
     if (featureData.business && process.env.FORM_CREATE_BUSINESS !== 'true') {
@@ -69,8 +68,10 @@ export const getFeatureTemplateTool: ToolRegistration = {
   },
   handler: async (args: ToolArgs, request: ToolContext) => {
     const { uiFramework = DEFAULT_UI_FRAMEWORK } = args || {};
-    return createResponse(formatFeatureTemplateResponse({
-      uiFramework,
-    }));
+    return createResponse(
+      formatFeatureTemplateResponse({
+        uiFramework,
+      })
+    );
   },
 };

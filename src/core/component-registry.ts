@@ -36,7 +36,7 @@ import {
 } from '../components';
 import { PropsDefinition } from '../components/ta404-ui/vue2/form/fieldsProps';
 import type { ToolRegistration } from '../types';
-import { formTools } from '../components/tools/index.js';
+import { formTools } from '../components/common/tools/index.js';
 
 // 组件分类类型
 export type ComponentCategory = 'form' | 'layout' | 'assist' | 'input' | 'select' | 'date' | 'display';

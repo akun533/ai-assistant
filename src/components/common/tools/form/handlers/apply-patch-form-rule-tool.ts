@@ -1,8 +1,8 @@
-import { applyJSONPatch } from '../../../../core/json-patch-validator.js';
-import { createResponse, removeRulePrefix } from '../../../../utils/index.js';
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../types/index.js';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
 import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
-import { createDetailedValidate } from '../../index.js';
+import { createResponse, removeRulePrefix } from '../../../../../utils';
+import { applyJSONPatch } from '../../../../../core/json-patch-validator';
+import { createDetailedValidate } from '../../form-validator';
 
 /**
  * 调整表单规则工具
@@ -81,10 +81,19 @@ export const applyPatchFormRuleTool: ToolRegistration = {
     const results = applyJSONPatch(data.form.rule, jsonPatch as any);
 
     // 验证并改进规则
-    const validateAndImproveResult = request.formGenerator.validateRule({ rule: results.newDocument }, uiFramework, request.componentRegistry);
+    const validateAndImproveResult = request.formGenerator.validateRule(
+      { rule: results.newDocument },
+      uiFramework,
+      request.componentRegistry
+    );
 
     // 创建详细的验证结果
-    const detailedValidate = createDetailedValidate(validateAndImproveResult, { rule: results.newDocument }, uiFramework as string, request.componentRegistry);
+    const detailedValidate = createDetailedValidate(
+      validateAndImproveResult,
+      { rule: results.newDocument },
+      uiFramework as string,
+      request.componentRegistry
+    );
 
     if (!detailedValidate.isValid) {
       return createResponse(`推送失败，表单规则验证发现问题，需要修复：
@@ -92,18 +101,33 @@ export const applyPatchFormRuleTool: ToolRegistration = {
 **需要修复的错误：**
 ${detailedValidate.errors.map((error: string, index: number) => `${index + 1}. ${error}`).join('\n')}
 
-${detailedValidate.warnings && detailedValidate.warnings.length > 0 ? `**警告信息：**
-${detailedValidate.warnings.map((warning: string, index: number) => `${index + 1}. ${warning}`).join('\n')}` : ''}
+${
+  detailedValidate.warnings && detailedValidate.warnings.length > 0
+    ? `**警告信息：**
+${detailedValidate.warnings.map((warning: string, index: number) => `${index + 1}. ${warning}`).join('\n')}`
+    : ''
+}
 
-${detailedValidate.suggestions && detailedValidate.suggestions.length > 0 ? `**修复建议：**
-${detailedValidate.suggestions.map((suggestion: string, index: number) => `${index + 1}. ${suggestion}`).join('\n')}` : ''}
+${
+  detailedValidate.suggestions && detailedValidate.suggestions.length > 0
+    ? `**修复建议：**
+${detailedValidate.suggestions.map((suggestion: string, index: number) => `${index + 1}. ${suggestion}`).join('\n')}`
+    : ''
+}
 
 请根据以上建议修改表单规则。`);
     }
     request.context.form = results.newDocument;
 
-    return createResponse('完成执行', [`\`\`\`fcRuleDiff
+    return createResponse(
+      '完成执行',
+      [
+        `\`\`\`fcRuleDiff
 ${JSON.stringify(detailedValidate.improvedRule)}
-\`\`\``, summarize as string], true);
+\`\`\``,
+        summarize as string,
+      ],
+      true
+    );
   },
 };

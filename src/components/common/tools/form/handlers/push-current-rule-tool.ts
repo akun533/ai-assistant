@@ -1,7 +1,7 @@
-import { createResponse } from '../../../../utils/index.js';
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../types/index.js';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
 import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
-import { createDetailedValidate } from '../../index.js';
+import { createResponse } from '../../../../../utils';
+import { createDetailedValidate } from '../../form-validator';
 
 /**
  * 推送当前表单规则工具
@@ -64,17 +64,32 @@ export const pushCurrentRuleTool: ToolRegistration = {
 **需要修复的错误：**
 ${detailedValidate.errors.map((error: string, index: number) => `${index + 1}. ${error}`).join('\n')}
 
-${detailedValidate.warnings && detailedValidate.warnings.length > 0 ? `**警告信息：**
-${detailedValidate.warnings.map((warning: string, index: number) => `${index + 1}. ${warning}`).join('\n')}` : ''}
+${
+  detailedValidate.warnings && detailedValidate.warnings.length > 0
+    ? `**警告信息：**
+${detailedValidate.warnings.map((warning: string, index: number) => `${index + 1}. ${warning}`).join('\n')}`
+    : ''
+}
 
-${detailedValidate.suggestions && detailedValidate.suggestions.length > 0 ? `**修复建议：**
-${detailedValidate.suggestions.map((suggestion: string, index: number) => `${index + 1}. ${suggestion}`).join('\n')}` : ''}
+${
+  detailedValidate.suggestions && detailedValidate.suggestions.length > 0
+    ? `**修复建议：**
+${detailedValidate.suggestions.map((suggestion: string, index: number) => `${index + 1}. ${suggestion}`).join('\n')}`
+    : ''
+}
 
 请根据以上建议修改表单规则。`);
     }
 
-    return createResponse('完成执行', [`\`\`\`${operationType === 'create' ? 'fcRule' : 'fcRuleDiff'}
+    return createResponse(
+      '完成执行',
+      [
+        `\`\`\`${operationType === 'create' ? 'fcRule' : 'fcRuleDiff'}
 ${JSON.stringify(detailedValidate.improvedRule)}
-\`\`\``, summarize as string], isComplete);
+\`\`\``,
+        summarize as string,
+      ],
+      isComplete
+    );
   },
 };

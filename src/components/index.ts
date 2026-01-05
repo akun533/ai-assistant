@@ -37,6 +37,3 @@ export {
   ta404uiVue2Components,
   getTa404uiVue2Validators
 } from './ta404-ui/index.js'
-
-// 导出组件工具函数
-export * from './tools/index.js';
