@@ -1,10 +1,10 @@
-import sections from './common/sections';
-import usage from './common/usage';
-import category from './common/category';
+import sections from './common/sections.js';
+import usage from './common/usage.js';
+import category from './common/category.js';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { readFileSync } from 'fs';
-import { ComponentCategory } from '../../core/component-registry';
+import { ComponentCategory } from '../../core/component-registry.js';
 
 /**
  * 读取 Vant 的系统提示词

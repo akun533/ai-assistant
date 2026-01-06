@@ -2,7 +2,7 @@ import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types/in
 import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
 import { createResponse, removeRulePrefix } from '../../../../../utils/index.js';
 import { applyJSONPatch } from '../../../../../core/json-patch-validator.js';
-import { createDetailedValidate } from '../../form-validator';
+import { createDetailedValidate } from '../../form-validator.js';
 
 /**
  * 调整表单规则工具

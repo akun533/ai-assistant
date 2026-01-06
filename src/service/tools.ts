@@ -1,6 +1,6 @@
 import type { ToolRegistration, ToolDefinition, ToolHandler } from '../types/index.js';
 import { ComponentRegistry } from '../core/component-registry.js';
-export * from '../types';
+export * from '../types/index.js';
 
 export class ToolRegistry {
   private componentRegistry: ComponentRegistry;

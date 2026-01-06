@@ -34,9 +34,9 @@ import {
   getTa404uiVue2Sections,
   getTa404uiVue2Validators,
   ta404uiFormTools,
-} from '../components';
-import { PropsDefinition } from '../components/ta404-ui/vue2/form/fieldsProps';
-import type { ToolRegistration } from '../types';
+} from '../components/index.js';
+import { PropsDefinition } from '../components/ta404-ui/vue2/form/fieldsProps.js';
+import type { ToolRegistration } from '../types/index.js';
 import { formTools } from '../components/common/tools/index.js';
 
 // 组件分类类型

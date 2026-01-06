@@ -1,4 +1,4 @@
-import { ComponentCategory } from '../../../core/component-registry';
+import { ComponentCategory } from '../../../core/component-registry.js';
 
 const categoryMap: Record<string, ComponentCategory> = {
   input: 'form',
