@@ -1,8 +1,8 @@
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types/index.js';
 import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
-import { createResponse } from '../../../../../utils';
+import { createResponse } from '../../../../../utils/index.js';
 import { getDefaultFormOptions } from './form-config.js';
-import { createDetailedValidate } from '../../form-validator';
+import { createDetailedValidate } from '../../form-validator.js';
 
 /**
  * 检查表单规则有效性工具

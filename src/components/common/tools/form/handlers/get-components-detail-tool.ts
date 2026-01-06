@@ -1,7 +1,7 @@
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types/index.js';
 import { DEFAULT_UI_FRAMEWORK, DEFAULT_VUE_VERSION, SUPPORTED_UI_FRAMEWORKS, SUPPORTED_VUE_VERSIONS } from '../constants.js';
-import { createResponse } from '../../../../../utils';
-import { filterComponentsByNames, formatComponentsDetail } from '../../component-detail-formatter';
+import { createResponse } from '../../../../../utils/index.js';
+import { filterComponentsByNames, formatComponentsDetail } from '../../component-detail-formatter.js';
 
 /**
  * 查看组件详细信息工具

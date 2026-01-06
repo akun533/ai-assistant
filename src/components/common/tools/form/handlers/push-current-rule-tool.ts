@@ -1,7 +1,7 @@
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types/index.js';
 import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
-import { createResponse } from '../../../../../utils';
-import { createDetailedValidate } from '../../form-validator';
+import { createResponse } from '../../../../../utils/index.js';
+import { createDetailedValidate } from '../../form-validator.js';
 
 /**
  * 推送当前表单规则工具

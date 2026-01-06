@@ -1,7 +1,7 @@
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types/index.js';
 import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
-import { createResponse, removeRulePrefix } from '../../../../../utils';
-import { applyJSONPatch } from '../../../../../core/json-patch-validator';
+import { createResponse, removeRulePrefix } from '../../../../../utils/index.js';
+import { applyJSONPatch } from '../../../../../core/json-patch-validator.js';
 import { createDetailedValidate } from '../../form-validator';
 
 /**

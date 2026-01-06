@@ -1,7 +1,7 @@
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
-import featuresMap, { features } from '../features';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types/index.js';
+import featuresMap, { features } from '../features/index.js';
 import { DEFAULT_UI_FRAMEWORK, SUPPORTED_UI_FRAMEWORKS } from '../constants.js';
-import { createResponse } from '../../../../../utils';
+import { createResponse } from '../../../../../utils/index.js';
 
 /**
  * 格式化功能模板响应

@@ -1,7 +1,7 @@
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
-import { SUPPORTED_UI_FRAMEWORKS } from '../../../../common/tools/form/constants';
-import { DEFAULT_UI_FRAMEWORK } from '../../../../../core/form-rule-generator';
-import { createResponse } from '../../../../../utils';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types/index.js';
+import { SUPPORTED_UI_FRAMEWORKS } from '../../../../common/tools/form/constants.js';
+import { DEFAULT_UI_FRAMEWORK } from '../../../../../core/form-rule-generator.js';
+import { createResponse } from '../../../../../utils/index.js';
 import { getDefaultFormConfig } from './form-config.js';
 import { createDetailedValidate } from '../../../../common/tools/index.js';
 

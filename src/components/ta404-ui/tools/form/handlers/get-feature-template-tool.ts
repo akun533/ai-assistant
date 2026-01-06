@@ -1,9 +1,9 @@
-import yinhaiFeaturesMap from '../yinhai-features';
-import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types';
-import { features } from '../../../../common/tools/form/features';
-import { SUPPORTED_UI_FRAMEWORKS } from '../../../../common/tools/form/constants';
-import { DEFAULT_UI_FRAMEWORK } from '../../../../../core/form-rule-generator';
-import { createResponse } from '../../../../../utils';
+import yinhaiFeaturesMap from '../yinhai-features/index.js';
+import { ToolArgs, ToolContext, ToolRegistration } from '../../../../../types/index.js';
+import { features } from '../../../../common/tools/form/features/index.js';
+import { SUPPORTED_UI_FRAMEWORKS } from '../../../../common/tools/form/constants.js';
+import { DEFAULT_UI_FRAMEWORK } from '../../../../../core/form-rule-generator.js';
+import { createResponse } from '../../../../../utils/index.js';
 
 /**
  * 格式化功能模板响应
