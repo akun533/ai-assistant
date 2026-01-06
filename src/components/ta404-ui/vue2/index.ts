@@ -3,19 +3,19 @@ import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
-interface TaComponent extends Omit<ComponentInfo, 'events' | 'props' | 'fieldType' | 'uiFramework' | 'vueVersion' | 'label'> {
+export interface TaComponent extends Omit<ComponentInfo, 'events' | 'props' | 'fieldType' | 'uiFramework' | 'vueVersion' | 'label'> {
   type: string;
-  label: string;
-  icon: string;
+  label?: string;
+  icon?: string;
   span?: number;
-  display: string | boolean;
-  tools: Record<string, any>;
+  display?: string | boolean;
+  tools?: Record<string, any>;
   eventsDefinitions?: Record<string, any>;
   vueVersion?: 'vue2' | 'vue3' | 'common'; // 可选属性，因为不是所有地方都需要
   [key: string]: any;
 }
 
-interface TaComponentGroup {
+export interface TaComponentGroup {
   title: string;
   type: 'layout' | 'input' | 'select' | 'date' | 'assist' | 'display';
   list: TaComponent[];

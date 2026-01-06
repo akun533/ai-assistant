@@ -76,6 +76,96 @@ export default {
   description,
   templates: [
     {
+      description: '根据人员类型显示不同的信息录入组件',
+      example: [
+        {
+          type: 'select',
+          label: '人员类型',
+          autoShow: false,
+          allowDataMapping: true,
+          dataType: 'static',
+          staticData: [
+            {
+              label: '学生',
+              value: '0',
+            },
+            {
+              label: '老师',
+              value: '1',
+            },
+          ],
+          span: 8,
+          mode: 'default',
+          display: 'true',
+          allowClear: true,
+          tools: {},
+          fieldDecoratorId: 'role',
+          renderId: 'UJ7IJ1LMKKC6',
+          labelStyle: '{}',
+        },
+        {
+          type: 'select',
+          label: '教学科目',
+          autoShow: false,
+          allowDataMapping: true,
+          dataType: 'static',
+          staticData: [
+            {
+              label: '语文',
+              value: '0',
+            },
+            {
+              label: '数学',
+              value: '1',
+            },
+            {
+              label: '英语',
+              value: '2',
+            },
+          ],
+          span: 8,
+          mode: 'default',
+          display: {
+            items: [
+              {
+                field: 'role',
+                operator: 'equal',
+                value: '0',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
+          },
+          allowClear: true,
+          tools: {},
+          fieldDecoratorId: 'classType',
+          renderId: 'SAG43JU968SH',
+          labelStyle: '{}',
+        },
+        {
+          type: 'single-input',
+          label: '学生班级',
+          span: 8,
+          display: {
+            items: [
+              {
+                field: 'role',
+                operator: 'equal',
+                value: '1',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
+          },
+          autoShow: false,
+          tools: {},
+          fieldDecoratorId: 'made',
+          renderId: 'K6PNTSK6TIPB',
+          labelStyle: '{}',
+        },
+      ],
+    },
+    {
       description: '当值为1时显示指定字段',
       example: {
         control: [

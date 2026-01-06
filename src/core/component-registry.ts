@@ -44,7 +44,7 @@ export type ComponentCategory = 'form' | 'layout' | 'assist' | 'input' | 'select
 
 export interface ComponentInfo {
   type: string;
-  label: string;
+  label?: string;
   uiFramework: string;
   vueVersion: 'vue2' | 'vue3' | 'common';
   // 新增：组件所属分类，优先使用此字段进行分类

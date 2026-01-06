@@ -228,179 +228,69 @@ export default {
       ],
     },
     {
-      description: '根据年龄条件执行不同操作',
-      example: [
-        {
-          type: 'inputNumber',
-          field: 'age',
-          title: '年龄',
-        },
-        {
-          type: 'button',
-          $behavior: {
-            click: [
-              {
-                method: 'condition',
-                children: [
-                  {
-                    method: 'conditionItem',
-                    config: {
-                      mode: 'AND',
-                      group: [
-                        {
-                          field: 'age',
-                          condition: '>=',
-                          value: 18,
-                        },
-                      ],
-                    },
-                    children: [
-                      {
-                        method: 'message',
-                        config: {
-                          message: '成年人可以提交',
-                          type: 'success',
-                        },
-                      },
-                      {
-                        method: 'submit',
-                        config: {},
-                      },
-                    ],
-                  },
-                  {
-                    method: 'conditionItem',
-                    config: {
-                      mode: 'AND',
-                      group: [
-                        {
-                          field: 'age',
-                          condition: '<',
-                          value: 18,
-                        },
-                      ],
-                    },
-                    children: [
-                      {
-                        method: 'message',
-                        config: {
-                          message: '未成年人不能提交',
-                          type: 'error',
-                        },
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          children: ['检查年龄'],
-        },
-      ],
-    },
-    {
       description: '打开和关闭弹窗',
       example: [
         {
-          type: 'button',
-          $behavior: {
-            click: [
+          type: 'modal',
+          label: '弹窗',
+          title: '标题',
+          width: 800,
+          height: 500,
+          display: false,
+          okText: '确定',
+          cancelText: '取消',
+          okType: 'primary',
+          maskClosable: true,
+          keyboard: true,
+          destroyOnClose: true,
+          closeModalAfterOk: true,
+          children: {
+            align: 'center',
+            headerAlign: 'center',
+            addBtn: true,
+            delBtn: true,
+            column: [
               {
-                method: 'openModel',
-                config: {
-                  id: 'modalId',
-                },
+                type: 'single-input',
+                label: '输入框',
+                span: 8,
+                display: 'true',
+                autoShow: false,
+                tools: {},
+                fieldDecoratorId: 'AB6RNNB0',
+                renderId: 'PMBGJLI1M1R6',
+                labelStyle: '{}',
               },
             ],
           },
-          children: ['打开弹窗'],
+          tools: {
+            showClear: true,
+          },
+          fieldDecoratorId: 'IV3VMVIT',
+          renderId: 'FEAKPFJGACJM',
+          span: 24,
         },
         {
           type: 'button',
-          $behavior: {
-            click: [
-              {
-                method: 'closeModel',
-                config: {
-                  id: 'modalId',
-                },
-              },
-            ],
-          },
-          children: ['关闭弹窗'],
+          span: 4,
+          label: '打开弹框',
+          slotName: '',
+          size: 'default',
+          buttonType: 'primary',
+          display: 'true',
+          tools: {},
+          fieldDecoratorId: 'FEED8D45',
+          renderId: 'VUFJJNR4SP3I',
+          events: {},
+          eventList: [
+            {
+              eventType: 'click',
+              methodType: '1',
+              textarea: "\r\n// ------组件展示-函数开始------\r\n this_.showObj('IV3VMVIT')\r\n// ------组件展示-函数结束------\r\n",
+            },
+          ],
         },
       ],
-    },
-    {
-      description: '批量操作表单字段',
-      example: [
-        {
-          type: 'input',
-          field: 'field1',
-          title: '字段1',
-        },
-        {
-          type: 'input',
-          field: 'field2',
-          title: '字段2',
-        },
-        {
-          type: 'button',
-          $behavior: {
-            click: [
-              {
-                method: 'resetFields',
-                config: {
-                  id: ['field1', 'field2'],
-                },
-              },
-            ],
-            children: ['重置字段'],
-          },
-        },
-      ],
-    },
-    {
-      description: '发送HTTP请求并处理响应',
-      example: [
-        {
-          type: 'input',
-          field: 'searchKeyword',
-          title: '搜索关键词',
-        },
-        {
-          type: 'button',
-          $behavior: {
-            click: [
-              {
-                method: 'fetch',
-                config: {
-                  action: '/api/search',
-                  method: 'POST',
-                  data: {
-                    keyword: '{{$form.searchKeyword}}',
-                  },
-                  success: "[[FORM-CREATE-PREFIX-function(res) { console.log('搜索结果:', res); }-FORM-CREATE-SUFFIX]]",
-                  error: "[[FORM-CREATE-PREFIX-function(err) { console.error('搜索失败:', err); }-FORM-CREATE-SUFFIX]]",
-                },
-              },
-            ],
-          },
-          children: ['搜索'],
-        },
-      ],
-    },
-    {
-      description: '引用预定义的全局事件',
-      example: [
-        {
-          type: 'button',
-          on: {
-            click: '$GLOBAL:globalClickHandler',
-          },
-          children: ['全局事件'],
-        },
-      ],
-    },
+    }
   ],
 };
