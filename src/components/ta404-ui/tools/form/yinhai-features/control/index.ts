@@ -1,72 +1,20 @@
-export const description = `
-## 字段说明:
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { readFileSync } from 'fs';
 
-| **字段**    | **类型** | **说明**                                |
-|-----------|--------|-----------------------------------------|
-| value     | any    | 通过内置条件控制,和\`handle\`二选一              |
-| condition | string | 内置的条件,可以和\`value\`组合使用                |
-| handle    | function | 自定义控制条件,优先级大于value                    |
-| method    | string | 控制指定规则的显示,禁用,必填                      |
-| rule      | string[] | 控制的字段                                |
+function getEventPrompt(): string {
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const promptPath = join(__dirname, './', 'control-prompt.md');
+    return readFileSync(promptPath, 'utf-8');
+  } catch (error) {
+    console.error('❌ 读取 Vant 提示词失败:', error);
+    return '';
+  }
+}
 
-### method 选项
-
-| 键名 | 说明 |
-|------|------|
-| if | 条件渲染，控制组件的显示/隐藏状态 |
-| required | 必填验证，设置字段是否为必填项 |
-| enabled | 禁用状态，控制组件是否可交互 |
-| display | 显示状态，控制组件的显示状态(会渲染 DOM) |
-
-### condition 选项
-
-| 键名 | 运算符 | 说明 | 值类型 | 示例 |
-|------|--------|------|--------|------|
-| == | 全等 | 组件值完全等于value | Any | \`value: 10\` |
-| != | 不全等 | 组件值不等于value | Any | \`value: "error"\` |
-| <> | 不全等 | 组件值不等于value（同!=） | Any | \`value: false\` |
-| > | 大于 | 组件值大于value | Number | \`value: 100\` |
-| >= | 大于等于 | 组件值大于等于value | Number | \`value: 18\` |
-| < | 小于 | 组件值小于value | Number | \`value: 0\` |
-| <= | 小于等于 | 组件值小于等于value | Number | \`value: 100\` |
-| in | 包含 | 组件值存在于value数组中 | Array | \`value: [1,2,3]\` |
-| notIn | 不包含 | 组件值不存在于value数组中 | Array | \`value: ["a","b"]\` |
-| on | 包含值 | value存在于组件值（数组）中 | String/Number | \`value: "admin"\` |
-| notOn | 不包含值 | value不存在于组件值（数组）中 | String/Number | \`value: "guest"\` |
-| between | 区间内 | 组件值在value[0]和value[1]之间 | Array[2] | \`value: [10,20]\` |
-| notBetween | 区间外 | 组件值不在value[0]和value[1]之间 | Array[2] | \`value: [0,100]\` |
-| empty | 为空 | 组件值为空时通过验证 | - | \`value: true\` |
-| notEmpty | 非空 | 组件值不为空时通过验证 | - | \`value: true\` |
-| pattern | 正则 | 用正则表达式验证组件值 | String | \`value:'^1\\d{10}$'\` |
-
-## 实例模板
-input1输入值为"show"时，自动显示input2,并且让 input2必填
-
-\`\`\`JSON
-[{
-  type: 'input',
-  field: 'input1',
-  control: [{
-      value: 'show',
-      condition: '==',
-      method: 'if',
-      rule: ['input2', 'input3']
-    },{
-      value: 'show',
-      condition: '==',
-      method: 'required',
-      rule: ['input2']
-    }
-  ]
-},{
-  type: 'input',
-  field: 'input2',
-},{
-  type: 'input',
-  field: 'input3',
-}]
-\`\`\`
-`;
+export const description = getEventPrompt();
 
 export default {
   name: 'computed',
@@ -167,201 +115,708 @@ export default {
     },
     {
       description: '当值为1时显示指定字段',
-      example: {
-        control: [
-          {
-            value: 1,
-            rule: ['field1', 'name2'],
+      example: [
+        {
+          type: 'select',
+          label: '状态',
+          fieldDecoratorId: 'status',
+          renderId: 'STATUS001',
+          staticData: [
+            { label: '正常', value: '0' },
+            { label: '激活', value: '1' },
+          ],
+          display: {
+            items: [
+              {
+                field: 'status',
+                operator: 'equal',
+                value: '1',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
           },
-        ],
-      },
-    },
-    {
-      description: '当值大于等于1时显示指定字段',
-      example: {
-        control: [
-          {
-            value: 1,
-            condition: '>=',
-            rule: ['field1', 'name2'],
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '额外信息',
+          fieldDecoratorId: 'field1',
+          renderId: 'FIELD001',
+          display: {
+            items: [
+              {
+                field: 'status',
+                operator: 'equal',
+                value: '1',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
           },
-        ],
-      },
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '其他信息',
+          fieldDecoratorId: 'name2',
+          renderId: 'NAME002',
+          display: {
+            items: [
+              {
+                field: 'status',
+                operator: 'equal',
+                value: '1',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
+          },
+          span: 8,
+        },
+      ],
     },
+    // {
+    //   description: '当值大于等于1时显示指定字段',
+    //   example: [
+    //     {
+    //       type: 'input-number',
+    //       label: '数量',
+    //       fieldDecoratorId: 'quantity',
+    //       renderId: 'QTY001',
+    //       display: true,
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '额外信息',
+    //       fieldDecoratorId: 'field1',
+    //       renderId: 'FIELD001',
+    //       display: {
+    //         items: [
+    //           {
+    //             field: 'quantity',
+    //             operator: 'greaterThanOrEqual',
+    //             value: 1,
+    //           },
+    //         ],
+    //         conjunction: 'some',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '其他信息',
+    //       fieldDecoratorId: 'name2',
+    //       renderId: 'NAME002',
+    //       display: {
+    //         items: [
+    //           {
+    //             field: 'quantity',
+    //             operator: 'greaterThanOrEqual',
+    //             value: 1,
+    //           },
+    //         ],
+    //         conjunction: 'some',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //   ],
+    // },
     {
       description: '当值为1时禁用指定字段',
-      example: {
-        control: [
-          {
-            value: 1,
-            method: 'enabled',
-            rule: ['field1', 'name2'],
+      example: [
+        {
+          type: 'select',
+          label: '状态',
+          fieldDecoratorId: 'status',
+          renderId: 'STATUS001',
+          staticData: [
+            { label: '正常', value: '0' },
+            { label: '激活', value: '1' },
+          ],
+          display: true,
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '字段1',
+          fieldDecoratorId: 'field1',
+          renderId: 'FIELD001',
+          display: true,
+          disabled: {
+            items: [
+              {
+                field: 'status',
+                operator: 'equal',
+                value: '1',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
           },
-        ],
-      },
-    },
-    {
-      description: '当值为1时设置指定字段为必填',
-      example: {
-        control: [
-          {
-            value: 1,
-            method: 'required',
-            rule: ['field1', 'name2'],
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '字段2',
+          fieldDecoratorId: 'name2',
+          renderId: 'NAME002',
+          display: true,
+          disabled: {
+            items: [
+              {
+                field: 'status',
+                operator: 'equal',
+                value: '1',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
           },
-        ],
-      },
+          span: 8,
+        },
+      ],
     },
+    // {
+    //   description: '当值为1时设置指定字段为必填',
+    //   example: [
+    //     {
+    //       type: 'select',
+    //       label: '状态',
+    //       fieldDecoratorId: 'status',
+    //       renderId: 'STATUS001',
+    //       staticData: [
+    //         { label: '正常', value: '0' },
+    //         { label: '激活', value: '1' },
+    //       ],
+    //       display: true,
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '字段1',
+    //       fieldDecoratorId: 'field1',
+    //       renderId: 'FIELD001',
+    //       display: true,
+    //       required: {
+    //         items: [
+    //           {
+    //             field: 'status',
+    //             operator: 'equal',
+    //             value: '1',
+    //           },
+    //         ],
+    //         conjunction: 'some',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '字段2',
+    //       fieldDecoratorId: 'name2',
+    //       renderId: 'NAME002',
+    //       display: true,
+    //       required: {
+    //         items: [
+    //           {
+    //             field: 'status',
+    //             operator: 'equal',
+    //             value: '1',
+    //           },
+    //         ],
+    //         conjunction: 'some',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //   ],
+    // },
     {
       description: '当值完全等于指定值时显示字段',
-      example: {
-        control: [
-          {
-            value: 'admin',
-            condition: '==',
-            rule: ['adminFields'],
+      example: [
+        {
+          type: 'input',
+          label: '用户角色',
+          fieldDecoratorId: 'userRole',
+          renderId: 'ROLE001',
+          display: true,
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '管理员字段',
+          fieldDecoratorId: 'adminFields',
+          renderId: 'ADMIN001',
+          display: {
+            items: [
+              {
+                field: 'userRole',
+                operator: 'equal',
+                value: 'admin',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
           },
-        ],
-      },
+          span: 8,
+        },
+      ],
     },
     {
       description: '当值不等于指定值时显示字段',
-      example: {
-        control: [
-          {
-            value: 'guest',
-            condition: '!=',
-            rule: ['userFields'],
+      example: [
+        {
+          type: 'input',
+          label: '用户类型',
+          fieldDecoratorId: 'userType',
+          renderId: 'TYPE001',
+          display: true,
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '普通用户字段',
+          fieldDecoratorId: 'userFields',
+          renderId: 'USER001',
+          display: {
+            items: [
+              {
+                field: 'userType',
+                operator: 'notEqual',
+                value: 'guest',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
           },
-        ],
-      },
+          span: 8,
+        },
+      ],
     },
-    {
-      description: '当值大于指定数值时显示字段',
-      example: {
-        control: [
-          {
-            value: 18,
-            condition: '>',
-            rule: ['adultFields'],
-          },
-        ],
-      },
-    },
-    {
-      description: '当值在指定范围内时显示字段',
-      example: {
-        control: [
-          {
-            value: [18, 65],
-            condition: 'between',
-            rule: ['workingAgeFields'],
-          },
-        ],
-      },
-    },
+    // {
+    //   description: '当值大于指定数值时显示字段',
+    //   example: [
+    //     {
+    //       type: 'input-number',
+    //       label: '年龄',
+    //       fieldDecoratorId: 'age',
+    //       renderId: 'AGE001',
+    //       display: true,
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '成人字段',
+    //       fieldDecoratorId: 'adultFields',
+    //       renderId: 'ADULT001',
+    //       display: {
+    //         items: [
+    //           {
+    //             field: 'age',
+    //             operator: 'greaterThan',
+    //             value: 18,
+    //           },
+    //         ],
+    //         conjunction: 'some',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //   ],
+    // },
+    // {
+    //   description: '当值在指定范围内时显示字段',
+    //   example: [
+    //     {
+    //       type: 'input-number',
+    //       label: '年龄',
+    //       fieldDecoratorId: 'age',
+    //       renderId: 'AGE001',
+    //       display: true,
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '工作年龄字段',
+    //       fieldDecoratorId: 'workingAgeFields',
+    //       renderId: 'WORK001',
+    //       display: {
+    //         items: [
+    //           {
+    //             field: 'age',
+    //             operator: 'greaterThanOrEqual',
+    //             value: 18,
+    //           },
+    //           {
+    //             field: 'age',
+    //             operator: 'lessThanOrEqual',
+    //             value: 65,
+    //           },
+    //         ],
+    //         conjunction: 'all',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //   ],
+    // },
     {
       description: '当值在指定数组中时显示字段',
-      example: {
-        control: [
-          {
-            value: ['admin', 'manager'],
-            condition: 'in',
-            rule: ['privilegeFields'],
+      example: [
+        {
+          type: 'select',
+          label: '用户角色',
+          fieldDecoratorId: 'userRole',
+          renderId: 'ROLE001',
+          staticData: [
+            { label: '访客', value: 'guest' },
+            { label: '用户', value: 'user' },
+            { label: '管理员', value: 'admin' },
+            { label: '经理', value: 'manager' },
+          ],
+          display: true,
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '特权字段',
+          fieldDecoratorId: 'privilegeFields',
+          renderId: 'PRIV001',
+          display: {
+            items: [
+              {
+                field: 'userRole',
+                operator: 'equal',
+                value: 'admin',
+              },
+              {
+                field: 'userRole',
+                operator: 'equal',
+                value: 'manager',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
           },
-        ],
-      },
+          span: 8,
+        },
+      ],
     },
     {
       description: '当值不在指定数组中时显示字段',
-      example: {
-        control: [
-          {
-            value: ['guest', 'visitor'],
-            condition: 'notIn',
-            rule: ['memberFields'],
+      example: [
+        {
+          type: 'select',
+          label: '用户类型',
+          fieldDecoratorId: 'userType',
+          renderId: 'TYPE001',
+          staticData: [
+            { label: '会员', value: 'member' },
+            { label: '访客', value: 'guest' },
+            { label: '访客2', value: 'visitor' },
+          ],
+          display: true,
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '会员字段',
+          fieldDecoratorId: 'memberFields',
+          renderId: 'MEMBER001',
+          display: {
+            items: [
+              {
+                field: 'userType',
+                operator: 'notEqual',
+                value: 'guest',
+              },
+              {
+                field: 'userType',
+                operator: 'notEqual',
+                value: 'visitor',
+              },
+            ],
+            conjunction: 'all',
+            value: true,
           },
-        ],
-      },
+          span: 8,
+        },
+      ],
     },
     {
       description: '当值为空时显示字段',
-      example: {
-        control: [
-          {
+      example: [
+        {
+          type: 'input',
+          label: '搜索内容',
+          fieldDecoratorId: 'searchContent',
+          renderId: 'SEARCH001',
+          display: true,
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '默认字段',
+          fieldDecoratorId: 'defaultFields',
+          renderId: 'DEFAULT001',
+          display: {
+            items: [
+              {
+                field: 'searchContent',
+                operator: 'null',
+              },
+            ],
+            conjunction: 'some',
             value: true,
-            condition: 'empty',
-            rule: ['defaultFields'],
           },
-        ],
-      },
+          span: 8,
+        },
+      ],
     },
     {
       description: '当值不为空时显示字段',
-      example: {
-        control: [
-          {
+      example: [
+        {
+          type: 'input',
+          label: '搜索内容',
+          fieldDecoratorId: 'searchContent',
+          renderId: 'SEARCH001',
+          display: true,
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '动态字段',
+          fieldDecoratorId: 'dynamicFields',
+          renderId: 'DYNAMIC001',
+          display: {
+            items: [
+              {
+                field: 'searchContent',
+                operator: 'notNull',
+              },
+            ],
+            conjunction: 'some',
             value: true,
-            condition: 'notEmpty',
-            rule: ['dynamicFields'],
           },
-        ],
-      },
+          span: 8,
+        },
+      ],
     },
-    {
-      description: '当值匹配正则时显示字段',
-      example: {
-        control: [
-          {
-            value: '^1\\d{10}$',
-            condition: 'pattern',
-            rule: ['phoneFields'],
-          },
-        ],
-      },
-    },
-    {
-      description: '使用函数控制字段显示',
-      example: {
-        control: [
-          {
-            handle: 'function(val, api) { return val > 0 && api.getValue("status") === "active"; }',
-            rule: ['conditionalFields'],
-          },
-        ],
-      },
-    },
+    // {
+    //   description: '当值匹配正则时显示字段',
+    //   example: [
+    //     {
+    //       type: 'input',
+    //       label: '手机号',
+    //       fieldDecoratorId: 'phone',
+    //       renderId: 'PHONE001',
+    //       display: true,
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '手机相关字段',
+    //       fieldDecoratorId: 'phoneFields',
+    //       renderId: 'PHONEFIELDS001',
+    //       display: {
+    //         items: [
+    //           {
+    //             field: 'phone',
+    //             operator: 'pattern',
+    //             value: '^1\\\\d{10}$',
+    //           },
+    //         ],
+    //         conjunction: 'some',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //   ],
+    // },
+    // {
+    //   description: '使用函数控制字段显示',
+    //   example: [
+    //     {
+    //       type: 'input-number',
+    //       label: '数量',
+    //       fieldDecoratorId: 'quantity',
+    //       renderId: 'QTY001',
+    //       display: true,
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'select',
+    //       label: '状态',
+    //       fieldDecoratorId: 'status',
+    //       renderId: 'STATUS001',
+    //       staticData: [
+    //         { label: '未激活', value: 'inactive' },
+    //         { label: '激活', value: 'active' },
+    //       ],
+    //       display: true,
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '条件字段',
+    //       fieldDecoratorId: 'conditionalFields',
+    //       renderId: 'CONDITIONAL001',
+    //       display: {
+    //         items: [
+    //           {
+    //             field: 'quantity',
+    //             operator: 'greaterThan',
+    //             value: 0,
+    //           },
+    //           {
+    //             field: 'status',
+    //             operator: 'equal',
+    //             value: 'active',
+    //           },
+    //         ],
+    //         conjunction: 'all',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //   ],
+    // },
     {
       description: '一个条件控制多个字段的显示',
-      example: {
-        control: [
-          {
-            value: 'enterprise',
-            condition: '==',
-            method: 'display',
-            rule: ['companyName', 'taxNumber', 'businessLicense'],
+      example: [
+        {
+          type: 'select',
+          label: '公司类型',
+          fieldDecoratorId: 'companyType',
+          renderId: 'COMPANYTYPE001',
+          staticData: [
+            { label: '个人', value: 'personal' },
+            { label: '企业', value: 'enterprise' },
+          ],
+          display: true,
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '公司名称',
+          fieldDecoratorId: 'companyName',
+          renderId: 'COMPANY001',
+          display: {
+            items: [
+              {
+                field: 'companyType',
+                operator: 'equal',
+                value: 'enterprise',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
           },
-        ],
-      },
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '税号',
+          fieldDecoratorId: 'taxNumber',
+          renderId: 'TAX001',
+          display: {
+            items: [
+              {
+                field: 'companyType',
+                operator: 'equal',
+                value: 'enterprise',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
+          },
+          span: 8,
+        },
+        {
+          type: 'input',
+          label: '营业执照',
+          fieldDecoratorId: 'businessLicense',
+          renderId: 'LICENSE001',
+          display: {
+            items: [
+              {
+                field: 'companyType',
+                operator: 'equal',
+                value: 'enterprise',
+              },
+            ],
+            conjunction: 'some',
+            value: true,
+          },
+          span: 8,
+        },
+      ],
     },
-    {
-      description: '结合多个控制条件',
-      example: {
-        control: [
-          {
-            value: 18,
-            condition: '>=',
-            method: 'display',
-            rule: ['adultFields'],
-          },
-          {
-            value: 'premium',
-            condition: '==',
-            method: 'required',
-            rule: ['premiumFields'],
-          },
-        ],
-      },
-    },
+    // {
+    //   description: '结合多个控制条件',
+    //   example: [
+    //     {
+    //       type: 'input-number',
+    //       label: '年龄',
+    //       fieldDecoratorId: 'age',
+    //       renderId: 'AGE001',
+    //       display: true,
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'select',
+    //       label: '会员类型',
+    //       fieldDecoratorId: 'memberType',
+    //       renderId: 'MEMBERTYPE001',
+    //       staticData: [
+    //         { label: '普通', value: 'normal' },
+    //         { label: '高级', value: 'premium' },
+    //       ],
+    //       display: true,
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '成人字段',
+    //       fieldDecoratorId: 'adultFields',
+    //       renderId: 'ADULT001',
+    //       display: {
+    //         items: [
+    //           {
+    //             field: 'age',
+    //             operator: 'greaterThanOrEqual',
+    //             value: 18,
+    //           },
+    //         ],
+    //         conjunction: 'some',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //     {
+    //       type: 'input',
+    //       label: '高级会员字段',
+    //       fieldDecoratorId: 'premiumFields',
+    //       renderId: 'PREMIUM001',
+    //       required: {
+    //         items: [
+    //           {
+    //             field: 'memberType',
+    //             operator: 'equal',
+    //             value: 'premium',
+    //           },
+    //         ],
+    //         conjunction: 'some',
+    //         value: true,
+    //       },
+    //       span: 8,
+    //     },
+    //   ],
+    // },
   ],
 };
