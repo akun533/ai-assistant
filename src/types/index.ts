@@ -59,5 +59,5 @@ export interface ToolArgs {
   data?: Record<string, any>;
 }
 
-// 从 components/tools 导入 ValidateDetails
-export type { ValidateDetails } from '../components/tools';
+// 从 components/common/tools 导入 ValidateDetails
+export type { ValidateDetails } from '../components/common/tools/index.js';

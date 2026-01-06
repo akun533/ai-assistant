@@ -13,15 +13,18 @@ RUN npm config set registry https://registry.npmmirror.com && \
 # 复制 package.json 和 pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml* ./
 
-# 安装生产依赖
-RUN pnpm install --prod
+# 安装所有依赖（包括 devDependencies，用于构建）
+RUN pnpm install
 
 # 复制源代码
 COPY src ./src
 COPY tsconfig.json ./
 
 # 构建项目
-RUN pnpm run build
+RUN npm run build
+
+# 删除 devDependencies，只保留生产依赖
+RUN pnpm prune --prod
 
 # 检查 dist 目录内容
 RUN ls -la dist/
