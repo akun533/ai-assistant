@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { ComponentRegistry } from '../core/component-registry.js';
 import { FormRuleGenerator } from '../core/form-rule-generator.js';
-import { generateSessionId } from '../utils';
-import { AgentMessage, AgentType } from './agent';
+import { generateSessionId } from '../utils/index.js';
+import { AgentMessage, AgentType } from './agent/index.js';
 import { ToolRegistry } from './tools.js';
 import { AgentManager } from './agent-manager.js';
 import { MessageProcessor } from './message-processor.js';
