@@ -486,7 +486,7 @@ export class ComponentRegistry {
     this.registerTools(formTools);
     
     // 注册 ta404-ui 框架的自定义工具
-    this.registerFrameworkTools('ta404-ui', ta404uiFormTools);
+    this.registerFrameworkTools('ta404-ui@vue2', ta404uiFormTools);
   }
 
   /**
@@ -523,6 +523,7 @@ export class ComponentRegistry {
    * 优先使用组件自定义的工具，没有则使用公共工具
    */
   getToolHandler(name: string, uiFramework?: string) {
+    console.log('uiFramework', uiFramework);
     // 如果指定了UI框架，先查找该框架的自定义工具
     if (uiFramework) {
       const frameworkToolsMap = this.frameworkTools.get(uiFramework);

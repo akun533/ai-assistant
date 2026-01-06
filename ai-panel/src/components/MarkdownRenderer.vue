@@ -82,14 +82,10 @@ export default {
                                     <CopyIcon class="icon" />
                                     <span class="code-action-text">复制</span>
                                 </div>
-                                ${
-                    language === 'fcRule'
-                        ? `<div class="code-action-item is-primary" onclick="_fd_importCode('${blockId}')">
+                              <div class="code-action-item is-primary" onclick="_fd_importCode('${blockId}')">
                                     <FileImportIcon class="icon" />
                                     <span class="code-action-text">导入</span>
-                                </div>`
-                        : ''
-                }
+                                </div>
                             </div>
                         </div>
                         <pre><code class="${className}">${codeContent}</code></pre>
