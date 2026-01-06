@@ -23,7 +23,17 @@ COPY tsconfig.json ./
 # 构建项目
 RUN npm run build
 
-# 删除 devDependencies，只保留生产依赖
+# 复制 .md 提示词文件到 dist 目录
+RUN mkdir -p dist/components/common/prompts && \
+    mkdir -p dist/components/ta404-ui/prompts && \
+    mkdir -p dist/components/ta404-ui/tools/form/yinhai-features/control && \
+    mkdir -p dist/components/ta404-ui/tools/form/yinhai-features/event && \
+    cp src/components/common/prompts/*.md dist/components/common/prompts/ && \
+    cp src/components/ta404-ui/prompts/*.md dist/components/ta404-ui/prompts/ && \
+    cp src/components/ta404-ui/tools/form/yinhai-features/control/*.md dist/components/ta404-ui/tools/form/yinhai-features/control/ && \
+    cp src/components/ta404-ui/tools/form/yinhai-features/event/*.md dist/components/ta404-ui/tools/form/yinhai-features/event/
+
+# 删除 devDependencies,只保留生产依赖
 RUN pnpm prune --prod
 
 # 检查 dist 目录内容
