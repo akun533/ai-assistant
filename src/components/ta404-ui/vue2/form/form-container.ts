@@ -1,5 +1,5 @@
 import fieldsConfig from './fieldsConfig.js';
-import { TaComponent, TaComponentGroup } from '../index';
+import { TaComponent, TaComponentGroup } from '../index.js';
 
 
 const cloneFieldsConfig: TaComponentGroup[] = JSON.parse(JSON.stringify(fieldsConfig));

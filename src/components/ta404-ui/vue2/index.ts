@@ -1,4 +1,4 @@
-import { ComponentInfo } from '../../../core/component-registry';
+import { ComponentInfo } from '../../../core/component-registry.js';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -25,7 +25,7 @@ import taComponents from './form/fieldsConfig.js';
 import fieldsProps, { PropsDefinition } from './form/fieldsProps.js';
 import sections from './sections.js'
 import usage from './usage.js';
-import { ComponentProps, ValidationResult, validatorMap } from './form/fieldsPropsValidators';
+import { ComponentProps, ValidationResult, validatorMap } from './form/fieldsPropsValidators.js';
 import ta404uiFormToolsArray from '../tools/form/index.js';
 
 /**
