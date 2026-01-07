@@ -1,4 +1,4 @@
-# @akun/ai-panel 组件
+# @akun15623/ai-panel 组件
 
 一个基于 Vue 3 的 AI 助手聊天面板组件，可以轻松集成到你的项目中。
 
@@ -12,25 +12,28 @@
 - 响应式设计，适配不同屏幕尺寸
 - 代码块一键复制功能
 - 流式数据处理，实时显示 AI 回复
+- AI 思考链可视化，展示工具调用过程
+- 支持多种 UI 框架（如 Element Plus, Ant Design Vue, Vant 等）
+- 支持表单规则生成和可视化
 
 ## 安装
 
 通过 npm 安装：
 
 ```bash
-npm install @akun/ai-panel
+npm install @akun15623/ai-panel
 ```
 
 通过 yarn 安装：
 
 ```bash
-yarn add @akun/ai-panel
+yarn add @akun15623/ai-panel
 ```
 
 通过 pnpm 安装：
 
 ```bash
-pnpm add @akun/ai-panel
+pnpm add @akun15623/ai-panel
 ```
 
 ## 使用方法
@@ -45,7 +48,7 @@ pnpm add @akun/ai-panel
 </template>
 
 <script>
-import AiPanel from '@akun/ai-panel';
+import AiPanel from '@akun15623/ai-panel';
 
 export default {
   components: {
@@ -70,7 +73,7 @@ export default {
 </template>
 
 <script>
-import AiPanel from '@akun/ai-panel';
+import AiPanel from '@akun15623/ai-panel';
 
 export default {
   components: {
@@ -79,7 +82,7 @@ export default {
   data() {
     return {
       requestOption: {
-        ui: 'element-plus',
+        ui: 'ta404-ui@vue2',
         basic: true,
         form: {
           rule: '[]',
@@ -109,9 +112,9 @@ export default {
 | requestOption | Object | `{ ui: 'ta404-ui@vue2', basic: true, form: { rule: '[]' }, messages: [] }` | 请求选项，用于配置AI助手的上下文信息 |
 | config | Object | 见下方说明 | 配置选项，支持国际化和自定义文本 |
 
-## 构建
+## 开发
 
-如果你想自己构建这个组件：
+如果你想参与开发这个组件：
 
 1. 克隆项目：
 ```bash
@@ -142,6 +145,12 @@ npm run build:package
 - 检查并安装依赖（如果尚未安装）
 - 构建组件到 dist 目录
 - 生成 .tgz 包文件用于发布或本地安装
+
+## API 接口配置
+
+组件内部使用了预设的 API 地址和认证令牌，你可以在部署时根据需要修改这些配置：
+
+> 注意：在生产环境中请务必使用安全的 API 地址和认证令牌
 
 ## 浏览器兼容性
 

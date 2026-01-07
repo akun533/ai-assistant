@@ -11,6 +11,9 @@ AI 表单助理，用于根据自然语言描述自动生成和修改表单规�
 - 🔄 **增量更新** - 支持基于 JSONPatch 的精确表单规则修改
 - 📱 **移动端支持** - 支持 Vant 移动端表单生成
 - 🔌 **OpenAI 兼容** - 完全兼容 OpenAI Chat Completions API 格式
+- 🧩 **MCP 工具集成** - 集成 Model Context Protocol 工具，提供组件详情、表单验证等功能
+- 💬 **AI 面板组件** - 内置 @akun15623/ai-panel 聊天面板组件，便于集成到前端项目
+- 🚀 **流式响应** - 支持 Server-Sent Events (SSE) 实时流式响应
 
 ## 📦 安装
 
@@ -30,6 +33,18 @@ pnpm install
 pnpm start
 ```
 服务启动后，默认监听 `http://localhost:3001`
+
+### Docker 部署
+
+```bash
+# 构建镜像
+docker build -t ai-assistant .
+
+# 运行容器
+docker run -d -p 3001:3001 --env-file .env ai-assistant
+```
+
+Docker 部署支持环境变量配置，可通过 `.env` 文件传递配置参数。
 
 ## ⚙️ 配置
 
