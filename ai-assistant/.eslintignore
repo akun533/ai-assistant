@@ -1,0 +1,52 @@
+# 依赖目录
+node_modules/
+dist/
+build/
+
+# 日志文件
+*.md
+*.log
+log/
+src/log/
+
+# 测试覆盖率
+coverage/
+.nyc_output/
+
+# 编译输出
+*.js
+*.d.ts
+*.d.ts.map
+*.js.map
+
+# 配置文件
+*.config.js
+*.config.ts
+
+# 临时文件
+.tmp/
+.temp/
+*.tmp
+*.temp
+
+# IDE 文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 环境文件
+.env
+.env.local
+.env.*.local
+
+# 文档生成
+docs/generated/
+
+# 其他
+*.min.js
+*.bundle.js
