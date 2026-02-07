@@ -95,11 +95,12 @@
 
     <!-- 输入区域 -->
     <div class="ai-input">
-      <!-- 已上传的图片缩略图 -->
+      <!-- 已上传的图片 -->
       <div v-if="uploadedImages.length > 0" class="ai-uploaded-images">
-        <div v-for="(img, index) in uploadedImages" :key="index" class="ai-uploaded-image">
+        <div v-for="(img, index) in uploadedImages" :key="index" class="ai-uploaded-image-item">
           <img :src="img.preview" :alt="img.name" class="ai-image-thumbnail" />
-          <div class="ai-image-remove" @click="removeImage(index)">
+          <span class="ai-image-name" :title="img.name">{{ img.name }}</span>
+          <div class="ai-image-remove" @click="removeImage(index)" :title="config.deleteMessage || '删除'">
             <CloseIcon />
           </div>
         </div>
@@ -950,23 +951,41 @@ export default {
 .ai-uploaded-images {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
   margin-bottom: 12px;
 }
 
-.ai-uploaded-image {
-  position: relative;
-  width: 60px;
-  height: 60px;
+.ai-uploaded-image-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  background: #f5f5f5;
   border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid #ececec;
+  position: relative;
+}
+
+.ai-uploaded-image-item:hover {
+  background: #ececec;
 }
 
 .ai-image-thumbnail {
-  width: 100%;
-  height: 100%;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid #ececec;
+}
+
+.ai-image-name {
+  font-size: 11px;
+  color: #666666;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .ai-image-remove {
@@ -975,7 +994,7 @@ export default {
   right: 2px;
   width: 18px;
   height: 18px;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(255, 82, 82, 0.9);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -987,7 +1006,7 @@ export default {
   transition: opacity 0.2s ease;
 }
 
-.ai-uploaded-image:hover .ai-image-remove {
+.ai-uploaded-image-item:hover .ai-image-remove {
   opacity: 1;
 }
 
