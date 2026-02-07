@@ -110,6 +110,23 @@ export default class Chat {
       // 构建消息数组
       const messages = this.convertToAgentMessages(request.messages);
 
+      // 处理图片 OCR（如果有）
+      if (request.images && request.images.length > 0) {
+        console.log(`📸 检测到 ${request.images.length} 张图片，开始 OCR 识别...`);
+        const ocrText = await this.messageProcessor.processUserMessageImages({
+          role: 'user',
+          content: messages.filter(m => m.role === 'user').pop()?.content || '',
+          images: request.images,
+        });
+        
+        // 更新最后一条用户消息的内容
+        const lastUserMsg = messages.filter(m => m.role === 'user').pop();
+        if (lastUserMsg) {
+          lastUserMsg.content = ocrText;
+        }
+        console.log('✅ OCR 识别完成');
+      }
+
       // 如果没有系统消息，添加系统提示词
       const hasSystemMessage = messages.some((msg) => msg.role === 'system');
       if (!hasSystemMessage) {
