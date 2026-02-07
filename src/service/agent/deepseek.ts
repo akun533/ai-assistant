@@ -15,7 +15,7 @@ export class DeepSeekAgent extends BaseAgent {
   }
 
   protected getEndpoint(): string {
-    return '/v1/chat/completions';
+    return '/chat/completions';
   }
 }
 

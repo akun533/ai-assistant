@@ -1,5 +1,6 @@
 import * as paddleocr from 'paddleocr';
 const PaddleOcrService = paddleocr.PaddleOcrService;
+// @ts-ignore
 import { decode } from 'fast-png';
 import sharp from 'sharp';
 import fs from 'fs';

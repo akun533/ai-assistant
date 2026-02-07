@@ -111,16 +111,9 @@
         <div class="ai-image-upload-btn" @click="triggerImageUpload" :title="config.uploadImage">
           <FileImportIcon />
         </div>
-        
+
         <!-- 文件输入框 (使用 CSS 隐藏而不是 hidden 属性) -->
-        <input
-          ref="fileInput"
-          type="file"
-          multiple
-          accept="image/*"
-          class="hidden-file-input"
-          @change="handleImageUpload"
-        />
+        <input ref="fileInput" type="file" multiple accept="image/*" class="hidden-file-input" @change="handleImageUpload" />
 
         <textarea
           v-model="inputText"
@@ -166,7 +159,7 @@ export default {
     },
     apiToken: {
       type: String,
-      default: '',
+      default: 'sk-5ade2cc05cc943bc9713aa8bdc0d86c2',
     },
     // 默认模型
     defaultModel: {
@@ -223,7 +216,7 @@ export default {
       }
       return token;
     },
-    
+
     // 判断是否可以发送消息
     canSend() {
       return (this.inputText.trim() || this.uploadedImages.length > 0) && !this.isThinking;
@@ -234,25 +227,25 @@ export default {
     triggerImageUpload() {
       this.$refs.fileInput.click();
     },
-    
+
     // 处理图片上传
     async handleImageUpload(event) {
       const files = event.target.files;
       if (!files || files.length === 0) return;
-      
+
       // 重置文件输入框，以便可以重复选择同一文件
       event.target.value = '';
-      
+
       // 处理每个上传的文件
       for (const file of files) {
         if (!file.type.startsWith('image/')) continue;
-        
+
         // 创建预览 URL
         const preview = URL.createObjectURL(file);
-        
+
         // 将图片转为 base64
         const base64 = await this.fileToBase64(file);
-        
+
         this.uploadedImages.push({
           file,
           name: file.name,
@@ -262,7 +255,7 @@ export default {
         });
       }
     },
-    
+
     // 将文件转为 base64
     fileToBase64(file) {
       return new Promise((resolve, reject) => {
@@ -272,7 +265,7 @@ export default {
         reader.onerror = error => reject(error);
       });
     },
-    
+
     // 移除已上传的图片
     removeImage(index) {
       const image = this.uploadedImages[index];
@@ -282,7 +275,7 @@ export default {
       }
       this.uploadedImages.splice(index, 1);
     },
-    
+
     // 发送消息
     async sendMessage() {
       if (this.isThinking) {
@@ -290,14 +283,14 @@ export default {
         this.controller && this.controller.abort();
         return;
       }
-      
+
       // 如果没有文本且没有图片，则不能发送
       if (!this.inputText.trim() && this.uploadedImages.length === 0) return;
-      
+
       // 准备消息内容
       const content = this.inputText.trim();
       const images = this.uploadedImages.map(img => img.base64);
-      
+
       // 添加用户消息
       const userMessage = {
         role: 'user',
@@ -305,22 +298,22 @@ export default {
         images,
         timestamp: new Date(),
       };
-      
+
       this.messages.push(userMessage);
       this.inputText = '';
-      
+
       // 清空已上传的图片
       this.uploadedImages.forEach(img => {
         if (img.preview) URL.revokeObjectURL(img.preview);
       });
       this.uploadedImages = [];
-      
+
       // 滚动到底部
       this.isUserAtBottom = true;
       this.$nextTick(() => {
         this.scrollToBottom();
       });
-      
+
       this.callAiApi();
     },
 
@@ -571,12 +564,6 @@ export default {
       return this.messages.filter(m => m.role === 'user' || m.role === 'assistant');
     },
   },
-  data() {
-    return {
-      page: 0,
-      ...this.$options.data(),
-    };
-  },
   created() {
     this.loadHistory();
     this.refreshSuggestions();
@@ -595,7 +582,7 @@ export default {
     this.uploadedImages.forEach(img => {
       if (img.preview) URL.revokeObjectURL(img.preview);
     });
-    
+
     const content = this.$refs.chatContent;
     if (content) {
       content.removeEventListener('scroll', this.handleScroll);
@@ -889,12 +876,24 @@ export default {
   animation: thinking-pulse 1.4s ease-in-out infinite both;
 }
 
-.ai-thinking-dot:nth-child(1) { animation-delay: -0.32s; }
-.ai-thinking-dot:nth-child(2) { animation-delay: -0.16s; }
+.ai-thinking-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.ai-thinking-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
 
 @keyframes thinking-pulse {
-  0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-  40% { transform: scale(1); opacity: 1; }
+  0%,
+  80%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .ai-ocr-results {
@@ -945,7 +944,9 @@ export default {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .ai-uploaded-images {
