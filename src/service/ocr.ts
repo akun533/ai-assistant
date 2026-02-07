@@ -1,6 +1,3 @@
-import * as paddleocr from 'paddleocr';
-const PaddleOcrService = paddleocr.PaddleOcrService;
-// @ts-ignore
 import { decode } from 'fast-png';
 import sharp from 'sharp';
 import fs from 'fs';
@@ -15,16 +12,18 @@ const DET_MODEL = path.join(MODELS_DIR, 'PP-OCRv5_mobile_det_infer.onnx');
 const REC_MODEL = path.join(MODELS_DIR, 'PP-OCRv5_mobile_rec_infer.onnx');
 const DICT_FILE = path.join(MODELS_DIR, 'ppocrv5_dict.txt');
 
-let ocrInstance: PaddleOcrService | null = null;
+let PaddleOcrService: any = null;
 
 /**
  * 初始化 PaddleOCR 实例
  */
 async function initOcr() {
-  if (ocrInstance) return ocrInstance;
+  if (PaddleOcrService) return PaddleOcrService;
 
   try {
-    // 检查模型文件是否存在
+    // 动态导入 paddleocr
+    const paddleocrModule = await import('paddleocr');
+    PaddleOcrService = paddleocrModule.default || paddleocrModule.PaddleOcrService || paddleocrModule;
     const missing = [];
     if (!fs.existsSync(DET_MODEL)) missing.push('检测模型');
     if (!fs.existsSync(REC_MODEL)) missing.push('识别模型');
@@ -40,7 +39,7 @@ async function initOcr() {
     
     const ort = await import('onnxruntime-node');
     
-    ocrInstance = await PaddleOcrService.createInstance({
+    const ocrInstance = await PaddleOcrService.createInstance({
       ort,
       detection: {
         modelBuffer: fs.readFileSync(DET_MODEL),
