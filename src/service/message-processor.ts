@@ -185,6 +185,7 @@ export class MessageProcessor {
         const agent = this.agentManager.getAgent(agentType, apiKey, model);
         const response = await agent.chat(
           {
+            model: model,
             messages: currentMessages,
             tools: tools,
             stream: true,
