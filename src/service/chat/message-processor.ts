@@ -4,11 +4,11 @@
  * 移除了表单组件相关逻辑
  */
 
-import { AgentManager } from './agent-manager.js';
-import { AgentMessage, AgentTool, AgentType } from './agent/index.js';
-import { ToolRegistry } from './tools.js';
+import { AgentManager } from '../agents/agent-manager.js';
+import { AgentMessage, AgentTool, AgentType } from '../agent/index.js';
+import { ToolRegistry } from '../tools/tools.js';
 import type { ToolArgs } from '../types/index.js';
-import { recognizeImage } from './ocr.js';
+import { recognizeImage } from '../ocr/ocr.js';
 
 /**
  * 工具调用结果

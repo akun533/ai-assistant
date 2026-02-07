@@ -6,11 +6,11 @@
 
 import axios from 'axios';
 import { generateSessionId } from '../utils/index.js';
-import { AgentMessage, AgentType } from './agent/index.js';
-import { ToolRegistry } from './tools.js';
-import { AgentManager } from './agent-manager.js';
+import { AgentMessage, AgentType } from '../agent/index.js';
+import { ToolRegistry } from '../tools/tools.js';
+import { AgentManager } from '../agents/agent-manager.js';
 import { MessageProcessor } from './message-processor.js';
-import { PromptBuilder } from './prompt-builder.js';
+import { PromptBuilder } from '../prompt/prompt-builder.js';
 import type { ChatRequest, OpenAIMessage, OpenAIChatStreamChunk } from '../types/index.js';
 
 export default class Chat {

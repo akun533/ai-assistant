@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 import express, { type Express, Request, Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import Chat from './chat.js';
-import { recognizeImage } from './ocr.js';
+import Chat from './chat/chat.js';
+import { recognizeImage } from './ocr/ocr.js';
 
 // 加载 .env 文件
 const dotenvResult = dotenv.config({ override: true });
