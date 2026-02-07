@@ -51,7 +51,6 @@ export interface ChatRequest {
   messages: OpenAIMessage[];
   agent?: string;
   context?: Record<string, any>;
-  agentMessageType?: string;
   conversation_id?: string;
 }
 
@@ -88,4 +87,4 @@ export interface OpenAIChatStreamChunk {
 }
 
 // Agent 类型
-export type AgentType = 'deepseek' | 'zhipu' | 'qwen' | 'other' | 'dify';
+export type AgentType = 'deepseek' | 'zhipu' | 'qwen' | 'other';

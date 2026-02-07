@@ -103,10 +103,6 @@ app.post('/api/chat/completions', async (req: Request, res: Response) => {
       params.model = process.env.DEFAULT_MODEL || 'deepseek-chat';
     }
 
-    if (!params.agentMessageType) {
-      params.agentMessageType = process.env.DEFAULT_AGENT_KEY_TYPE || 'openai';
-    }
-
     console.log(`📥 请求 Agent: ${params.agent}, 模型: ${params.model}`);
 
     // 处理请求

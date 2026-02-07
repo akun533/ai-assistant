@@ -100,9 +100,6 @@ export default class Chat {
       const agentType = (request.agent || 'deepseek') as AgentType;
       console.log(`🤖 使用 Agent: ${agentType}`);
 
-      // 获取 API 密钥类型
-      const agentMessageType = request.agentMessageType || 'openai';
-
       // 生成会话 ID
       const currentSessionId = generateSessionId();
       console.log('📋 会话 ID:', currentSessionId);
@@ -129,33 +126,19 @@ export default class Chat {
 
       console.log('🔑 使用 API 密钥:', apiKey ? `${apiKey.substring(0, 10)}...` : '未提供');
 
-      // 根据 agentMessageType 进行分流处理
-      if (agentMessageType === 'dify') {
-        yield* this.messageProcessor.processDifyChatStream(
-          messages,
-          apiKey,
-          request,
-          tools,
-          agentType,
-          1,
-          currentSessionId,
-          signal,
-          request.ui,
-        );
-      } else {
-        yield* this.messageProcessor.processChatStream(
-          messages,
-          apiKey,
-          request.model,
-          tools,
-          agentType,
-          request.context || {},
-          1,
-          currentSessionId,
-          signal,
-          request.ui,
-        );
-      }
+      // 调用流式聊天
+      yield* this.messageProcessor.processChatStream(
+        messages,
+        apiKey,
+        request.model,
+        tools,
+        agentType,
+        request.context || {},
+        1,
+        currentSessionId,
+        signal,
+        request.ui,
+      );
 
       console.log('📋 会话结束 ID:', currentSessionId);
     } catch (error: any) {

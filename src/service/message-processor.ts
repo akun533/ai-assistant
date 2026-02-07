@@ -288,33 +288,4 @@ export class MessageProcessor {
       return;
     }
   }
-
-  /**
-   * 处理 Dify 流式聊天
-   */
-  async *processDifyChatStream(
-    messages: AgentMessage[],
-    apiKey: string,
-    request: any,
-    tools: AgentTool[],
-    agentType: AgentType,
-    retryCount: number,
-    sessionId: string,
-    signal: AbortSignal,
-    uiFramework?: string,
-  ): AsyncGenerator<string, void, unknown> {
-    // Dify 特定的处理逻辑
-    yield* this.processChatStream(
-      messages,
-      apiKey,
-      request.model || 'dify',
-      tools,
-      agentType,
-      request.context || {},
-      retryCount,
-      sessionId,
-      signal,
-      uiFramework,
-    );
-  }
 }

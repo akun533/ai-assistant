@@ -124,7 +124,7 @@ Authorization: Bearer <your-api-key>
 |------|------|------|------|
 | `messages` | array | 是 | 对话消息数组（OpenAI 格式） |
 | `model` | string | 否 | AI 模型名称 |
-| `agent` | string | 否 | AI 服务提供商：`deepseek`、`zhipu`、`qwen`、`other`、`dify`（默认: `deepseek`） |
+| `agent` | string | 否 | AI 服务提供商：`deepseek`、`zhipu`、`qwen`、`other`（默认: `deepseek`） |
 | `ui` | string | 否 | UI 框架标识（用于框架特定工具） |
 
 **响应格式**（Server-Sent Events）：
