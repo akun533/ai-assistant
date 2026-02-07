@@ -5,13 +5,13 @@
  */
 
 import axios from 'axios';
-import { generateSessionId } from '../utils/index.js';
+import { generateSessionId } from '../../utils/index.js';
 import { AgentMessage, AgentType } from '../agent/index.js';
-import { ToolRegistry } from '../tools/tools.js';
+import { ToolRegistry } from '../mcp/tools.js';
 import { AgentManager } from '../agents/agent-manager.js';
 import { MessageProcessor } from './message-processor.js';
 import { PromptBuilder } from '../prompt/prompt-builder.js';
-import type { ChatRequest, OpenAIMessage, OpenAIChatStreamChunk } from '../types/index.js';
+import type { ChatRequest, OpenAIMessage, OpenAIChatStreamChunk } from '../../types/index.js';
 
 export default class Chat {
   private toolRegistry: ToolRegistry;

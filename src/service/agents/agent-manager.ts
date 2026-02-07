@@ -1,4 +1,4 @@
-import { AgentType, BaseAgent, createAgent } from './agent/index.js';
+import { AgentType, BaseAgent, createAgent } from '../agent/index.js';
 
 /**
  * Agent管理器

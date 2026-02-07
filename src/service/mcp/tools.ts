@@ -3,8 +3,8 @@
  * 提供通用工具注册和管理功能
  */
 
-import type { ToolDefinition, ToolHandler, ToolRegistration } from '../types/index.js';
-import { ToolRegistryCore } from '../core/component-registry.js';
+import type { ToolDefinition, ToolHandler, ToolRegistration } from '../../types';
+import { ToolRegistryCore } from './component-registry.js';
 
 export class ToolRegistry {
   private registry: ToolRegistryCore;

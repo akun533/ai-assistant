@@ -1,5 +1,3 @@
-import type { ToolRegistration } from '../types/index.js';
-
 /**
  * 通用 MCP 工具注册表
  * 移除了表单组件相关逻辑，专注于工具注册和管理

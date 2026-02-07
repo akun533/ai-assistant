@@ -6,8 +6,8 @@
 
 import { AgentManager } from '../agents/agent-manager.js';
 import { AgentMessage, AgentTool, AgentType } from '../agent/index.js';
-import { ToolRegistry } from '../tools/tools.js';
-import type { ToolArgs } from '../types/index.js';
+import { ToolRegistry } from '../mcp/tools.js';
+import type { ToolArgs } from '../../types/index.js';
 import { recognizeImage } from '../ocr/ocr.js';
 
 /**
