@@ -238,20 +238,17 @@ export default {
     async handleImageUpload(event) {
       const files = event.target.files;
       if (!files || files.length === 0) return;
-
-      // 重置文件输入框，以便可以重复选择同一文件
-      event.target.value = '';
-
+      
       // 处理每个上传的文件
       for (const file of files) {
         if (!file.type.startsWith('image/')) continue;
-
+        
         // 创建预览 URL
         const preview = URL.createObjectURL(file);
-
+        
         // 将图片转为 base64
         const base64 = await this.fileToBase64(file);
-
+        
         this.uploadedImages.push({
           file,
           name: file.name,
@@ -260,6 +257,9 @@ export default {
           id: Date.now() + Math.random(),
         });
       }
+      
+      // 重置文件输入框，以便可以重复选择同一文件
+      event.target.value = '';
     },
 
     // 将文件转为 base64
@@ -581,7 +581,7 @@ export default {
       if (content) {
         content.addEventListener('scroll', this.handleScroll);
       }
-      
+
       // 原生监听文件选择
       const fileInput = this.$refs.fileInput;
       if (fileInput) {
@@ -594,7 +594,7 @@ export default {
     this.uploadedImages.forEach(img => {
       if (img.preview) URL.revokeObjectURL(img.preview);
     });
-    
+
     // 移除文件输入框事件监听
     const fileInput = this.$refs.fileInput;
     if (fileInput) {
