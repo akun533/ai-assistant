@@ -112,8 +112,14 @@
           <FileImportIcon />
         </div>
 
-        <!-- 文件输入框 (使用 CSS 隐藏而不是 hidden 属性) -->
-        <input ref="fileInput" type="file" multiple accept="image/*" class="hidden-file-input" @change="handleImageUpload" />
+        <!-- 文件输入框 -->
+        <input
+          ref="fileInput"
+          type="file"
+          multiple
+          accept="image/*"
+          class="hidden-file-input"
+        />
 
         <textarea
           v-model="inputText"
@@ -575,6 +581,12 @@ export default {
       if (content) {
         content.addEventListener('scroll', this.handleScroll);
       }
+      
+      // 原生监听文件选择
+      const fileInput = this.$refs.fileInput;
+      if (fileInput) {
+        fileInput.addEventListener('change', this.handleImageUpload);
+      }
     });
   },
   beforeUnmount() {
@@ -582,6 +594,12 @@ export default {
     this.uploadedImages.forEach(img => {
       if (img.preview) URL.revokeObjectURL(img.preview);
     });
+    
+    // 移除文件输入框事件监听
+    const fileInput = this.$refs.fileInput;
+    if (fileInput) {
+      fileInput.removeEventListener('change', this.handleImageUpload);
+    }
 
     const content = this.$refs.chatContent;
     if (content) {
