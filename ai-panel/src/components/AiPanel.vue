@@ -346,11 +346,16 @@ export default {
             role: m.role,
             content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content),
           }));
+        
+        // 获取最新上传的图片（如果有）
+        const lastUserMessage = this.messages.filter(m => m.role === 'user').pop();
+        const images = lastUserMessage?.images || [];
 
         const requestBody = {
           model: this.defaultModel,
           agent: this.defaultAgent,
           messages: messagesPayload,
+          images,
         };
 
         const response = await fetch(this.apiUrl, {
