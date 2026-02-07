@@ -411,7 +411,7 @@ export class MessageProcessor {
           // 忽略
         }
 
-        // 如果有函数调用
+        // 如果有函数调用, MCP工具调用
         if (functionCallData) {
           console.log(`📦 第 ${round} 轮函数调用`);
 
@@ -442,6 +442,13 @@ export class MessageProcessor {
           round++;
           continue;
         }
+
+
+        // 此处完成skill中脚本的调用逻辑，支持skill的多轮调用
+
+
+
+
 
         // 正常结束
         console.log(`✅ 对话正常结束`);
