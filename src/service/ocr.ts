@@ -1,4 +1,4 @@
-import { PaddleOcrService } from 'paddleocr';
+import PaddleOcrService from 'paddleocr';
 import { decode } from 'fast-png';
 import sharp from 'sharp';
 import fs from 'fs';
