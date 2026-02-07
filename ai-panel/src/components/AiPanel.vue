@@ -112,13 +112,13 @@
           <FileImportIcon />
         </div>
         
-        <!-- 隐藏的文件输入框 -->
+        <!-- 文件输入框 (使用 CSS 隐藏而不是 hidden 属性) -->
         <input
           ref="fileInput"
           type="file"
           multiple
           accept="image/*"
-          hidden
+          class="hidden-file-input"
           @change="handleImageUpload"
         />
 
@@ -1008,6 +1008,15 @@ export default {
 
 .ai-uploaded-image-item:hover .ai-image-remove {
   opacity: 1;
+}
+
+/* 隐藏文件输入框 */
+.hidden-file-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .ai-image-upload-btn {
