@@ -1,9 +1,11 @@
 import cors from 'cors';
+import multer from 'multer';
 import dotenv from 'dotenv';
 import express, { type Express, Request, Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Chat from './chat.js';
+import { recognizeImage } from './ocr.js';
 
 // 加载 .env 文件
 const dotenvResult = dotenv.config({ override: true });
@@ -45,6 +47,14 @@ app.use(
 );
 app.use(express.json());
 
+// Multer 配置 - 处理文件上传
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 限制 10MB
+  },
+});
+
 // 静态文件服务 - 指向项目根目录
 app.use(express.static(__dirname));
 
@@ -70,7 +80,7 @@ app.post('/api/chat/completions', async (req: Request, res: Response) => {
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'Content-Type, Authorization, X-Requested-With, Accept, Origin, Cache-Control',
@@ -178,7 +188,7 @@ app.post('/api/chat/completions', async (req: Request, res: Response) => {
 // 处理 OPTIONS 预检请求
 app.options('/api/chat/completions', (req: Request, res: Response) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'Content-Type, Authorization, X-Requested-With, Accept, Origin',
@@ -186,6 +196,32 @@ app.options('/api/chat/completions', (req: Request, res: Response) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Max-Age', '86400');
   res.status(200).end();
+});
+
+// OCR 图片识别 API
+app.post('/api/ocr/recognize', upload.single('image'), async (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: '没有上传图片',
+      });
+    }
+
+    const imageBuffer = req.file.buffer;
+
+    console.log('📸 开始识别图片...');
+
+    const result = await recognizeImage(imageBuffer);
+
+    res.json(result);
+  } catch (error) {
+    console.error('❌ OCR API 错误:', error instanceof Error ? error.message : String(error));
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : '识别失败',
+    });
+  }
 });
 
 // 关闭
@@ -204,6 +240,7 @@ app.listen(port, () => {
   console.log(`📡 服务器地址: http://localhost:${port}`);
   console.log(`❤️ 健康检查: http://localhost:${port}/api/health`);
   console.log(`🤖 对话接口: http://localhost:${port}/api/chat/completions`);
+  console.log(`🔍 OCR 识别接口: http://localhost:${port}/api/ocr/recognize`);
   console.log(`🔧 支持的 Agent: deepseek, zhipu, qwen, other`);
   console.log(`💡 提示: 在请求中使用 "agent" 参数指定 AI 服务提供商 (默认: deepseek)`);
   console.log(`🔗 Other Agent 配置: 通过 .env 文件`);
