@@ -8,6 +8,7 @@ import { AgentManager } from './agent-manager.js';
 import { AgentMessage, AgentTool, AgentType } from './agent/index.js';
 import { ToolRegistry } from './tools.js';
 import type { ToolArgs } from '../types/index.js';
+import { recognizeImage } from './ocr.js';
 
 /**
  * 工具调用结果
@@ -54,6 +55,54 @@ async function* parseStream(response: ReadableStream): AsyncGenerator<string, vo
   }
 }
 
+/**
+ * 将 base64 图片数据转为 Buffer
+ */
+function base64ToBuffer(base64: string): Buffer {
+  // 移除 data:image/xxx;base64, 前缀
+  const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
+  return Buffer.from(base64Data, 'base64');
+}
+
+/**
+ * 处理图片 OCR 识别
+ * @param images 图片 base64 数据数组
+ * @returns 识别结果文本
+ */
+async function processImageOcr(images: string[]): Promise<string> {
+  if (!images || images.length === 0) {
+    return '';
+  }
+
+  console.log(`📸 开始处理 ${images.length} 张图片的 OCR 识别...`);
+
+  const ocrResults: string[] = [];
+
+  for (let i = 0; i < images.length; i++) {
+    const imageBase64 = images[i];
+    
+    try {
+      const imageBuffer = base64ToBuffer(imageBase64);
+      console.log(`🔍 识别第 ${i + 1}/${images.length} 张图片...`);
+      
+      const result = await recognizeImage(imageBuffer);
+      
+      if (result.success && result.text) {
+        ocrResults.push(`【图片 ${i + 1}】\n${result.text}`);
+        console.log(`✅ 图片 ${i + 1} 识别完成: ${result.text.length} 个字符`);
+      } else {
+        ocrResults.push(`【图片 ${i + 1}】识别失败或无文字内容`);
+        console.log(`⚠️ 图片 ${i + 1} 识别失败或无文字`);
+      }
+    } catch (error) {
+      console.error(`❌ 图片 ${i + 1} OCR 处理错误:`, error);
+      ocrResults.push(`【图片 ${i + 1}】OCR 处理出错`);
+    }
+  }
+
+  return ocrResults.join('\n\n');
+}
+
 export class MessageProcessor {
   private toolRegistry: ToolRegistry;
   private agentManager: AgentManager;
@@ -64,6 +113,35 @@ export class MessageProcessor {
   ) {
     this.toolRegistry = toolRegistry;
     this.agentManager = agentManager;
+  }
+
+  /**
+   * 处理用户消息中的图片（如果有）
+   * @param message 用户消息
+   * @returns 处理后的消息内容
+   */
+  async processUserMessageImages(message: AgentMessage): Promise<string> {
+    // 从消息中获取图片数据（前端通过 images 字段传递）
+    const content = typeof message.content === 'string' ? message.content : '';
+    const images = (message as any).images || [];
+
+    if (images.length === 0) {
+      return content;
+    }
+
+    // 进行 OCR 识别
+    const ocrText = await processImageOcr(images);
+
+    if (!ocrText) {
+      return content;
+    }
+
+    // 将 OCR 结果添加到消息内容中
+    if (content.trim()) {
+      return `${content}\n\n图片内容识别结果：\n${ocrText}`;
+    } else {
+      return `请识别图片内容并回答：\n${ocrText}`;
+    }
   }
 
   /**
@@ -172,6 +250,16 @@ export class MessageProcessor {
     let round = 1;
     const maxRounds = 20;
     const maxRetries = 3;
+
+    // 检查最后一条用户消息是否包含图片，进行 OCR 处理
+    const lastMessage = currentMessages[currentMessages.length - 1];
+    if (lastMessage && lastMessage.role === 'user') {
+      const processedContent = await this.processUserMessageImages(lastMessage);
+      if (processedContent !== lastMessage.content) {
+        lastMessage.content = processedContent;
+        console.log('✅ 图片 OCR 处理完成，已添加到用户消息');
+      }
+    }
 
     while (round <= maxRounds) {
       if (signal.aborted) {

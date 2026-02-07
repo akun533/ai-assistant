@@ -1,5 +1,6 @@
 import { PaddleOcrService } from 'paddleocr';
 import { decode } from 'fast-png';
+import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
 
@@ -55,6 +56,15 @@ async function initOcr() {
 }
 
 /**
+ * 将任意格式图片转换为 PNG Buffer
+ * @param imageBuffer 原始图片 Buffer
+ * @returns PNG Buffer
+ */
+async function convertToPng(imageBuffer: Buffer): Promise<Buffer> {
+  return sharp(imageBuffer).png().toBuffer();
+}
+
+/**
  * 识别图片中的文字
  * @param imageBuffer 图片 Buffer
  * @returns 识别结果
@@ -73,8 +83,11 @@ export async function recognizeImage(imageBuffer: Buffer) {
   }
 
   try {
+    // 将图片转换为 PNG 格式（支持 JPEG、PNG、GIF、WebP 等）
+    const pngBuffer = await convertToPng(imageBuffer);
+    
     // 使用 fast-png 解码图片
-    const image = decode(imageBuffer);
+    const image = decode(pngBuffer);
     
     const startTime = Date.now();
     

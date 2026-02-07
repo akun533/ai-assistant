@@ -45,13 +45,6 @@
           <div v-if="message.role === 'user'" class="ai-message-content">
             <div class="ai-message-bubble ai-message-bubble--user">
               <div class="ai-message-text">{{ message.content }}</div>
-              <!-- 显示识别的图片内容 -->
-              <div v-if="message.ocrResults && message.ocrResults.length" class="ai-ocr-results">
-                <div v-for="(ocr, idx) in message.ocrResults" :key="idx" class="ai-ocr-item">
-                  <span class="ai-ocr-label">图片 {{ idx + 1 }}:</span>
-                  <span class="ai-ocr-text">{{ ocr.text }}</span>
-                </div>
-              </div>
             </div>
             <!-- 底部操作按钮 -->
             <div class="ai-message-footer">
@@ -102,12 +95,6 @@
 
     <!-- 输入区域 -->
     <div class="ai-input">
-      <!-- OCR 识别状态 -->
-      <div v-if="isRecognizing" class="ai-ocr-status">
-        <div class="ai-ocr-status-icon"></div>
-        <span class="ai-ocr-status-text">{{ ocrStatus }}</span>
-      </div>
-
       <!-- 已上传的图片缩略图 -->
       <div v-if="uploadedImages.length > 0" class="ai-uploaded-images">
         <div v-for="(img, index) in uploadedImages" :key="index" class="ai-uploaded-image">
@@ -156,7 +143,6 @@
 import MarkdownRenderer from './MarkdownRenderer.vue';
 import { copyTextToClipboard } from '../utils/utils.js';
 import { RobotIcon, TrashIcon, SyncIcon, CopyIcon, PaperPlaneIcon, PauseIcon, FileImportIcon, CloseIcon } from './icons';
-import { recognize, recognizeBatch } from '../../../tools/paddle-ocr.js';
 
 export default {
   name: 'AiPanel',
@@ -226,8 +212,6 @@ export default {
       messages: [],
       // 图片上传相关
       uploadedImages: [],
-      isRecognizing: false,
-      ocrStatus: '',
     };
   },
   computed: {
@@ -265,18 +249,27 @@ export default {
         // 创建预览 URL
         const preview = URL.createObjectURL(file);
         
+        // 将图片转为 base64
+        const base64 = await this.fileToBase64(file);
+        
         this.uploadedImages.push({
           file,
           name: file.name,
           preview,
+          base64,
           id: Date.now() + Math.random(),
         });
       }
-      
-      // 如果有图片，自动开始识别
-      if (this.uploadedImages.length > 0) {
-        await this.recognizeImages();
-      }
+    },
+    
+    // 将文件转为 base64
+    fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
     },
     
     // 移除已上传的图片
@@ -287,46 +280,6 @@ export default {
         URL.revokeObjectURL(image.preview);
       }
       this.uploadedImages.splice(index, 1);
-    },
-    
-    // 识别上传的图片
-    async recognizeImages() {
-      if (this.uploadedImages.length === 0) return;
-      
-      this.isRecognizing = true;
-      this.ocrStatus = this.config.ocrRecognizing || '正在识别图片内容...';
-      
-      try {
-        // 并行识别所有图片
-        const results = await recognizeBatch(
-          this.uploadedImages.map(img => img.file),
-          { sequential: false }
-        );
-        
-        // 更新每个图片的识别结果
-        this.uploadedImages = this.uploadedImages.map((img, index) => ({
-          ...img,
-          ocrResult: results[index],
-        }));
-        
-        this.ocrStatus = this.config.ocrComplete || '图片识别完成';
-        
-        // 3秒后隐藏状态
-        setTimeout(() => {
-          this.ocrStatus = '';
-        }, 3000);
-        
-      } catch (error) {
-        console.error('OCR 识别失败:', error);
-        this.ocrStatus = this.config.ocrFailed || '图片识别失败';
-        
-        // 3秒后隐藏状态
-        setTimeout(() => {
-          this.ocrStatus = '';
-        }, 3000);
-      } finally {
-        this.isRecognizing = false;
-      }
     },
     
     // 发送消息
@@ -341,31 +294,15 @@ export default {
       if (!this.inputText.trim() && this.uploadedImages.length === 0) return;
       
       // 准备消息内容
-      let content = this.inputText.trim();
-      const ocrResults = [];
-      
-      // 如果有图片，拼接 OCR 识别结果
-      if (this.uploadedImages.length > 0) {
-        const ocrTexts = this.uploadedImages
-          .filter(img => img.ocrResult && img.ocrResult.success)
-          .map((img, index) => {
-            ocrResults.push(img.ocrResult);
-            return `【图片 ${index + 1}】${img.ocrResult.text}`;
-          });
-        
-        if (ocrTexts.length > 0) {
-          content = content 
-            ? `${content}\\n\\n图片内容识别结果:\\n${ocrTexts.join('\\n')}`
-            : `请识别图片内容并回答:\\n${ocrTexts.join('\\n')}`;
-        }
-      }
+      const content = this.inputText.trim();
+      const images = this.uploadedImages.map(img => img.base64);
       
       // 添加用户消息
       const userMessage = {
         role: 'user',
         content,
+        images,
         timestamp: new Date(),
-        ocrResults,
       };
       
       this.messages.push(userMessage);
@@ -570,7 +507,7 @@ export default {
     },
 
     saveHistory() {
-      // 只保存 role 和 content，移除状态信息
+      // 只保存 role 和 content，移除状态信息和图片
       const history = this.messages.map(m => ({
         role: m.role,
         content: m.content,

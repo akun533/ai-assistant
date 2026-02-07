@@ -52,6 +52,7 @@ export interface ChatRequest {
   agent?: string;
   context?: Record<string, any>;
   conversation_id?: string;
+  images?: string[]; // 图片 base64 数据
 }
 
 // OpenAI 兼容的消息格式
