@@ -9,6 +9,7 @@ import { AgentMessage, AgentTool, AgentType } from '../agent/index.js';
 import { ToolRegistry } from '../mcp/tools.js';
 import type { ToolArgs } from '../../types/index.js';
 import { recognizeImage } from '../ocr/ocr.js';
+import { SkillManager } from '../../skills/skill-manager.js';
 
 /**
  * 工具调用结果

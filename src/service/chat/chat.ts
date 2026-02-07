@@ -11,6 +11,7 @@ import { ToolRegistry } from '../mcp/tools.js';
 import { AgentManager } from '../agents/agent-manager.js';
 import { MessageProcessor } from './message-processor.js';
 import { PromptBuilder } from '../prompt/prompt-builder.js';
+import { SkillManager } from '../../skills/skill-manager.js';
 import type { ChatRequest, OpenAIMessage, OpenAIChatStreamChunk } from '../../types/index.js';
 
 export default class Chat {
@@ -18,6 +19,7 @@ export default class Chat {
   private agentManager: AgentManager;
   private messageProcessor: MessageProcessor;
   private promptBuilder: PromptBuilder;
+  private skillManager: SkillManager;
 
   constructor() {
     this.toolRegistry = new ToolRegistry();
@@ -27,12 +29,15 @@ export default class Chat {
       this.toolRegistry,
       this.agentManager,
     );
+    this.skillManager = new SkillManager();
   }
 
   /**
    * 初始化服务
    */
-  async initialize(): Promise<void> {}
+  async initialize(): Promise<void> {
+    await this.skillManager.loadSkills();
+  }
 
   /**
    * 生成 OpenAI 兼容的响应 ID
