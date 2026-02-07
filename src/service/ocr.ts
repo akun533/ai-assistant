@@ -8,7 +8,7 @@ import path from 'path';
 
 // 获取项目根目录（绝对路径）
 const PROJECT_ROOT = process.cwd();
-const MODELS_DIR = path.join(PROJECT_ROOT, 'models');
+const MODELS_DIR = path.join(PROJECT_ROOT, 'src/service/models');
 
 // 模型文件路径
 const DET_MODEL = path.join(MODELS_DIR, 'PP-OCRv5_mobile_det_infer.onnx');
