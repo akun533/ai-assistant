@@ -65,6 +65,105 @@ function base64ToBuffer(base64: string): Buffer {
 }
 
 /**
+ * 格式化 OCR 结果，恢复图片布局格式
+ * @param regions OCR 识别结果区域
+ * @param imageWidth 图片宽度（用于相对位置计算）
+ * @param imageHeight 图片高度
+ * @returns 格式化后的文本
+ */
+function formatOcrResult(regions: Array<{text: string, confidence: number, box?: any}>): string {
+  if (!regions || regions.length === 0) return '';
+
+  // 按行分组（根据 y 坐标）
+  // 计算行的平均 y 坐标
+  const getCenterY = (box: any) => {
+    if (!box) return 0;
+    // box 格式可能是 [x1, y1, x2, y2, x3, y3, x4, y4]
+    if (Array.isArray(box) && box.length >= 4) {
+      return (box[1] + box[5]) / 2; // (y1 + y3) / 2
+    }
+    return 0;
+  };
+
+  // 计算行的 y 坐标（使用中心点）
+  const lines = regions.map((item, index) => ({
+    ...item,
+    index,
+    centerY: getCenterY(item.box),
+  }));
+
+  // 按 y 坐标排序
+  lines.sort((a, b) => a.centerY - b.centerY);
+
+  // 分组到行（行间距阈值：高度差的 20%）
+  const rowThreshold = 20; // 像素阈值，可调整
+  const rows: Array<typeof lines> = [];
+  let currentRow: typeof lines = [];
+
+  for (const item of lines) {
+    if (currentRow.length === 0) {
+      currentRow.push(item);
+    } else {
+      const lastItem = currentRow[currentRow.length - 1];
+      const yDiff = Math.abs(item.centerY - lastItem.centerY);
+      if (yDiff <= rowThreshold) {
+        currentRow.push(item);
+      } else {
+        // 新行开始
+        if (currentRow.length > 0) {
+          // 按 x 坐标排序当前行
+          currentRow.sort((a, b) => {
+            const aX = Array.isArray(a.box) ? a.box[0] : 0;
+            const bX = Array.isArray(b.box) ? b.box[0] : 0;
+            return aX - bX;
+          });
+          rows.push(currentRow);
+        }
+        currentRow = [item];
+      }
+    }
+  }
+
+  // 处理最后一行
+  if (currentRow.length > 0) {
+    currentRow.sort((a, b) => {
+      const aX = Array.isArray(a.box) ? a.box[0] : 0;
+      const bX = Array.isArray(b.box) ? b.box[0] : 0;
+      return aX - bX;
+    });
+    rows.push(currentRow);
+  }
+
+  // 检测段落（行间距较大时添加空行）
+  const formattedLines: string[] = [];
+  for (let i = 0; i < rows.length; i++) {
+    // 添加当前行的文字（用空格连接）
+    const lineText = rows[i].map(item => item.text).join(' ');
+    formattedLines.push(lineText);
+
+    // 检测是否需要段落分隔（与下一行的间距）
+    if (i < rows.length - 1) {
+      const currentY = rows[i][0].centerY;
+      const nextY = rows[i + 1][0].centerY;
+      const lineHeight = nextY - currentY;
+      
+      // 如果行间距是平均行间距的 2 倍以上，视为段落
+      const avgHeight = rows.reduce((sum, row) => {
+        if (row.length < 2) return sum;
+        const width = Array.isArray(row[0].box) ? row[0].box[2] - row[0].box[0] : 0;
+        return sum + width / row.length;
+      }, 0) / rows.length;
+
+      if (lineHeight > avgHeight * 3) {
+        formattedLines.push(''); // 添加空行表示段落分隔
+      }
+    }
+  }
+
+  return formattedLines.join('\n');
+}
+
+/**
  * 处理图片 OCR 识别
  * @param images 图片 base64 数据数组
  * @returns 识别结果文本
@@ -87,9 +186,16 @@ async function processImageOcr(images: string[]): Promise<string> {
       
       const result = await recognizeImage(imageBuffer);
       
-      if (result.success && result.text) {
-        ocrResults.push(`【图片 ${i + 1}】\n${result.text}`);
-        console.log(`✅ 图片 ${i + 1} 识别完成: ${result.text.length} 个字符`);
+      if (result.success && result.regions && result.regions.length > 0) {
+        // 格式化结果，恢复排版
+        const formattedText = formatOcrResult(result.regions);
+        if (formattedText.trim()) {
+          ocrResults.push(`【图片 ${i + 1}】\n${formattedText}`);
+          console.log(`✅ 图片 ${i + 1} 识别完成: ${formattedText.split('\n').length} 行, ${formattedText.length} 字符`);
+        } else {
+          ocrResults.push(`【图片 ${i + 1}】识别失败或无文字内容`);
+          console.log(`⚠️ 图片 ${i + 1} 识别失败或无文字`);
+        }
       } else {
         ocrResults.push(`【图片 ${i + 1}】识别失败或无文字内容`);
         console.log(`⚠️ 图片 ${i + 1} 识别失败或无文字`);
