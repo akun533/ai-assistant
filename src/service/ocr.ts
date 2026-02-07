@@ -8,10 +8,10 @@ import path from 'path';
 
 const MODEL_DIR = './models';
 
-// 模型文件路径
-const DET_MODEL = './models/PP-OCRv5_mobile_det_infer.onnx';
-const REC_MODEL = './models/PP-OCRv5_mobile_rec_infer.onnx';
-const DICT_FILE = './models/ppocrv5_dict.txt';
+// 模型文件路径（使用正斜杠确保跨平台兼容）
+const DET_MODEL = path.posix.join(MODEL_DIR, 'PP-OCRv5_mobile_det_infer.onnx');
+const REC_MODEL = path.posix.join(MODEL_DIR, 'PP-OCRv5_mobile_rec_infer.onnx');
+const DICT_FILE = path.posix.join(MODEL_DIR, 'ppocrv5_dict.txt');
 
 let ocrInstance: PaddleOcrService | null = null;
 
