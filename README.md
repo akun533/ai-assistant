@@ -1,25 +1,20 @@
-# AI 表单助理
+# AI Assistant
 
-AI 表单助理，用于根据自然语言描述自动生成和修改表单规则。
+通用 AI 助手服务，支持多 AI 服务、流式响应 (SSE)、MCP 工具注册系统和会话能力。
 
 ## ✨ 功能特性
 
 - 🤖 **多 AI 服务支持** - 支持 DeepSeek、智谱AI、通义千问及自定义 OpenAI 兼容接口
-- 🎨 **多 UI 框架** - 支持 Element Plus/UI、Ant Design Vue、Vant、银海TA404-UI
-- 📝 **智能表单生成** - 根据自然语言描述自动生成完整的表单规则
-- 🔧 **表单验证与修复** - 自动验证表单规则并提供修复建议
-- 🔄 **增量更新** - 支持基于 JSONPatch 的精确表单规则修改
-- 📱 **移动端支持** - 支持 Vant 移动端表单生成
-- 🔌 **OpenAI 兼容** - 完全兼容 OpenAI Chat Completions API 格式
-- 🧩 **MCP 工具集成** - 集成 Model Context Protocol 工具，提供组件详情、表单验证等功能
-- 💬 **AI 面板组件** - 内置 @akun15623/ai-panel 聊天面板组件，便于集成到前端项目
 - 🚀 **流式响应** - 支持 Server-Sent Events (SSE) 实时流式响应
+- 🧩 **MCP 工具集成** - 集成 Model Context Protocol 工具，提供通用工具调用能力
+- 💬 **会话管理** - 支持会话 ID 生成和上下文管理
+- 🔌 **OpenAI 兼容** - 完全兼容 OpenAI Chat Completions API 格式
 
 ## 📦 安装
 
 ```bash
 # 克隆项目
-git clone https://github.com/akun/ai-assistant/
+git clone https://github.com/your-repo/ai-assistant
 cd ai-assistant
 
 # 安装依赖
@@ -32,6 +27,7 @@ pnpm install
 # 使用 tsx 直接运行
 pnpm start
 ```
+
 服务启动后，默认监听 `http://localhost:3001`
 
 ### Docker 部署
@@ -43,8 +39,6 @@ docker build -t ai-assistant .
 # 运行容器
 docker run -d -p 3001:3001 --env-file .env ai-assistant
 ```
-
-Docker 部署支持环境变量配置，可通过 `.env` 文件传递配置参数。
 
 ## ⚙️ 配置
 
@@ -63,16 +57,13 @@ DEFAULT_AGENT=deepseek
 DEFAULT_MODEL=deepseek-chat
 
 # 默认 API 密钥（可选，当请求中未提供 Authorization header 时使用）
-DEFAULT_TOKEN=fc-xxxxxxxxxxxxxxxxxx
+DEFAULT_TOKEN=your-api-key
 
 # Other Agent 的自定义 API 端点（用于自定义 OpenAI 兼容接口）
 AGENT_API=https://api.example.com/v1/chat/completions
 
 # Agent 请求超时时间（毫秒，默认: 180000，即 3 分钟）
 AGENT_TIMEOUT=180000
-
-# 是否为 FormCreate 设计器高级版, 部分组件和功能只有高级版支持
-FORM_CREATE_BUSINESS=false
 ```
 
 ### API 密钥
@@ -86,8 +77,6 @@ Authorization: Bearer <your-api-key>
 
 2. **环境变量配置**（可选）：
 如果请求中未提供 API 密钥，系统会使用 `DEFAULT_TOKEN` 环境变量中的值。
-
-**注意**：优先使用请求头中的 API 密钥，如果请求头中未提供，才会使用环境变量中的 `DEFAULT_TOKEN`。
 
 ## 📡 API 接口
 
@@ -120,11 +109,10 @@ Authorization: Bearer <your-api-key>
 {
   "model": "deepseek-chat",
   "agent": "deepseek",
-  "ui": "element-plus",
   "messages": [
     {
       "role": "user",
-      "content": "生成一个用户注册表单"
+      "content": "你好，请介绍一下你自己"
     }
   ]
 }
@@ -132,20 +120,19 @@ Authorization: Bearer <your-api-key>
 
 **请求参数说明**：
 
-| 参数         | 类型 | 必填 | 说明                                                                                          |
-|------------|------|----|---------------------------------------------------------------------------------------------|
-| `ui`       | string | 是  | UI 框架：`element-plus`、`element-ui`、`ant-design-vue`、`vant`、`vant@vue2`、`ant-design-vue@vue2`、`ta404-ui@vue2` |
-| `messages` | array | 是  | 对话消息数组（OpenAI 格式）                                                                           |
-| `form`     | object | 否  | 当前表单规则（修改表单时使用）                                                                            |
-| `model`    | string | 否  | AI 模型名称                                                                                     |
-| `agent`    | string | 否  | AI 服务提供商：`deepseek`、`zhipu`、`qwen`、`other`（默认: `deepseek`）                                  |
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `messages` | array | 是 | 对话消息数组（OpenAI 格式） |
+| `model` | string | 否 | AI 模型名称 |
+| `agent` | string | 否 | AI 服务提供商：`deepseek`、`zhipu`、`qwen`、`other`、`dify`（默认: `deepseek`） |
+| `ui` | string | 否 | UI 框架标识（用于框架特定工具） |
 
 **响应格式**（Server-Sent Events）：
 
 ```
-data: {"id":"chatcmpl-xxx","object":"formCreateAgent","created":1234567890,"choices":[{"index":0,"delta":{"role":"assistant","content":"..."},"finish_reason":null}]}
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1234567890,"choices":[{"index":0,"delta":{"role":"assistant","content":"..."},"finish_reason":null}]}
 
-data: {"id":"chatcmpl-xxx","object":"formCreateAgent","created":1234567890,"choices":[{"index":0,"delta":{"content":"..."},"finish_reason":null}]}
+data: {"id":"chatcmpl-xxx","object":"chat.completion.chunk","created":1234567890,"choices":[{"index":0,"delta":{"content":"..."},"finish_reason":null}]}
 
 data: [DONE]
 ```
@@ -183,257 +170,93 @@ AGENT_API=https://api.example.com/v1/chat/completions
 
 ## 🛠️ MCP 工具
 
-系统提供以下 MCP 工具供 AI 调用：
+系统提供 MCP 工具注册框架，支持自定义工具集成。
 
-### 1. `get_components_detail`
-
-获取组件的详细配置信息，包括属性、事件、使用示例等。
-
-**参数**：
-- `componentNames` (array, 必填) - 组件名称数组
-- `uiFramework` (string, 可选) - UI 框架类型
-- `vueVersion` (string, 可选) - Vue 版本：`vue2`、`vue3`、`auto`
-
-### 2. `validate_form_rule`
-
-验证表单规则的正确性，检查必填字段、组件配置等。
-
-**参数**：
-- `rule` (array, 必填) - 表单规则数组
-- `uiFramework` (string, 可选) - UI 框架类型
-
-### 3. `apply_patch_form_rule`
-
-应用 JSONPatch 补丁来修改表单规则。
-
-### 4. `get_feature_template`
-
-获取表单功能的模板代码，如验证规则、计算属性、事件处理等。
-
-**参数**：
-- `featureType` (string, 必填) - 功能类型：`validate`、`computed`、`control`、`event`
-- `uiFramework` (string, 可选) - UI 框架类型
-
-### 5. `push_current_rule`
-
-推送当前表单规则到客户端（完成表单生成/修改后调用）。
-
-**参数**：
-- `rule` (array, 必填) - 表单规则数组
-- `summarize` (string, 可选) - 操作总结（Markdown 格式）
-- `uiFramework` (string, 可选) - UI 框架类型
-
-## 🎨 支持的 UI 框架
-
-### Element Plus / Element UI
-
-- **Element Plus** (Vue3): `ui: "element-plus"`
-- **Element UI** (Vue2): `ui: "element-ui"`
-
-### Ant Design Vue
-
-- **Vue3**: `ui: "ant-design-vue"`
-- **Vue2**: `ui: "ant-design-vue@vue2"`
-
-### Vant（移动端）
-
-- **Vue3**: `ui: "vant"`
-- **Vue2**: `ui: "vant@vue2"`
-
-### 银海 TA404-UI
-
-- **Vue2**: `ui: "ta404-ui@vue2"`
-
-### 组件架构
-
-系统采用模块化的组件架构：
-
-- **`src/components/element-plus/`** - Element Plus 组件定义（Vue2/Vue3）
-- **`src/components/ant-design-vue/`** - Ant Design Vue 组件定义（Vue2/Vue3）
-- **`src/components/vant/`** - Vant 组件定义（Vue2/Vue3）
-- **`src/components/ta404-ui/`** - 银海 TA404-UI 组件定义（Vue2）
-- **`src/components/common/`** - 通用组件定义（所有框架支持）
-
-### 组件分类
-
-根据组件用途设置正确的分类标识：
-
-**表单组件 (isField: true)**
-- 用于数据输入和收集
-- 必须包含 `field` 和 `title` 属性（TA404-UI 使用 `fieldDecoratorId`、`renderId` 和 `label`）
-- 示例：input, select, textarea, date-picker
+### 注册自定义工具
 
 ```typescript
-{
-  type: 'input',
-  isField: true,
-  // ... 其他属性
-}
-```
+import { ToolRegistry } from './src/service/tools.js';
 
-**容器组件 (isContainer: true)**
-- 用于页面布局和结构组织
-- 必须包含 `children` 或指定路径的子组件
-- 需要设置 `childrenPath`（默认为 'children'）
-- 示例：fcRow, col, group, card
+const toolRegistry = new ToolRegistry();
 
-```typescript
-{
-  type: 'fcRow',
-  isContainer: true,
-  childrenPath: 'children',  // 子组件存储路径
-  defaultChildren: ['col'],  // 默认子组件类型
-  // ... 其他属性
-}
-```
-
-**辅助组件 (isAssist: true)**
-- 提供其他功能的辅助组件
-- 不需要 `field` 和 `title` 属性
-- 示例：divider, text, html
-
-```typescript
-{
-  type: 'divider',
-  isAssist: true,
-  // ... 其他属性
-}
-```
-
-## 🔧 扩展新组件
-
-### ComponentInfo 类型说明
-
-`ComponentInfo` 是组件定义的核心接口，用于描述组件的所有信息：
-
-```typescript
-interface ComponentInfo {
-  // 基础信息
-  type: string;                    // 组件类型（必需，唯一标识）
-  label: string;                   // 组件标签（显示名称）
-  uiFramework: string;             // UI 框架名称
-  vueVersion: 'vue2' | 'vue3' | 'common'; // Vue 版本
-
-  // 组件分类标识
-  isAssist?: boolean;              // 是否为辅助组件（不需要 field 和 title）
-  isContainer?: boolean;           // 是否为容器组件（必须包含 children）
-  isField?: boolean;               // 是否为表单组件（必须有 field 和 title）
-
-  // 容器组件配置
-  childrenPath?: string;           // 子组件存储路径，如 'props.rule' 或 'children'
-  defaultChildren?: string[];      // 默认子组件类型列表
-
-  // 文档和示例
-  usage?: string;                  // 使用说明
-  examples?: any[];                // 使用示例（AI 助手 规则格式）
-
-  // 组件事件定义
-  events?: Array<{
-    name: string;                  // 事件名称
-    description?: string;          // 事件说明
-  }>;
-}
-```
-
-### 添加新组件步骤
-
-#### 1. 确定组件位置
-
-根据 UI 框架和 Vue 版本，选择对应的组件文件：
-
-- **Element Plus (Vue3)**: `src/components/element-plus/vue3/index.ts`
-- **Element UI (Vue2)**: `src/components/element-plus/vue2/index.ts`
-- **Ant Design Vue (Vue3)**: `src/components/ant-design-vue/vue3/index.ts`
-- **Ant Design Vue (Vue2)**: `src/components/ant-design-vue/vue2/index.ts`
-- **Vant (Vue3)**: `src/components/vant/vue3/index.ts`
-- **Vant (Vue2)**: `src/components/vant/vue2/index.ts`
-- **TA404-UI (Vue2)**: `src/components/ta404-ui/vue2/index.ts`
-- **通用组件**: `src/components/common/index.ts`（所有框架支持）
-
-#### 2. 定义组件信息
-
-在对应的组件文件中添加组件定义：
-
-```typescript
-import { ComponentInfo } from '../../core/component-registry.js';
-
-export const elementPlusComponents: ComponentInfo[] = [
-  // ... 现有组件
-  {
-    type: 'myCustomInput',           // 组件类型（唯一标识）
-    label: '自定义输入框',            // 显示名称
-    uiFramework: 'element-plus',     // UI 框架
-    vueVersion: 'vue3',              // Vue 版本
-    isField: true,                   // 表单组件
-    isContainer: false,
-    isAssist: false,
-    usage: '用于输入自定义格式的文本', // 使用说明
-    
-    // 组件属性
-    props: [
-      {
-        name: 'placeholder',
-        type: 'string',
-        description: '输入框占位文本',
-        required: false,
-      },
-      {
-        name: 'maxlength',
-        type: 'number',
-        description: '最大输入长度',
-        required: false,
-      },
-      {
-        name: 'disabled',
-        type: 'boolean',
-        defaultValue: false,
-        description: '是否禁用',
-        required: false,
-      },
-    ],
-    
-    // 组件事件
-    events: [
-      {
-        name: 'input',
-        description: '输入时触发',
-      },
-      {
-        name: 'change',
-        description: '值改变时触发',
-      },
-    ],
-    
-    // 使用示例
-    examples: [
-      {
-        type: 'myCustomInput',
-        field: 'customField',
-        title: '自定义输入',
-        props: {
-          placeholder: '请输入内容',
-          maxlength: 100,
+// 注册工具
+toolRegistry.registerTool({
+  definition: {
+    name: 'my_custom_tool',
+    title: '我的自定义工具',
+    description: '执行自定义任务的工具',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        param1: {
+          type: 'string',
+          description: '参数1',
         },
-        _fc_drag_tag: 'myCustomInput',
+        param2: {
+          type: 'number',
+          description: '参数2',
+        },
       },
-    ],
+      required: ['param1'],
+    },
   },
-];
+  handler: async (args, context) => {
+    // 工具处理逻辑
+    return { result: 'success', data: args };
+  },
+});
 ```
 
-### 添加新 UI 框架
+### 框架特定工具
 
-如果需要添加全新的 UI 框架支持：
+可以为特定 UI 框架注册自定义工具：
 
-1. **创建组件目录**：`src/components/new-framework/`
-2. **创建组件文件**：`vue2/index.ts` 和/或 `vue3/index.ts`
-3. **导出组件**：在 `src/components/index.ts` 中导出
-4. **注册组件**：在 `src/core/component-registry.ts` 的 `initializeComponents()` 中注册
-5. **更新框架检测**：在 `src/service/chat.ts` 的 `getUiVersion()` 方法中添加框架别名
+```typescript
+toolRegistry.registerFrameworkTools('my-framework', [
+  {
+    definition: {
+      name: 'framework_specific_tool',
+      description: '特定框架的工具',
+      inputSchema: {
+        type: 'object',
+        properties: {},
+      },
+    },
+    handler: async (args, context) => {
+      // 处理逻辑
+      return {};
+    },
+  },
+]);
+```
 
-## 📝 使用示例
+## 🏗️ 项目结构
 
-### 示例 1: 生成新表单
+```
+ai-assistant/
+├── src/
+│   ├── core/                  # 核心功能
+│   │   └── component-registry.ts    # 工具注册表
+│   ├── service/               # 服务层
+│   │   ├── agent/             # AI Agent 实现
+│   │   ├── tools.ts           # MCP 工具注册
+│   │   ├── chat.ts            # 聊天服务核心
+│   │   ├── message-processor.ts    # 消息处理器
+│   │   ├── prompt-builder.ts  # 提示词构建器
+│   │   └── index.ts           # Express 服务器入口
+│   ├── types/                 # 类型定义
+│   │   └── index.ts
+│   └── utils/                 # 工具函数
+│       └── index.ts
+├── backup_components/         # 备份的表单组件（可删除）
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+## 🎯 使用示例
+
+### 示例 1: 基础对话
 
 ```bash
 curl -X POST http://localhost:3001/api/chat/completions \
@@ -442,48 +265,16 @@ curl -X POST http://localhost:3001/api/chat/completions \
   -d '{
     "model": "deepseek-chat",
     "agent": "deepseek",
-    "ui": "element-plus",
     "messages": [
       {
         "role": "user",
-        "content": "生成一个用户注册表单，包含用户名、邮箱、密码和确认密码字段"
+        "content": "你好，请介绍一下你自己"
       }
     ]
   }'
 ```
 
-### 示例 2: 修改现有表单
-
-```bash
-curl -X POST http://localhost:3001/api/chat/completions \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <your-api-key>" \
-  -d '{
-    "model": "deepseek-chat",
-    "agent": "deepseek",
-    "ui": "element-plus",
-    "messages": [
-      {
-        "role": "user",
-        "content": "在表单中添加一个手机号字段"
-      }
-    ],
-    "form": {
-      "rule": [
-        {
-          "type": "input",
-          "field": "username",
-          "title": "用户名",
-          "props": {
-            "placeholder": "请输入用户名"
-          }
-        }
-      ]
-    }
-  }'
-```
-
-### 示例 3: 使用 JavaScript/TypeScript
+### 示例 2: 使用 JavaScript/TypeScript
 
 ```typescript
 const response = await fetch('http://localhost:3001/api/chat/completions', {
@@ -495,11 +286,10 @@ const response = await fetch('http://localhost:3001/api/chat/completions', {
   body: JSON.stringify({
     model: 'deepseek-chat',
     agent: 'deepseek',
-    ui: 'element-plus',
     messages: [
       {
         role: 'user',
-        content: '生成一个登录表单',
+        content: '你好，请介绍一下你自己',
       },
     ],
   }),
@@ -536,36 +326,6 @@ while (true) {
 }
 ```
 
-## 🏗️ 项目结构
-
-```
-ai-assistant/
-├── src/
-│   ├── components/          # UI 组件定义
-│   │   ├── element-plus/    # Element Plus 组件
-│   │   ├── ant-design-vue/  # Ant Design Vue 组件
-│   │   ├── vant/            # Vant 组件
-│   │   ├── ta404-ui/        # 银海 TA404-UI 组件
-│   │   └── common/          # 通用组件
-│   ├── core/                # 核心功能
-│   │   ├── component-registry.ts      # 组件注册表
-│   │   ├── form-rule-generator.ts     # 表单规则生成器
-│   │   └── json-patch-validator.ts    # JSONPatch 验证器
-│   ├── service/             # 服务层
-│   │   ├── agent/           # AI Agent 实现
-│   │   ├── tools/           # MCP 工具定义
-│   │   ├── chat.ts          # 聊天服务核心
-│   │   ├── index.ts         # Express 服务器入口
-│   │   ├── SYSTEM_PROMPT.md # 系统提示词
-│   │   └── YH_FORM_PROMPT.md # 银海表单系统提示词
-│   └── utils/               # 工具函数
-├── dist/                    # 编译输出
-├── log/                     # 日志文件
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
 ## 🐛 故障排除
 
 ### 服务无法启动
@@ -583,5 +343,3 @@ ai-assistant/
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
-
-Copyright (c) 2021-present xaboy

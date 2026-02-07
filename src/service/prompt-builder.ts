@@ -1,133 +1,110 @@
-import { ComponentRegistry } from '../core/component-registry.js';
-
 /**
  * 提示词构建器
- * 负责读取系统提示词、构建组件列表、会话信息等
+ * 提供通用的系统提示词构建功能
+ * 移除了表单组件相关的提示词
  */
+
 export class PromptBuilder {
-  private componentRegistry: ComponentRegistry;
+  private defaultPrompt = `你是一个通用的 AI 助手，具备以下能力：
 
-  constructor(componentRegistry: ComponentRegistry) {
-    this.componentRegistry = componentRegistry;
-  }
+## 核心能力
+1. **智能对话** - 能够理解和回应用户的各种问题
+2. **工具调用** - 可以使用 MCP 工具来执行特定任务
+3. **代码编写** - 能够编写、解释和调试代码
+4. **问题分析** - 能够分析复杂问题并提供解决方案
 
-  /**
-   * 读取系统提示词
-   * 根据UI框架调用对应的提示词函数
-   */
-  readSystemPrompt(version: { ui: string; vue: 'vue2' | 'vue3' }): string {
-    return this.componentRegistry.getSystemPrompt(version.ui, version.vue);
-  }
+## 工具使用规范
+- 当需要执行特定任务时，请使用可用的工具
+- 工具调用格式：function_call
+- 确保传递正确的参数
+- 工具调用结果会返回给你，你可以基于结果继续对话
 
-  /**
-   * 生成会话信息部分
-   */
-  buildSessionInfo(sessionId: string, ui: string, vueVersion: 'vue2' | 'vue3'): string {
-    return `<session_id readonly>
-${sessionId}
-</session_id>
-<ui readonly>
-${ui}
-</ui>
-<vue_version readonly>
-${vueVersion}
-</vue_version>`;
-  }
+## 交互原则
+- 回答要清晰、准确、有条理
+- 如果不确定答案，请明确说明
+- 遇到错误时，提供有用的错误信息和建议
+
+## 会话信息
+- 会话 ID：{sessionId}
+- 当前时间：{timestamp}
+
+请根据用户的问题，提供最有帮助的回答。`;
+
+  constructor() {}
 
   /**
-   * 生成组件列表部分
+   * 构建系统提示词
    */
-  buildComponentList(
-    categorizedComponents: ReturnType<ComponentRegistry['categorizeComponents']>,
-    version: { ui: string; vue: 'vue2' | 'vue3' },
+  buildSystemPrompt(
+    sessionId: string,
+    context?: Record<string, any>,
   ): string {
-    const sections = this.componentRegistry.getSections(categorizedComponents, version.ui, version.vue);
+    const timestamp = new Date().toISOString();
 
-    const componentListParts = sections.map(section => {
-      const componentItems = section.category.components.map(comp => `- ${comp.type}: ${comp.label}`).join('\n');
+    let prompt = this.defaultPrompt
+      .replace('{sessionId}', sessionId)
+      .replace('{timestamp}', timestamp);
 
-      return `## ${section.title} (${section.category.count}个)
-${section.category.description}
-${componentItems}`;
-    });
-
-    return `## 可用组件列表
-${componentListParts.join('\n\n')}
-
-请只使用以上组件来构建您的表单规则。`;
-  }
-
-  /**
-   * 生成用户规则部分
-   */
-  buildUserRule(formRule: any): string {
-    if (!formRule) {
-      return '';
+    // 如果有上下文信息，添加到提示词中
+    if (context) {
+      const contextStr = JSON.stringify(context, null, 2);
+      prompt += `\n\n## 上下文信息\n\`\`\`json\n${contextStr}\n\`\`\``;
     }
 
-    return `
-<current_user_rule>
-${JSON.stringify(formRule)}
-</current_user_rule>`;
+    return prompt;
   }
 
   /**
-   * 构建增强的系统提示词
+   * 构建会话提示词
    */
-  buildEnhancedSystemPrompt(
-    sessionId: string,
-    version: { ui: string; vue: 'vue2' | 'vue3' },
-    formRule?: any,
+  buildConversationPrompt(
+    userInput: string,
+    history?: Array<{ role: string; content: string }>,
   ): string {
-    const systemPrompt = this.readSystemPrompt(version);
-    const sessionInfo = this.buildSessionInfo(sessionId, version.ui, version.vue);
-    const components = this.componentRegistry.getComponents(version.ui, version.vue);
-    const categorizedComponents = this.componentRegistry.categorizeComponents(components);
-    const componentList = this.buildComponentList(categorizedComponents, version);
-    const userRule = this.buildUserRule(formRule);
+    let prompt = '## 当前对话\n\n';
+    prompt += `用户输入：${userInput}\n`;
 
-    return `${systemPrompt}
-${sessionInfo}
+    if (history && history.length > 0) {
+      prompt += '\n## 对话历史\n';
+      history.forEach((msg, index) => {
+        prompt += `${index + 1}. **${msg.role}**: ${msg.content}\n`;
+      });
+    }
 
-${componentList}
-
-${userRule}`;
+    return prompt;
   }
 
   /**
-   * 获取UI版本信息
+   * 构建工具调用提示词
    */
-  getUiVersion(ui: string): { ui: string; vue: 'vue2' | 'vue3' } {
-    const alias = {
-      'element-plus': {
-        ui: 'element-plus',
-        vue: 'vue3',
-      },
-      'element-ui': {
-        ui: 'element-ui',
-        vue: 'vue2',
-      },
-      vant: {
-        ui: 'vant',
-        vue: 'vue3',
-      },
-      'vant@vue2': {
-        ui: 'vant',
-        vue: 'vue2',
-      },
-      'ant-design-vue': {
-        ui: 'ant-design-vue',
-        vue: 'vue3',
-      },
-      'ant-design-vue@vue2': {
-        ui: 'ant-design-vue',
-        vue: 'vue2',
-      },
-      'ta404-ui@vue2': {
-        ui: 'ta404-ui',
-        vue: 'vue2',
-      },
-    } as { [key: string]: { ui: string; vue: 'vue2' | 'vue3' } };
-    return alias[ui] || alias['element-plus'];
+  buildToolPrompt(
+    toolName: string,
+    toolDescription: string,
+    parameters: Record<string, any>,
+  ): string {
+    return `请使用工具 "${toolName}" 执行以下任务：
+
+**工具描述**：${toolDescription}
+
+**参数**：
+${JSON.stringify(parameters, null, 2)}
+
+请根据工具的返回结果，提供适当的回答。`;
+  }
+
+  /**
+   * 获取系统提示词模板
+   */
+  getDefaultPrompt(): string {
+    return this.defaultPrompt;
+  }
+
+  /**
+   * 自定义系统提示词
+   */
+  setCustomPrompt(prompt: string): void {
+    this.defaultPrompt = prompt;
   }
 }
+
+export default PromptBuilder;

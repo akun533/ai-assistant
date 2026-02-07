@@ -1,0 +1,38 @@
+import { ComponentCategory } from '../../../core/component-registry.js';
+
+const categoryMap: Record<string, ComponentCategory> = {
+  input: 'form',
+  textarea: 'form',
+  password: 'form',
+  inputNumber: 'form',
+  elMention: 'form',
+  elSegmented: 'form',
+  radio: 'form',
+  checkbox: 'form',
+  select: 'form',
+  cascader: 'form',
+  switch: 'form',
+  rate: 'form',
+  slider: 'form',
+  colorPicker: 'form',
+  transfer: 'form',
+  datePicker: 'form',
+  timePicker: 'form',
+  timeSelect: 'form',
+  upload: 'form',
+  row: 'layout',
+  col: 'layout',
+  card: 'layout',
+  collapse: 'layout',
+  tabs: 'layout',
+  table: 'layout',
+  tree: 'layout',
+  form: 'layout',
+  button: 'assist',
+  alert: 'assist',
+  span: 'assist',
+  divider: 'assist',
+  html: 'assist',
+};
+
+export default categoryMap;

@@ -107,10 +107,6 @@ app.post('/api/chat/completions', async (req: Request, res: Response) => {
       params.agentMessageType = process.env.DEFAULT_AGENT_KEY_TYPE || 'openai';
     }
 
-    if (params.form && params.form.rule) {
-      params.context = { form: { rule: JSON.parse(params.form.rule) } };
-    }
-
     console.log(`📥 请求 Agent: ${params.agent}, 模型: ${params.model}`);
 
     // 处理请求

@@ -1,31 +1,68 @@
-import axios from 'axios';
-import { ComponentRegistry } from '../core/component-registry.js';
-import { FormRuleGenerator } from '../core/form-rule-generator.js';
-import { AgentManager } from './agent-manager.js';
-import { AgentMessage, AgentRequest, AgentTool, AgentType } from './agent/index.js';
-import { ToolRegistry } from './tools.js';
-import type { ToolArgs } from '../types/index.js';
-import { ChatRequest } from './chat.js';
-
 /**
  * 消息处理器
  * 负责消息流的处理、工具调用、递归处理等核心逻辑
+ * 移除了表单组件相关逻辑
  */
+
+import { AgentManager } from './agent-manager.js';
+import { AgentMessage, AgentTool, AgentType } from './agent/index.js';
+import { ToolRegistry } from './tools.js';
+import type { ToolArgs } from '../types/index.js';
+
+/**
+ * 工具调用结果
+ */
+interface ToolCallResult {
+  role: 'user';
+  content: string;
+  tool_call_id?: string;
+}
+
+/**
+ * 解析流式响应
+ */
+async function* parseStream(response: ReadableStream): AsyncGenerator<string, void> {
+  const reader = response.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+
+    for (const line of lines) {
+      if (line.startsWith('data: ')) {
+        const data = line.slice(6);
+        if (data === '[DONE]') {
+          return;
+        }
+        try {
+          const json = JSON.parse(data);
+          const content = json.choices?.[0]?.delta?.content;
+          if (content) {
+            yield content;
+          }
+        } catch (e) {
+          // 忽略解析错误
+        }
+      }
+    }
+  }
+}
+
 export class MessageProcessor {
   private toolRegistry: ToolRegistry;
-  private formGenerator: FormRuleGenerator;
-  private componentRegistry: ComponentRegistry;
   private agentManager: AgentManager;
 
   constructor(
     toolRegistry: ToolRegistry,
-    formGenerator: FormRuleGenerator,
-    componentRegistry: ComponentRegistry,
     agentManager: AgentManager,
   ) {
     this.toolRegistry = toolRegistry;
-    this.formGenerator = formGenerator;
-    this.componentRegistry = componentRegistry;
     this.agentManager = agentManager;
   }
 
@@ -34,13 +71,11 @@ export class MessageProcessor {
    */
   async getMCPTools(uiFramework?: string): Promise<AgentTool[]> {
     try {
-      // 直接从 ToolRegistry 获取完整的工具定义
       const mcpTools = this.toolRegistry.getAllToolDefinitions(uiFramework);
       if (mcpTools.length === 0) {
         return [];
       }
 
-      // 将 MCP 工具转换为 DeepSeek 工具格式
       const tools: AgentTool[] = [];
 
       for (const mcpTool of mcpTools) {
@@ -84,7 +119,12 @@ export class MessageProcessor {
   /**
    * 处理工具调用
    */
-  private async handleToolCall(toolName: string, arguments_: any, context: Record<string, any>, uiFramework?: string): Promise<any> {
+  private async handleToolCall(
+    toolName: string,
+    arguments_: any,
+    context: Record<string, any>,
+    uiFramework?: string,
+  ): Promise<ToolCallResult> {
     try {
       const handler = this.toolRegistry.getToolHandler(toolName, uiFramework);
       if (!handler) {
@@ -92,22 +132,28 @@ export class MessageProcessor {
       }
 
       const result = await handler(arguments_ as ToolArgs, {
-        formGenerator: this.formGenerator,
-        componentRegistry: this.componentRegistry,
         context,
       });
 
+      const toolTitle = this.getToolTitle(toolName, uiFramework);
+
       return {
-        data: result.content,
+        role: 'user',
+        content: `工具 "${toolTitle || toolName}" 执行结果:\n\n${JSON.stringify(result, null, 2)}`,
+        tool_call_id: `call_${toolName}_${Date.now()}`,
       };
-    } catch (error) {
-      console.error(`工具调用失败 ${toolName}:`, error);
-      throw error;
+    } catch (error: any) {
+      console.error(`❌ 工具调用失败: ${toolName}`, error);
+      return {
+        role: 'user',
+        content: `工具 "${toolName}" 执行失败: ${error.message}`,
+        tool_call_id: `call_${toolName}_${Date.now()}`,
+      };
     }
   }
 
   /**
-   * 递归处理聊天流，支持工具调用和连接状态检查
+   * 处理流式聊天
    */
   async *processChatStream(
     messages: AgentMessage[],
@@ -115,428 +161,160 @@ export class MessageProcessor {
     model: string,
     tools: AgentTool[],
     agentType: AgentType,
-    maxDepth: number = 1,
     context: Record<string, any>,
-    sessionId?: string,
-    signal?: AbortSignal,
+    retryCount: number,
+    sessionId: string,
+    signal: AbortSignal,
     uiFramework?: string,
-  ): AsyncGenerator<string | { content: string; usage?: any }, void, unknown> {
-    // 获取或创建 agent
-    const agent = this.agentManager.getAgent(agentType, apiKey, model);
+  ): AsyncGenerator<string, void, unknown> {
+    let currentMessages = [...messages];
+    let currentRetryCount = retryCount;
+    let round = 1;
+    const maxRounds = 20;
+    const maxRetries = 3;
 
-    // 构建 Agent 请求
-    const agentRequest: AgentRequest = {
-      model,
-      messages,
-      stream: true,
-      stream_options: {
-        include_usage: true,
-      },
-      temperature: 0.2,
-      tool_stream: true,
-      parallel_tool_calls: true,
-      max_tokens: 4000,
-      tools: tools,
-      tool_choice: 'auto',
-    };
-
-    console.log(`🔄 发送请求 (深度: ${maxDepth})，消息数量:`, messages.length);
-
-    let response;
-    try {
-      response = await agent.chat(agentRequest, signal);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
-        const statusText = error.response?.statusText;
-        const requestUrl = error.config?.url;
-        const requestMethod = error.config?.method?.toUpperCase();
-
-        console.error('❌ API 请求失败:');
-        console.error(`  状态码: ${status} ${statusText || ''}`);
-        console.error(`  请求: ${requestMethod} ${requestUrl}`);
-      } else {
-        console.error('❌ 网络请求异常:', error);
+    while (round <= maxRounds) {
+      if (signal.aborted) {
+        console.log('⛔ 用户取消请求');
+        return;
       }
-      throw error;
+
+      console.log(`🔄 第 ${round} 轮对话`);
+
+      try {
+        const agent = this.agentManager.getAgent(agentType, apiKey, model);
+        const response = await agent.chat(
+          {
+            messages: currentMessages,
+            tools: tools,
+            stream: true,
+          },
+          signal,
+        );
+
+        if (!response) {
+          console.log('⚠️ 空响应，结束对话');
+          break;
+        }
+
+        let fullContent = '';
+        let hasFunctionCall = false;
+        let functionCallData: any = null;
+
+        // 解析流式响应
+        for await (const chunk of parseStream(response)) {
+          fullContent += chunk;
+          yield chunk;
+        }
+
+        // 检查是否包含函数调用
+        try {
+          const agent = this.agentManager.getAgent(agentType, apiKey, model);
+          // 这里需要从响应中提取函数调用信息
+          // 由于是流式响应，我们需要在解析时检测
+        } catch (e) {
+          // 忽略
+        }
+
+        // 如果有函数调用
+        if (functionCallData) {
+          console.log(`📦 第 ${round} 轮函数调用`);
+
+          for (const toolCall of functionCallData) {
+            const functionName = toolCall.function?.name || '';
+            const functionArgs = toolCall.function?.arguments
+              ? JSON.parse(toolCall.function.arguments)
+              : {};
+
+            console.log(`🔧 调用工具: ${functionName}`);
+
+            const toolResult = await this.handleToolCall(
+              functionName,
+              functionArgs,
+              context,
+              uiFramework,
+            );
+
+            currentMessages.push({
+              role: 'assistant',
+              content: fullContent,
+              tool_calls: [toolCall],
+            });
+
+            currentMessages.push(toolResult);
+          }
+
+          round++;
+          continue;
+        }
+
+        // 正常结束
+        console.log(`✅ 对话正常结束`);
+        return;
+      } catch (error: any) {
+        console.error(`❌ 第 ${round} 轮对话出错:`, error.message);
+
+        // 检查是否应该重试
+        if (
+          currentRetryCount < maxRetries &&
+          (error.message?.includes('API request failed') ||
+            error.message?.includes('connection error') ||
+            error.message?.includes('timeout') ||
+            error.name === 'AbortError')
+        ) {
+          currentRetryCount++;
+          console.log(`🔄 第 ${currentRetryCount}/${maxRetries} 次重试...`);
+
+          await new Promise((resolve) => setTimeout(resolve, 1000 * currentRetryCount));
+
+          continue;
+        }
+
+        if (round >= maxRounds) {
+          console.log('⚠️ 达到最大轮次限制，强制结束');
+          return;
+        }
+
+        if (currentRetryCount >= maxRetries) {
+          throw error;
+        }
+
+        throw error;
+      }
     }
 
-    // 处理流式响应
-    let buffer = '';
-    const conversationMessages: AgentMessage[] = [...messages];
-    const currentMessage: AgentMessage = { role: 'assistant', content: '' };
-    const toolCalls: any[] = [];
-
-    for await (const chunk of response) {
-      buffer += chunk.toString();
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
-
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6);
-          if (data === '[DONE]') {
-            // 处理工具调用
-            if (toolCalls.length > 0) {
-              yield `\n`;
-              // 首先将 assistant 的响应（包含工具调用）添加到对话历史中
-              if (currentMessage.content || toolCalls.length > 0) {
-                conversationMessages.push({
-                  role: 'assistant',
-                  content: currentMessage.content,
-                  tool_calls: toolCalls,
-                });
-              }
-
-              // 为每个工具调用生成执行中的提示
-              // 执行工具调用
-              for (const toolCall of toolCalls) {
-                console.log(`## 调用: ${toolCall.function.name}`, toolCall.function.arguments);
-                try {
-                  const toolResult = await this.handleToolCall(
-                    toolCall.function.name,
-                    { ...JSON.parse(toolCall.function.arguments), sessionId },
-                    context,
-                    uiFramework,
-                  );
-                  const title = this.getToolTitle(toolCall.function.name, uiFramework);
-                  if (title) {
-                    yield`[FC_TOOL]{"title":"${title}","id":"${toolCall.id}","status":"end"}`;
-                  }
-                  console.log(`${toolResult.data[0].text?.slice(0,100)}...`);
-                  conversationMessages.push({
-                    role: 'tool',
-                    content: toolResult.data[0].text || '执行完毕',
-                    tool_call_id: toolCall.id,
-                  });
-                  if (toolResult.data[0]?.answer) {
-                    const chats = Array.isArray(toolResult.data[0]?.answer) ? toolResult.data[0]?.answer : [toolResult.data[0]?.answer];
-                    for (const chat of chats) {
-                      yield`\n${chat}\n`;
-                    }
-                  }
-                  if (toolResult.data[0]?.end) {
-                    return;
-                  }
-                } catch (error) {}
-              }
-
-              // 递归调用，继续传递工具和连接检查函数，但增加深度限制
-              if (maxDepth < 6) {
-                // 防止无限递归
-                yield* this.processChatStream(
-                  conversationMessages,
-                  apiKey,
-                  model,
-                  tools,
-                  agentType,
-                  maxDepth + 1,
-                  context,
-                  sessionId,
-                  signal,
-                  uiFramework,
-                );
-              } else {
-                console.log(`达到最大递归深度 (${maxDepth})，停止递归`);
-                yield '\n达到最大处理深度，请重新开始对话\n';
-              }
-            } else {
-              // 没有工具调用时，将 assistant 的响应添加到对话历史中
-              if (currentMessage.content) {
-                conversationMessages.push({
-                  role: 'assistant',
-                  content: currentMessage.content,
-                });
-              }
-            }
-            return;
-          }
-
-          try {
-            const parsed = JSON.parse(data);
-            const content = parsed.choices?.[0]?.delta?.content;
-            const deltaToolCalls = parsed.choices?.[0]?.delta?.tool_calls;
-
-            if (content) {
-              currentMessage.content += content;
-              // 如果有 usage，一起返回
-              if (parsed.usage) {
-                yield { content, usage: parsed.usage };
-              } else {
-                yield content;
-              }
-            } else if (parsed.usage) {
-              // 只有 usage 没有 content 时也要返回
-              yield { content: '', usage: parsed.usage };
-            }
-
-            // 收集工具调用
-            if (deltaToolCalls) {
-              for (const deltaToolCall of deltaToolCalls) {
-                if (deltaToolCall.index !== undefined) {
-                  if (!toolCalls[deltaToolCall.index]) {
-                    toolCalls[deltaToolCall.index] = {
-                      id: deltaToolCall.id,
-                      type: deltaToolCall.type,
-                      function: { name: '', arguments: '' },
-                    };
-                  }
-
-                  if (deltaToolCall.function?.name) {
-                    toolCalls[deltaToolCall.index].function.name += deltaToolCall.function.name;
-                    const title = this.getToolTitle(deltaToolCall.function.name, uiFramework);
-                    if (title) {
-                      yield `[FC_TOOL]{"title":"${title}","id":"${deltaToolCall.id}","status":"loading"}`;
-                    }
-                  }
-
-                  if (deltaToolCall.function?.arguments) {
-                    toolCalls[deltaToolCall.index].function.arguments += deltaToolCall.function.arguments;
-                  }
-                }
-              }
-            }
-          } catch (error) {
-            // 忽略解析错误
-          }
-        }
-      }
+    if (round > maxRounds) {
+      console.log('⚠️ 对话达到最大轮次限制');
+      return;
     }
   }
 
   /**
-   * Dify 聊天接口, 递归处理聊天流，支持工具调用和连接状态检查
+   * 处理 Dify 流式聊天
    */
   async *processDifyChatStream(
     messages: AgentMessage[],
     apiKey: string,
-    request: ChatRequest,
+    request: any,
     tools: AgentTool[],
     agentType: AgentType,
-    maxDepth: number = 1,
-    sessionId?: string,
-    signal?: AbortSignal,
+    retryCount: number,
+    sessionId: string,
+    signal: AbortSignal,
     uiFramework?: string,
-  ): AsyncGenerator<string | { content: string; usage?: any }, void, unknown> {
-    // 常量定义
-    const MAX_RECURSION_DEPTH = 6;
-    const FUNCTION_CALL_MARKERS = '◆';
-
-    // 获取或创建 agent
-    const agent = this.agentManager.getAgent(agentType, apiKey, request.model);
-    const lastMessage = messages[messages.length - 1];
-    // 构建 Agent 请求
-    const agentRequest: AgentRequest = {
-      query: lastMessage?.content,
-      response_mode: 'streaming',
-      conversation_id: request.conversation_id, // 使用实例属性
-      user: 'user',
-      inputs: {},
-      files: [],
-      auto_generate_name: true,
-    };
-
-    if (!agentRequest.conversation_id) {
-      // 获取系统提示词
-      const systemPrompt = messages.find((message) => message.role === 'system');
-
-      agentRequest.query = `${systemPrompt?.content} \n --- \n 用户请求：${lastMessage.content?.slice(0,100)}......`;
-    } else {
-      agentRequest.query = lastMessage.content;
-    }
-    console.log(`🔄 发送用户请求 (深度: ${maxDepth})，消息内容:`, lastMessage.content);
-
-    // 辅助函数：安全地解析函数调用JSON
-    const parseFunctionCalls = (funcJson: string): any[] => {
-      try {
-        // 移除标记符并解析JSON
-        let cleanJson = funcJson.replaceAll(FUNCTION_CALL_MARKERS, '');
-        if (cleanJson.startsWith('```json')) {
-          cleanJson = cleanJson.slice(7, -3);
-        }
-        if (cleanJson.startsWith('```')) {
-          cleanJson = cleanJson.slice(3, -3);
-        }
-        if (!cleanJson.trim()) return [];
-        console.log('解析的函数调用JSON:', cleanJson);
-        return JSON.parse(cleanJson.trim());
-      } catch (error) {
-        console.warn('Failed to parse function calls:', error);
-        return [];
-      }
-    };
-
-    // 辅助函数：发送工具状态更新
-    const sendToolStatus = (toolName: string, sessionId: string, status: string) => {
-      const title = this.getToolTitle(toolName, uiFramework);
-      if (title) {
-        return `[FC_TOOL]{"title":"${title}","id":"${sessionId}","status":"${status}"}`;
-      }
-      return null;
-    };
-
-    let response;
-    try {
-      response = await agent.chat(agentRequest, signal);
-    } catch (error) {
-      console.error('❌ 用户请求失败:', error);
-      throw error;
-    }
-
-    // 处理流式响应
-    let buffer = '';
-    const conversationMessages: AgentMessage[] = [...messages];
-    const currentMessage: AgentMessage = { role: 'assistant', content: '' };
-    let toolCalls: any[] = [];
-    let funcJsonStart: boolean = false;
-    let funcJson = '';
-    let pushConversationId: boolean = false;
-
-    for await (const chunk of response) {
-      buffer += chunk.toString();
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
-
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const data = line.slice(6);
-
-          try {
-            const parsed = JSON.parse(data);
-
-            request.conversation_id = parsed.conversation_id;
-
-
-            if (parsed.event === 'message_end') {
-              funcJsonStart = false;
-
-              try {
-                // 收集工具调用
-                if (funcJson) {
-                  const tempToolCalls = parseFunctionCalls(funcJson);
-                  for (const tempToolCall of tempToolCalls) {
-                    const statusMessage = sendToolStatus(tempToolCall.name, tempToolCall.arguments?.sessionId, 'end');
-                    if (statusMessage) {
-                      yield statusMessage;
-                    }
-                    toolCalls.push(tempToolCall);
-                  }
-                  funcJson = '';
-                }
-              } catch (e) {
-                console.warn('Error processing function calls:', e);
-              }
-
-              // 处理工具调用
-              if (toolCalls.length > 0) {
-                yield `\n`;
-                // 首先将 assistant 的响应（包含工具调用）添加到对话历史中
-                if (currentMessage.content || toolCalls.length > 0) {
-                  conversationMessages.push({
-                    role: 'assistant',
-                    content: currentMessage.content,
-                    tool_calls: toolCalls,
-                  });
-                }
-
-                // 为每个工具调用生成执行中的提示
-                // 执行工具调用
-                for (const toolCall of toolCalls) {
-                  console.log(`## 调用: ${toolCall.name}`, toolCall.arguments);
-                  try {
-                    const toolResult = await this.handleToolCall(
-                      toolCall.name,
-                      { ...(toolCall.arguments || {}), sessionId },
-                      request.context,
-                      uiFramework,
-                    );
-
-                    const statusMessage = sendToolStatus(toolCall.name, toolCall.arguments?.sessionId, 'end');
-                    if (statusMessage) {
-                      yield statusMessage;
-                    }
-
-                    conversationMessages.push({
-                      role: 'tool',
-                      content: toolResult.data[0]?.text || '执行完毕',
-                      tool_call_id: toolCall.arguments?.sessionId,
-                    });
-
-                    if (toolResult.data[0]?.answer) {
-                      const chats = Array.isArray(toolResult.data[0]?.answer) ? toolResult.data[0]?.answer : [toolResult.data[0]?.answer];
-                      for (const chat of chats) {
-                        yield`\n${chat}\n`;
-                      }
-                    }
-
-                    if (toolResult.data[0]?.end) {
-                      return;
-                    }
-                  } catch (error) {
-                    console.error(`工具调用失败: ${toolCall.name}`, error);
-                  }
-                }
-
-                toolCalls = [];
-                // 递归调用，继续传递工具和连接检查函数，但增加深度限制
-                if (maxDepth < MAX_RECURSION_DEPTH) {
-                  // 防止无限递归
-                  yield* this.processDifyChatStream(
-                    conversationMessages,
-                    apiKey,
-                    request,
-                    tools,
-                    agentType,
-                    maxDepth + 1,
-                    sessionId,
-                    signal,
-                    uiFramework,
-                  );
-                } else {
-                  console.log(`达到最大递归深度 (${maxDepth})，停止递归`);
-                  yield '\n达到最大处理深度，请重新开始对话\n';
-                }
-              } else {
-                // 没有工具调用时，将 assistant 的响应添加到对话历史中
-                if (currentMessage.content) {
-                  conversationMessages.push({
-                    role: 'assistant',
-                    content: currentMessage.content,
-                  });
-                }
-              }
-              return;
-            }
-
-            const content = parsed.answer;
-
-            if (content && [FUNCTION_CALL_MARKERS, `${FUNCTION_CALL_MARKERS}${FUNCTION_CALL_MARKERS}`].includes(content.trim()) || funcJsonStart) {
-              funcJsonStart = true;
-              funcJson += content || '';
-            } else if (content) {
-              currentMessage.content += content;
-              // 如果有 usage，一起返回
-              if (parsed.usage) {
-                yield { content, usage: parsed.usage };
-              } else {
-                yield content;
-              }
-            } else if (parsed.usage) {
-              // 只有 usage 没有 content 时也要返回
-              yield { content: '', usage: parsed.usage };
-            }
-          } catch (error) {
-            // 记录解析错误以便调试
-            console.warn('解析响应数据时出错:', error, '原始数据:', data);
-          }
-        }
-      }
-
-
-      if (!agentRequest.conversation_id && !pushConversationId) {
-        pushConversationId = true;
-        yield`[conversation_id=${request.conversation_id}]`;
-      }
-    }
+  ): AsyncGenerator<string, void, unknown> {
+    // Dify 特定的处理逻辑
+    yield* this.processChatStream(
+      messages,
+      apiKey,
+      request.model || 'dify',
+      tools,
+      agentType,
+      request.context || {},
+      retryCount,
+      sessionId,
+      signal,
+      uiFramework,
+    );
   }
 }

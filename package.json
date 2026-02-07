@@ -1,7 +1,7 @@
 {
-  "name": "@form-create/ai-assistant",
+  "name": "@ai-assistant/core",
   "version": "1.0.0",
-  "description": "AI 表单助理，用于根据自然语言描述自动生成和修改规则",
+  "description": "通用 AI 助手服务，支持多 AI 服务、流式响应和 MCP 工具",
   "main": "dist/service/index.js",
   "type": "module",
   "scripts": {
@@ -16,14 +16,14 @@
   },
   "keywords": [
     "AI",
-    "designer",
-    "form-create",
-    "element-plus",
-    "ant-design-vue",
-    "vant",
-    "form",
-    "vue",
-    "lowcode"
+    "assistant",
+    "MCP",
+    "stream",
+    "chat",
+    "openai",
+    "deepseek",
+    "qwen",
+    "zhipu"
   ],
   "author": "xaboy",
   "license": "MIT",
