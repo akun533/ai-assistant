@@ -9,9 +9,9 @@ import path from 'path';
 const MODEL_DIR = './models';
 
 // 模型文件路径
-const DET_MODEL = path.join(MODEL_DIR, 'PP-OCRv5_mobile_det_infer.onnx');
-const REC_MODEL = path.join(MODEL_DIR, 'PP-OCRv5_mobile_rec_infer.onnx');
-const DICT_FILE = path.join(MODEL_DIR, 'ppocrv5_dict.txt');
+const DET_MODEL = './models/PP-OCRv5_mobile_det_infer.onnx';
+const REC_MODEL = './models/PP-OCRv5_mobile_rec_infer.onnx';
+const DICT_FILE = './models/ppocrv5_dict.txt';
 
 let ocrInstance: PaddleOcrService | null = null;
 
