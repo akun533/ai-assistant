@@ -70,22 +70,25 @@ async function convertToPng(imageBuffer: Buffer): Promise<Buffer> {
 /**
  * 识别图片中的文字
  * @param imageBuffer 图片 Buffer
+ * @param autoClose 识别完成后是否自动关闭 OCR 实例（默认 true）
  * @returns 识别结果
  */
-export async function recognizeImage(imageBuffer: Buffer) {
-  const ocr = await initOcr();
+export async function recognizeImage(imageBuffer: Buffer, autoClose: boolean = true) {
+  let ocr: any = null;
   
-  if (!ocr) {
-    return {
-      success: false,
-      text: '',
-      confidence: 0,
-      regions: [],
-      error: 'OCR 服务未初始化',
-    };
-  }
-
   try {
+    ocr = await initOcr();
+  
+    if (!ocr) {
+      return {
+        success: false,
+        text: '',
+        confidence: 0,
+        regions: [],
+        error: 'OCR 服务未初始化',
+      };
+    }
+
     // 将图片转换为 PNG 格式（支持 JPEG、PNG、GIF、WebP 等）
     const pngBuffer = await convertToPng(imageBuffer);
     
@@ -101,7 +104,7 @@ export async function recognizeImage(imageBuffer: Buffer) {
     });
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    console.log('result', result);
+    
     // 格式化结果
     const regions = result.map((item: {text:string, box: object, confidence: number}, i: number) => ({
       index: i + 1,
@@ -127,15 +130,17 @@ export async function recognizeImage(imageBuffer: Buffer) {
       regions,
       duration: parseFloat(duration),
     };
-  } catch (error) {
-    console.error('❌ OCR 识别失败:', error instanceof Error ? error.message : String(error));
-    return {
-      success: false,
-      text: '',
-      confidence: 0,
-      regions: [],
-      error: error instanceof Error ? error.message : '未知错误',
-    };
+  } finally {
+    // 识别完成后关闭 OCR 实例，释放资源
+    if (autoClose && ocr) {
+      try {
+        await ocr.destroy();
+        PaddleOcrService = null;
+        console.log('🔒 OCR 实例已关闭（释放资源）');
+      } catch (e) {
+        // 忽略关闭错误
+      }
+    }
   }
 }
 
@@ -143,9 +148,13 @@ export async function recognizeImage(imageBuffer: Buffer) {
  * 关闭 OCR 服务
  */
 export async function shutdownOcr() {
-  if (ocrInstance) {
-    await ocrInstance.destroy();
-    ocrInstance = null;
+  if (PaddleOcrService) {
+    try {
+      await PaddleOcrService.destroy();
+    } catch (e) {
+      // 忽略关闭错误
+    }
+    PaddleOcrService = null;
     console.log('🔒 PaddleOCR 已关闭');
   }
 }
