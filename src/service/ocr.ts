@@ -1,8 +1,8 @@
+// @ts-ignore
 import { decode } from 'fast-png';
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
-
 // 获取项目根目录（绝对路径）
 const PROJECT_ROOT = process.cwd();
 const MODELS_DIR = path.join(PROJECT_ROOT, 'src/service/models');
@@ -22,7 +22,7 @@ async function initOcr() {
 
   try {
     // 动态导入 paddleocr
-    const paddleocrModule = await import('paddleocr');
+    const paddleocrModule = await import('paddleocr/src/processor/paddle-ocr.js');
     PaddleOcrService = paddleocrModule.default || paddleocrModule.PaddleOcrService || paddleocrModule;
     const missing = [];
     if (!fs.existsSync(DET_MODEL)) missing.push('检测模型');
@@ -31,7 +31,7 @@ async function initOcr() {
 
     if (missing.length > 0) {
       console.log(`⚠️ 缺少模型文件: ${missing.join(', ')}，OCR 功能不可用`);
-      console.log(`📥 请下载模型文件到 ${MODEL_DIR} 目录`);
+      console.log(`📥 请下载模型文件到 ${MODELS_DIR} 目录`);
       return null;
     }
 
@@ -101,21 +101,22 @@ export async function recognizeImage(imageBuffer: Buffer) {
     });
 
     const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-    
+    console.log('result', result);
     // 格式化结果
-    const regions = result.map((item, i) => ({
+    const regions = result.map((item: {text:string, box: object, confidence: number}, i: number) => ({
       index: i + 1,
       text: item.text,
       confidence: Math.round(item.confidence * 100) / 100,
     }));
 
     // 合并所有文本
-    const fullText = result.map(item => item.text).join('\n');
+    const fullText = result.map((item: { text: string; box: object; confidence: number }) => item.text).join('\n');
     
     // 计算平均置信度
-    const avgConfidence = result.length > 0
-      ? result.reduce((sum, item) => sum + item.confidence, 0) / result.length
-      : 0;
+    const avgConfidence =
+      result.length > 0
+        ? result.reduce((sum:number, item: { text: string; box: object; confidence: number }) => sum + item.confidence, 0) / result.length
+        : 0;
 
     console.log(`📸 OCR 识别完成: ${result.length} 个区域, 耗时 ${duration}s`);
 

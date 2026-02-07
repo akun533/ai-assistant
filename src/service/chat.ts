@@ -122,6 +122,7 @@ export default class Chat {
         // 更新最后一条用户消息的内容
         const lastUserMsg = messages.filter(m => m.role === 'user').pop();
         if (lastUserMsg) {
+          console.log('ocrText', ocrText);
           lastUserMsg.content = ocrText;
         }
         console.log('✅ OCR 识别完成');

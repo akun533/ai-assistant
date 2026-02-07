@@ -113,13 +113,7 @@
         </div>
 
         <!-- 文件输入框 -->
-        <input
-          ref="fileInput"
-          type="file"
-          multiple
-          accept="image/*"
-          class="hidden-file-input"
-        />
+        <input ref="fileInput" type="file" multiple accept="image/*" class="hidden-file-input" />
 
         <textarea
           v-model="inputText"
@@ -238,17 +232,17 @@ export default {
     async handleImageUpload(event) {
       const files = event.target.files;
       if (!files || files.length === 0) return;
-      
+
       // 处理每个上传的文件
       for (const file of files) {
         if (!file.type.startsWith('image/')) continue;
-        
+
         // 创建预览 URL
         const preview = URL.createObjectURL(file);
-        
+
         // 将图片转为 base64
         const base64 = await this.fileToBase64(file);
-        
+
         this.uploadedImages.push({
           file,
           name: file.name,
@@ -257,7 +251,6 @@ export default {
           id: Date.now() + Math.random(),
         });
       }
-      
       // 重置文件输入框，以便可以重复选择同一文件
       event.target.value = '';
     },
@@ -305,6 +298,7 @@ export default {
         timestamp: new Date(),
       };
 
+      console.log('images', images);
       this.messages.push(userMessage);
       this.inputText = '';
 

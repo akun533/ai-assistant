@@ -11,18 +11,19 @@ export interface AgentConfig {
  * Agent 消息格式
  */
 export interface AgentMessage {
-    role: 'system' | 'user' | 'assistant' | 'tool';
-    content: string;
-    tool_call_id?: string;
-    tool_calls?: Array<{
-        id: string;
-        type: 'function';
-        function: {
-            name: string;
-            arguments: string;
-        };
-    }>;
-    usage?: any;
+  role: 'system' | 'user' | 'assistant' | 'tool';
+  content: string;
+  tool_call_id?: string;
+  tool_calls?: Array<{
+    id: string;
+    type: 'function';
+    function: {
+      name: string;
+      arguments: string;
+    };
+  }>;
+  usage?: any;
+  images?: string[];
 }
 
 /**
