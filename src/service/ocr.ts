@@ -6,16 +6,14 @@ import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
 
-// 获取当前文件所在目录
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-// 模型文件目录（绝对路径）
-const MODEL_DIR = path.resolve(__dirname, '../models');
+// 获取项目根目录（绝对路径）
+const PROJECT_ROOT = process.cwd();
+const MODELS_DIR = path.join(PROJECT_ROOT, 'models');
 
 // 模型文件路径
-const DET_MODEL = path.join(MODEL_DIR, 'PP-OCRv5_mobile_det_infer.onnx');
-const REC_MODEL = path.join(MODEL_DIR, 'PP-OCRv5_mobile_rec_infer.onnx');
-const DICT_FILE = path.join(MODEL_DIR, 'ppocrv5_dict.txt');
+const DET_MODEL = path.join(MODELS_DIR, 'PP-OCRv5_mobile_det_infer.onnx');
+const REC_MODEL = path.join(MODELS_DIR, 'PP-OCRv5_mobile_rec_infer.onnx');
+const DICT_FILE = path.join(MODELS_DIR, 'ppocrv5_dict.txt');
 
 let ocrInstance: PaddleOcrService | null = null;
 
