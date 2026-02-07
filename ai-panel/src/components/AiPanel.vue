@@ -45,6 +45,13 @@
           <div v-if="message.role === 'user'" class="ai-message-content">
             <div class="ai-message-bubble ai-message-bubble--user">
               <div class="ai-message-text">{{ message.content }}</div>
+              <!-- 显示识别的图片内容 -->
+              <div v-if="message.ocrResults && message.ocrResults.length" class="ai-ocr-results">
+                <div v-for="(ocr, idx) in message.ocrResults" :key="idx" class="ai-ocr-item">
+                  <span class="ai-ocr-label">图片 {{ idx + 1 }}:</span>
+                  <span class="ai-ocr-text">{{ ocr.text }}</span>
+                </div>
+              </div>
             </div>
             <!-- 底部操作按钮 -->
             <div class="ai-message-footer">
@@ -95,7 +102,38 @@
 
     <!-- 输入区域 -->
     <div class="ai-input">
+      <!-- OCR 识别状态 -->
+      <div v-if="isRecognizing" class="ai-ocr-status">
+        <div class="ai-ocr-status-icon"></div>
+        <span class="ai-ocr-status-text">{{ ocrStatus }}</span>
+      </div>
+
+      <!-- 已上传的图片缩略图 -->
+      <div v-if="uploadedImages.length > 0" class="ai-uploaded-images">
+        <div v-for="(img, index) in uploadedImages" :key="index" class="ai-uploaded-image">
+          <img :src="img.preview" :alt="img.name" class="ai-image-thumbnail" />
+          <div class="ai-image-remove" @click="removeImage(index)">
+            <CloseIcon />
+          </div>
+        </div>
+      </div>
+
       <div class="ai-input-container">
+        <!-- 图片上传按钮 -->
+        <div class="ai-image-upload-btn" @click="triggerImageUpload" :title="config.uploadImage">
+          <FileImportIcon />
+        </div>
+        
+        <!-- 隐藏的文件输入框 -->
+        <input
+          ref="fileInput"
+          type="file"
+          multiple
+          accept="image/*"
+          hidden
+          @change="handleImageUpload"
+        />
+
         <textarea
           v-model="inputText"
           @keydown="handleKeydown"
@@ -105,7 +143,7 @@
           :disabled="isThinking"
           rows="1"
         ></textarea>
-        <div class="ai-send-btn" :class="{ 'ai-send-btn--disabled': !inputText.trim() && !isThinking }" @click="sendMessage">
+        <div class="ai-send-btn" :class="{ 'ai-send-btn--disabled': !canSend }" @click="sendMessage">
           <PauseIcon v-if="isThinking" />
           <PaperPlaneIcon v-else />
         </div>
@@ -117,7 +155,8 @@
 <script>
 import MarkdownRenderer from './MarkdownRenderer.vue';
 import { copyTextToClipboard } from '../utils/utils.js';
-import { RobotIcon, TrashIcon, SyncIcon, CopyIcon, PaperPlaneIcon, PauseIcon } from './icons';
+import { RobotIcon, TrashIcon, SyncIcon, CopyIcon, PaperPlaneIcon, PauseIcon, FileImportIcon, CloseIcon } from './icons';
+import { recognize, recognizeBatch } from '../../../tools/paddle-ocr.js';
 
 export default {
   name: 'AiPanel',
@@ -129,6 +168,8 @@ export default {
     CopyIcon,
     PaperPlaneIcon,
     PauseIcon,
+    FileImportIcon,
+    CloseIcon,
   },
   props: {
     // API 配置
@@ -158,11 +199,15 @@ export default {
         clearChat: '清空对话',
         deleteMessage: '删除消息',
         copyMessage: '复制',
+        uploadImage: '上传图片',
         welcomeTitle: '欢迎使用 AI 助理',
         welcomeMessage: '有什么我可以帮助你的吗？',
         suggestionsTitle: '示例问题',
         refreshSuggestions: '换一批',
         inputPlaceholder: '请输入您的问题...',
+        ocrRecognizing: '正在识别图片内容...',
+        ocrComplete: '图片识别完成',
+        ocrFailed: '图片识别失败',
       }),
     },
     // 初始消息（用于加载历史对话）
@@ -179,6 +224,10 @@ export default {
       isUserAtBottom: true,
       suggestions: [],
       messages: [],
+      // 图片上传相关
+      uploadedImages: [],
+      isRecognizing: false,
+      ocrStatus: '',
     };
   },
   computed: {
@@ -189,32 +238,151 @@ export default {
       }
       return token;
     },
+    
+    // 判断是否可以发送消息
+    canSend() {
+      return (this.inputText.trim() || this.uploadedImages.length > 0) && !this.isThinking;
+    },
   },
   methods: {
-    sendMessage() {
+    // 触发图片上传
+    triggerImageUpload() {
+      this.$refs.fileInput.click();
+    },
+    
+    // 处理图片上传
+    async handleImageUpload(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+      
+      // 重置文件输入框，以便可以重复选择同一文件
+      event.target.value = '';
+      
+      // 处理每个上传的文件
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) continue;
+        
+        // 创建预览 URL
+        const preview = URL.createObjectURL(file);
+        
+        this.uploadedImages.push({
+          file,
+          name: file.name,
+          preview,
+          id: Date.now() + Math.random(),
+        });
+      }
+      
+      // 如果有图片，自动开始识别
+      if (this.uploadedImages.length > 0) {
+        await this.recognizeImages();
+      }
+    },
+    
+    // 移除已上传的图片
+    removeImage(index) {
+      const image = this.uploadedImages[index];
+      // 释放预览 URL
+      if (image.preview) {
+        URL.revokeObjectURL(image.preview);
+      }
+      this.uploadedImages.splice(index, 1);
+    },
+    
+    // 识别上传的图片
+    async recognizeImages() {
+      if (this.uploadedImages.length === 0) return;
+      
+      this.isRecognizing = true;
+      this.ocrStatus = this.config.ocrRecognizing || '正在识别图片内容...';
+      
+      try {
+        // 并行识别所有图片
+        const results = await recognizeBatch(
+          this.uploadedImages.map(img => img.file),
+          { sequential: false }
+        );
+        
+        // 更新每个图片的识别结果
+        this.uploadedImages = this.uploadedImages.map((img, index) => ({
+          ...img,
+          ocrResult: results[index],
+        }));
+        
+        this.ocrStatus = this.config.ocrComplete || '图片识别完成';
+        
+        // 3秒后隐藏状态
+        setTimeout(() => {
+          this.ocrStatus = '';
+        }, 3000);
+        
+      } catch (error) {
+        console.error('OCR 识别失败:', error);
+        this.ocrStatus = this.config.ocrFailed || '图片识别失败';
+        
+        // 3秒后隐藏状态
+        setTimeout(() => {
+          this.ocrStatus = '';
+        }, 3000);
+      } finally {
+        this.isRecognizing = false;
+      }
+    },
+    
+    // 发送消息
+    async sendMessage() {
       if (this.isThinking) {
         this.isThinking = false;
         this.controller && this.controller.abort();
         return;
       }
-      if (!this.inputText.trim()) return;
-
-      // 添加用户消息（OpenAI 标准格式）
+      
+      // 如果没有文本且没有图片，则不能发送
+      if (!this.inputText.trim() && this.uploadedImages.length === 0) return;
+      
+      // 准备消息内容
+      let content = this.inputText.trim();
+      const ocrResults = [];
+      
+      // 如果有图片，拼接 OCR 识别结果
+      if (this.uploadedImages.length > 0) {
+        const ocrTexts = this.uploadedImages
+          .filter(img => img.ocrResult && img.ocrResult.success)
+          .map((img, index) => {
+            ocrResults.push(img.ocrResult);
+            return `【图片 ${index + 1}】${img.ocrResult.text}`;
+          });
+        
+        if (ocrTexts.length > 0) {
+          content = content 
+            ? `${content}\\n\\n图片内容识别结果:\\n${ocrTexts.join('\\n')}`
+            : `请识别图片内容并回答:\\n${ocrTexts.join('\\n')}`;
+        }
+      }
+      
+      // 添加用户消息
       const userMessage = {
         role: 'user',
-        content: this.inputText.trim(),
+        content,
         timestamp: new Date(),
+        ocrResults,
       };
-
+      
       this.messages.push(userMessage);
       this.inputText = '';
-
+      
+      // 清空已上传的图片
+      this.uploadedImages.forEach(img => {
+        if (img.preview) URL.revokeObjectURL(img.preview);
+      });
+      this.uploadedImages = [];
+      
       // 滚动到底部
       this.isUserAtBottom = true;
       this.$nextTick(() => {
         this.scrollToBottom();
       });
-
+      
       this.callAiApi();
     },
 
@@ -349,8 +517,13 @@ export default {
     },
 
     clearChat() {
+      // 清理图片预览 URL
+      this.uploadedImages.forEach(img => {
+        if (img.preview) URL.revokeObjectURL(img.preview);
+      });
       this.messages = [];
       this.inputText = '';
+      this.uploadedImages = [];
       this.isThinking = false;
       localStorage.removeItem('ai_chat_messages');
     },
@@ -480,6 +653,11 @@ export default {
     });
   },
   beforeUnmount() {
+    // 清理资源
+    this.uploadedImages.forEach(img => {
+      if (img.preview) URL.revokeObjectURL(img.preview);
+    });
+    
     const content = this.$refs.chatContent;
     if (content) {
       content.removeEventListener('scroll', this.handleScroll);
@@ -781,10 +959,119 @@ export default {
   40% { transform: scale(1); opacity: 1; }
 }
 
+.ai-ocr-results {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ai-ocr-item {
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.ai-ocr-label {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.ai-ocr-text {
+  opacity: 0.9;
+}
+
 .ai-input {
   padding: 20px 24px;
   background: #ffffff;
   flex-shrink: 0;
+}
+
+.ai-ocr-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #e8f5e9;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #2e7d32;
+}
+
+.ai-ocr-status-icon {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #2e7d32;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.ai-uploaded-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ai-uploaded-image {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #ececec;
+}
+
+.ai-image-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ai-image-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.ai-uploaded-image:hover .ai-image-remove {
+  opacity: 1;
+}
+
+.ai-image-upload-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #666666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.ai-image-upload-btn:hover {
+  background: #ececec;
+  color: #262626;
 }
 
 .ai-input-container {

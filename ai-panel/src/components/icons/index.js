@@ -6,3 +6,4 @@ export { default as PaperPlaneIcon } from './PaperPlaneIcon.vue';
 export { default as PauseIcon } from './PauseIcon.vue';
 export { default as CheckIcon } from './CheckIcon.vue';
 export { default as FileImportIcon } from './FileImportIcon.vue';
+export { default as CloseIcon } from './CloseIcon.vue';
