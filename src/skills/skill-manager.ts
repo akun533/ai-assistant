@@ -42,9 +42,19 @@ interface SkillTool {
 export class SkillManager {
   private skillsDir: string;
   private skills: Map<string, SkillInfo> = new Map();
+  private loaded: boolean = false;
 
   constructor(skillsDir: string = './src/skills') {
     this.skillsDir = skillsDir;
+  }
+
+  /**
+   * 确保 skills 已加载
+   */
+  private async ensureLoaded(): Promise<void> {
+    if (this.loaded) return;
+    await this.loadSkills();
+    this.loaded = true;
   }
 
   /**
@@ -265,6 +275,9 @@ export class SkillManager {
    * 执行 skill 脚本
    */
   async executeSkill(skillName: string, args: string): Promise<SkillResult> {
+    // 确保 skills 已加载
+    await this.ensureLoaded();
+    
     const skill = this.skills.get(skillName);
     
     if (!skill) {
