@@ -41,18 +41,9 @@ async function* parseStream(
       if (line.startsWith('data: ')) {
         const data = line.slice(6);
         if (data === '[DONE]') {
-          // 检查最后是否技能调用未闭合
-          const skillMatch = skillBuffer.match(/<skill:(\w+)>([^<]*)<\/skill>/);
-          if (skillMatch) {
-            yield {
-              type: 'skill_call',
-              data: {
-                name: skillMatch[1],
-                args: skillMatch[2].trim(),
-                status: 'detected',
-              },
-            };
-            skillBuffer = '';
+          // 输出剩余的普通文本
+          if (skillBuffer.trim()) {
+            yield { type: 'content', data: skillBuffer };
           }
           return;
         }
@@ -69,27 +60,24 @@ async function* parseStream(
             // 检查是否包含完整的 skill 标签
             const skillMatch = skillBuffer.match(/<skill:(\w+)>([^<]*)<\/skill>/);
             if (skillMatch) {
+              // 输出 skill 标签之前的内容
+              const beforeMatch = skillBuffer.substring(0, skillMatch.index);
+              if (beforeMatch.trim()) {
+                yield { type: 'content', data: beforeMatch };
+              }
+              
               // 发送技能调用通知
               yield {
                 type: 'skill_call',
                 data: {
                   name: skillMatch[1],
                   args: skillMatch[2].trim(),
-                  status: 'detected',
                 },
               };
-              // 清空 buffer
-              const beforeMatch = skillBuffer.substring(0, skillMatch.index);
+              
+              // 清空 buffer，只保留 skill 标签之后的内容
               const afterMatch = skillBuffer.substring(skillMatch.index + skillMatch[0].length);
-              skillBuffer = beforeMatch + afterMatch;
-            }
-
-            // 输出普通文本
-            if (skillBuffer) {
-              yield { type: 'content', data: skillBuffer };
-              skillBuffer = '';
-            } else {
-              yield { type: 'content', data: content };
+              skillBuffer = afterMatch;
             }
           }
 
