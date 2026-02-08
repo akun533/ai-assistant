@@ -110,7 +110,7 @@ export default class Chat {
       console.log('📋 会话 ID:', currentSessionId);
 
       // 动态获取所有工具（包含 MCP 工具和 Skill 工具）
-      const tools = await this.messageProcessor.getAllTools(request.ui);
+      const tools = await this.messageProcessor.getAllTools();
       console.log(`🔧 工具总数: ${tools.length}`);
 
       // 构建消息数组
@@ -165,7 +165,6 @@ export default class Chat {
         1,
         currentSessionId,
         signal,
-        request.ui,
       );
 
       console.log('📋 会话结束 ID:', currentSessionId);

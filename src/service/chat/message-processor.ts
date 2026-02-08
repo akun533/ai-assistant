@@ -231,9 +231,9 @@ export class MessageProcessor {
   /**
    * 动态获取 MCP 工具定义
    */
-  async getMCPTools(uiFramework?: string): Promise<AgentTool[]> {
+  async getMCPTools(): Promise<AgentTool[]> {
     try {
-      const mcpTools = this.toolRegistry.getAllToolDefinitions(uiFramework);
+      const mcpTools = this.toolRegistry.getAllToolDefinitions();
       if (mcpTools.length === 0) {
         return [];
       }
@@ -269,9 +269,9 @@ export class MessageProcessor {
   /**
    * 获取所有工具定义（包含 MCP 工具和 Skill 工具）
    */
-  async getAllTools(uiFramework?: string): Promise<AgentTool[]> {
+  async getAllTools(): Promise<AgentTool[]> {
     const [mcpTools, skillTools] = await Promise.all([
-      this.getMCPTools(uiFramework),
+      this.getMCPTools(),
       this.getSkillTools(),
     ]);
 
@@ -314,8 +314,8 @@ export class MessageProcessor {
   /**
    * 获取工具标题
    */
-  private getToolTitle(name: string, uiFramework?: string): string | undefined {
-    const tools = this.toolRegistry.getAllToolDefinitions(uiFramework);
+  private getToolTitle(name: string): string | undefined {
+    const tools = this.toolRegistry.getAllToolDefinitions();
     for (const tool of tools) {
       if (tool.name === name) {
         return tool.title;
@@ -375,7 +375,6 @@ export class MessageProcessor {
     toolName: string,
     arguments_: any,
     context: Record<string, any>,
-    uiFramework?: string,
   ): Promise<ToolCallResult> {
     // 检查是否是 Skill 工具
     if (this.isSkillTool(toolName)) {
@@ -386,7 +385,7 @@ export class MessageProcessor {
 
     // MCP 工具调用
     try {
-      const handler = this.toolRegistry.getToolHandler(toolName, uiFramework);
+      const handler = this.toolRegistry.getToolHandler(toolName);
       if (!handler) {
         throw new Error(`未知的工具: ${toolName}`);
       }
@@ -395,7 +394,7 @@ export class MessageProcessor {
         context,
       });
 
-      const toolTitle = this.getToolTitle(toolName, uiFramework);
+      const toolTitle = this.getToolTitle(toolName);
 
       return {
         role: 'user',
@@ -425,7 +424,6 @@ export class MessageProcessor {
     retryCount: number,
     sessionId: string,
     signal: AbortSignal,
-    uiFramework?: string,
   ): AsyncGenerator<string, void, unknown> {
     let currentMessages = [...messages];
     let currentRetryCount = retryCount;
@@ -529,7 +527,6 @@ export class MessageProcessor {
               functionName,
               functionArgs,
               context,
-              uiFramework,
             );
 
             currentMessages.push(toolResult);
