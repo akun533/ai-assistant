@@ -3,7 +3,7 @@
  * 支持 JS 脚本和 Shell 脚本
  */
 
-import { exec, execSync } from 'child_process';
+import { exec } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
@@ -21,6 +21,22 @@ interface SkillResult {
   success: boolean;
   output: string;
   error?: string;
+}
+
+/**
+ * Skill 工具定义（用于传递给大模型）
+ */
+interface SkillTool {
+  type: 'function';
+  function: {
+    name: string;
+    description: string;
+    parameters: {
+      type: 'object';
+      properties: Record<string, any>;
+      required: string[];
+    };
+  };
 }
 
 export class SkillManager {
@@ -122,6 +138,108 @@ export class SkillManager {
    */
   getSkill(name: string): SkillInfo | undefined {
     return this.skills.get(name);
+  }
+
+  /**
+   * 获取所有 skills 的工具定义（用于传递给大模型）
+   * 格式类似 OpenAI function calling
+   */
+  getSkillTools(): SkillTool[] {
+    const tools: SkillTool[] = [];
+
+    for (const skill of this.skills.values()) {
+      // 解析 SKILL.md 中的参数信息
+      const argsInfo = this.parseSkillArgs(skill.description);
+
+      tools.push({
+        type: 'function',
+        function: {
+          name: skill.name,
+          description: this.extractDescription(skill.description),
+          parameters: {
+            type: 'object',
+            properties: argsInfo.properties,
+            required: argsInfo.required,
+          },
+        },
+      });
+    }
+
+    return tools;
+  }
+
+  /**
+   * 从 SKILL.md 描述中提取参数信息
+   */
+  private parseSkillArgs(description: string): { properties: Record<string, any>; required: string[] } {
+    const properties: Record<string, any> = {
+      args: {
+        type: 'string',
+        description: '传递给脚本的参数',
+      },
+    };
+
+    // 尝试解析 Usage 中的参数
+    const usageMatch = description.match(/Usage:\s*<skill:(\w+)>(.+?)<\/skill>/);
+    if (usageMatch) {
+      const paramsStr = usageMatch[2];
+      // 简单处理：将整个参数作为字符串
+      properties.args.description = `参数: ${paramsStr}`;
+    }
+
+    return {
+      properties,
+      required: [],
+    };
+  }
+
+  /**
+   * 从 SKILL.md 中提取纯描述
+   */
+  private extractDescription(description: string): string {
+    // 移除 Usage、Options 等部分，保留功能描述
+    const lines = description.split('\n');
+    const descriptionLines: string[] = [];
+
+    for (const line of lines) {
+      if (line.startsWith('##') || line.startsWith('**')) {
+        break;
+      }
+      descriptionLines.push(line);
+    }
+
+    return descriptionLines.join(' ').trim();
+  }
+
+  /**
+   * 生成 Skills 提示词（用于 System Prompt）
+   */
+  generateSkillsPrompt(): string {
+    const skills = this.getSkills();
+    
+    if (skills.length === 0) {
+      return '';
+    }
+
+    let prompt = '\n## 可用的 Skills\n\n你可以使用以下脚本技能来帮助用户：\n\n';
+
+    for (const skill of skills) {
+      const description = this.extractDescription(skill.description);
+      const usageMatch = skill.description.match(/Usage:\s*<skill:(\w+)>(.+?)<\/skill>/);
+      const usage = usageMatch ? usageMatch[2] : '<参数>';
+
+      prompt += `### ${skill.name}\n`;
+      prompt += `${description}\n`;
+      prompt += `- 使用格式: \`<skill:${skill.name}>${usage}</skill>\`\n\n`;
+    }
+
+    prompt += '**重要提示：**\n';
+    prompt += '1. 当用户需要获取实时信息或执行特定任务时，调用相应的 skill\n';
+    prompt += '2. 使用格式: `<skill:skillName>参数</skill>`\n';
+    prompt += '3. 等待 skill 执行结果后再回答用户\n';
+    prompt += '4. 将 skill 结果自然地融入你的回答中\n';
+
+    return prompt;
   }
 
   /**
