@@ -154,7 +154,10 @@ export class SkillManager {
    * 获取所有 skills 的工具定义（用于传递给大模型）
    * 格式类似 OpenAI function calling
    */
-  getSkillTools(): SkillTool[] {
+  async getSkillTools(): Promise<SkillTool[]> {
+    // 确保 skills 已加载
+    await this.ensureLoaded();
+    
     const tools: SkillTool[] = [];
 
     for (const skill of this.skills.values()) {
