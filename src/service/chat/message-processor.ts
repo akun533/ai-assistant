@@ -336,6 +336,7 @@ export class MessageProcessor {
   private async handleSkillToolCall(
     skillName: string,
     args: string,
+    toolCallId: string,
   ): Promise<ToolCallResult> {
     try {
       const { SkillManager } = await import('../../skills/skill-manager.js');
@@ -349,13 +350,13 @@ export class MessageProcessor {
         return {
           role: 'tool',
           content: result.output.trim(),
-          tool_call_id: `skill_${skillName}_${Date.now()}`,
+          tool_call_id: toolCallId,
         };
       } else {
         return {
           role: 'tool',
           content: `Skill 执行失败: ${result.error}`,
-          tool_call_id: `skill_${skillName}_${Date.now()}`,
+          tool_call_id: toolCallId,
         };
       }
     } catch (error) {
@@ -363,7 +364,7 @@ export class MessageProcessor {
       return {
         role: 'tool',
         content: `Skill 执行错误: ${error instanceof Error ? error.message : String(error)}`,
-        tool_call_id: `skill_${skillName}_${Date.now()}`,
+        tool_call_id: toolCallId,
       };
     }
   }
@@ -375,12 +376,13 @@ export class MessageProcessor {
     toolName: string,
     arguments_: any,
     context: Record<string, any>,
+    toolCallId?: string,
   ): Promise<ToolCallResult> {
     // 检查是否是 Skill 工具
     if (this.isSkillTool(toolName)) {
       const skillName = toolName.replace('skill_', '');
       const args = arguments_?.args || '';
-      return this.handleSkillToolCall(skillName, args);
+      return this.handleSkillToolCall(skillName, args, toolCallId || `${toolName}_${Date.now()}`);
     }
 
     // MCP 工具调用
@@ -399,14 +401,14 @@ export class MessageProcessor {
       return {
         role: 'tool',
         content: `工具 "${toolTitle || toolName}" 执行结果:\n\n${JSON.stringify(result, null, 2)}`,
-        tool_call_id: `call_${toolName}_${Date.now()}`,
+        tool_call_id: toolCallId || `call_${toolName}_${Date.now()}`,
       };
     } catch (error: any) {
       console.error(`❌ 工具调用失败: ${toolName}`, error);
       return {
         role: 'tool',
         content: `工具 "${toolName}" 执行失败: ${error.message}`,
-        tool_call_id: `call_${toolName}_${Date.now()}`,
+        tool_call_id: toolCallId || `call_${toolName}_${Date.now()}`,
       };
     }
   }
@@ -520,13 +522,15 @@ export class MessageProcessor {
             const functionArgs = toolCall.function.arguments 
               ? JSON.parse(toolCall.function.arguments) 
               : {};
+            const toolCallId = toolCall.id;
 
-            console.log(`🔧 调用工具: ${functionName}`);
+            console.log(`🔧 调用工具: ${functionName} (id: ${toolCallId})`);
 
             const toolResult = await this.handleToolCall(
               functionName,
               functionArgs,
               context,
+              toolCallId,
             );
 
             currentMessages.push(toolResult);
