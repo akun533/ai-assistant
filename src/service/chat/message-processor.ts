@@ -359,13 +359,13 @@ export class MessageProcessor {
       const result = await skillManager.executeSkill(skillName, args);
       
       if (result.success) {
-        return `【Skill 执行结果】${skillName}:\n${result.output}`;
+        return result.output.trim();
       } else {
-        return `【Skill 执行失败】${skillName}: ${result.error}`;
+        return `⚠️ ${result.error}`;
       }
     } catch (error) {
       console.error(`❌ Skill 调用异常:`, error);
-      return `【Skill 执行错误】${skillName}: ${error instanceof Error ? error.message : String(error)}`;
+      return `❌ ${error instanceof Error ? error.message : String(error)}`;
     }
   }
 

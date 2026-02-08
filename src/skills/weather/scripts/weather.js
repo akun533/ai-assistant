@@ -130,7 +130,7 @@ Examples:
   const result = await getWeather(location, options);
 
   if (result.success) {
-    console.log(result.output);
+    console.log(result.output.trim());
     process.exit(0);
   } else {
     console.error(`Error: ${result.error}`);
