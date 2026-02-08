@@ -21,21 +21,21 @@ Get current weather and forecasts for any location. No API key required - uses w
 
 Text format (default):
 ```
-Weather report: Shanghai, China
+Weather Report for Shanghai
 
-   \   /     Sunny
-    .-.     28-32°C  ↑
-  (   )   ↓ 10 km
-   "-"   3 km
-  /   \   1 m/s
+🌡️ Temperature: 28°C (82°F)
+💧 Humidity: 65%
+🌬️ Wind: 15 km/h SW
+☁️ Weather: Partly Cloudy
+🌅 Feels Like: 30°C
 ```
 
 JSON format:
 ```json
 {
   "weather": "Sunny",
-  "temperature": "28-32°C",
-  "wind": "1 m/s",
-  ...
+  "temperature": "28°C",
+  "humidity": "65%",
+  "wind": "15 km/h"
 }
 ```
