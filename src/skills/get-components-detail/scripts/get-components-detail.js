@@ -18,18 +18,13 @@ function parseFieldsProps() {
   }
 
   const content = fs.readFileSync(REFERENCES_PATH, 'utf-8');
-  
-  // 提取 CommonProps
-  const commonPropsMatch = content.match(/export const CommonProps:\s*\{[^}]*\}=/s);
-  
-  // 提取 ComponentsProps
+
   const componentsMatch = content.match(/const ComponentsProps:Record<string, ComponentProp>=\s*\{/s);
   
   if (!componentsMatch) {
-    return { commonProps: {}, components: {} };
+    return { components: {} };
   }
 
-  // 找到 ComponentsProps 的结束位置（匹配最后一个 }）
   const startIndex = componentsMatch.index + componentsMatch[0].length;
   let braceCount = 1;
   let endIndex = startIndex;
@@ -44,68 +39,77 @@ function parseFieldsProps() {
   }
 
   const componentsContent = content.substring(startIndex, endIndex);
-  
-  // 解析每个组件
   const components = {};
-  const componentRegex = /(\w+):\s*\{([^}]*)\}/g;
-  let match;
   
-  while ((match = componentRegex.exec(componentsContent)) !== null) {
-    const componentName = match[1];
-    const componentBody = match[2];
+  let i = 0;
+  while (i < componentsContent.length) {
+    const nameMatch = componentsContent.matchAt(i, /(\w+):\s*\{/);
+    if (!nameMatch) break;
     
-    // 提取 type
+    const componentName = nameMatch[1];
+    const nameEndIndex = nameMatch.index + nameMatch[0].length;
+    
+    braceCount = 1;
+    let componentEndIndex = nameEndIndex;
+    
+    for (let j = nameEndIndex; j < componentsContent.length; j++) {
+      if (componentsContent[j] === '{') braceCount++;
+      if (componentsContent[j] === '}') braceCount--;
+      if (braceCount === 0) {
+        componentEndIndex = j + 1;
+        i = j + 1;
+        break;
+      }
+    }
+    
+    const componentBody = componentsContent.substring(nameEndIndex, componentEndIndex - 1);
+    
     const typeMatch = componentBody.match(/type:\s*['"]([^'"]+)['"]/);
-    
-    // 提取 props
     const props = [];
     const propsMatch = componentBody.match(/props:\s*\[([\s\S]*?)\]/);
     
     if (propsMatch) {
       const propsContent = propsMatch[1];
       
-      // 解析 CommonProps 引用
       const commonPropRegex = /CommonProps\.(\w+)/g;
-      let commonMatch;
+      let match;
       
-      while ((commonMatch = commonPropRegex.exec(propsContent)) !== null) {
-        const propName = commonMatch[1];
-        // 这里简化处理，返回 CommonProps 引用信息
+      while ((match = commonPropRegex.exec(propsContent)) !== null) {
         props.push({
-          _ref: propName,
-          _type: 'common'
+          _ref: match[1],
+          _type: 'common',
         });
       }
       
-      // 解析内联属性定义
-      const inlinePropRegex = /\{[\s\S]*?name:\s*['"]([^'"]+)['"][\s\S]*?label:\s*['"]([^'"]*)['"][\s\S]*?type:\s*['"]([^'"]*)['"]([\s\S]*?)\}/g;
+      const inlineRegex = /\{[\s\S]*?name:\s*['"]([^'"]+)['"][\s\S]*?label:\s*['"]([^'"]*)['"][\s\S]*?type:\s*['"]([^'"]*)['"]([\s\S]*?)\}/g;
       let inlineMatch;
       
-      while ((inlineMatch = inlinePropRegex.exec(propsContent)) !== null) {
+      while ((inlineMatch = inlineRegex.exec(propsContent)) !== null) {
         const propDef = {
           name: inlineMatch[1],
           label: inlineMatch[2],
           type: inlineMatch[3],
         };
         
-        // 提取可选字段
-        const descMatch = inlineMatch[4].match(/description:\s*['"]([^'"]*)['"]/);
-        const requiredMatch = inlineMatch[4].match(/required:\s*(true|false)/);
-        const defaultMatch = inlineMatch[4].match(/defaultValue:\s*(\{[^}]*\}|[^,]+)/);
-        const optionsMatch = inlineMatch[4].match(/options:\s*(\[[\s\S]*?\])/);
+        const extra = inlineMatch[4];
+        const descMatch = extra.match(/description:\s*['"]([^'"]*)['"]/);
+        const requiredMatch = extra.match(/required:\s*(true|false)/);
+        const defaultMatch = extra.match(/defaultValue:\s*(\{[^}]*\}|[^,}]+)/);
+        const optionsMatch = extra.match(/options:\s*(\[[\s\S]*?\])/);
         
         if (descMatch) propDef.description = descMatch[1];
         if (requiredMatch) propDef.required = requiredMatch[1] === 'true';
         if (defaultMatch) {
           try {
-            propDef.defaultValue = JSON.parse(defaultMatch[1]);
+            propDef.default = JSON.parse(defaultMatch[1]);
           } catch (e) {
-            propDef.defaultValue = defaultMatch[1];
+            propDef.default = defaultMatch[1].trim();
           }
         }
         if (optionsMatch) {
           try {
-            propDef.options = JSON.parse(optionsMatch[1].replace(/(\w+):/g, '"$1":'));
+            const opts = JSON.parse(optionsMatch[1].replace(/(\w+):/g, '"$1":'));
+            propDef.options = opts.map(o => o.label || o.value || o);
           } catch (e) {}
         }
         
@@ -123,35 +127,37 @@ function parseFieldsProps() {
 }
 
 /**
- * 获取组件详细信息
+ * 生成 Markdown 表格
  */
-function getComponentDetail(components, type) {
-  const component = components[type];
+function generatePropsTable(props) {
+  if (props.length === 0) return 'No props available.';
   
-  if (!component) {
-    return null;
-  }
-
-  const result = {
-    type: component.type,
-    props: [],
-  };
-
-  // 处理属性列表
-  for (const prop of component.props) {
+  const rows = [];
+  
+  for (const prop of props) {
     if (prop._type === 'common') {
-      // CommonProps 简化处理
-      result.props.push({
-        name: prop._ref,
-        type: 'common',
-        description: `Common property: ${prop._ref}`,
-      });
+      rows.push([prop._ref, 'common', '-', `Common property: ${prop._ref}`, '-']);
     } else {
-      result.props.push(prop);
+      const defaultStr = prop.default !== undefined 
+        ? JSON.stringify(prop.default).slice(0, 30) 
+        : '-';
+      const optionsStr = prop.options 
+        ? prop.options.join(', ').slice(0, 50) 
+        : '-';
+      
+      rows.push([
+        prop.name,
+        prop.type || '-',
+        prop.label || '-',
+        prop.description || '-',
+        optionsStr !== '-' ? optionsStr : defaultStr,
+      ]);
     }
   }
-
-  return result;
+  
+  return `| Name | Type | Label | Description | Default/Options |
+|------|------|-------|-------------|------------------|
+${rows.map(row => `| ${row.join(' | ')} |`).join('\n')}`;
 }
 
 /**
@@ -189,49 +195,23 @@ Examples:
     process.exit(1);
   }
 
-  console.log(`Found ${Object.keys(components).length} components\n`);
-
-  // 获取所有组件信息
-  const results = {};
+  let output = '';
   
   for (const type of types) {
-    const detail = getComponentDetail(components, type);
+    const component = components[type];
     
-    if (detail) {
-      results[type] = detail;
-    } else {
-      results[type] = {
-        type: type,
-        error: 'Component not found',
-      };
-    }
-  }
-
-  // 输出结果
-  for (const [type, detail] of Object.entries(results)) {
-    console.log(`\n=== ${type} ===`);
-    
-    if (detail.error) {
-      console.log(`Error: ${detail.error}`);
+    if (!component) {
+      output += `\n## ${type}\n\n**Error: Component not found**\n`;
       continue;
     }
     
-    console.log(`Type: ${detail.type}`);
-    console.log(`Props (${detail.props.length}):`);
-    
-    for (const prop of detail.props) {
-      if (prop._type === 'common') {
-        console.log(`  - ${prop.name} (common property)`);
-      } else {
-        console.log(`  - ${prop.name}: ${prop.type}`);
-        if (prop.label) console.log(`    Label: ${prop.label}`);
-        if (prop.description) console.log(`    Description: ${prop.description}`);
-        if (prop.required) console.log(`    Required: ${prop.required}`);
-        if (prop.defaultValue !== undefined) console.log(`    Default: ${JSON.stringify(prop.defaultValue)}`);
-        if (prop.options) console.log(`    Options: ${prop.options.map(o => o.label || o).join(', ')}`);
-      }
-    }
+    output += `\n## ${type}\n\n`;
+    output += `- **Type**: ${component.type}\n`;
+    output += `- **Props Count**: ${component.props.length}\n\n`;
+    output += generatePropsTable(component.props);
   }
+
+  console.log(output);
 }
 
 main();

@@ -17,60 +17,36 @@ Get component properties information for form builder components.
 <skill:get-components-detail>tabs input select</skill>
 
 # Get form related components
-<skill:get-components-detail>form formItem formList</skill>
+<skill:get-components-detail>form formItem</skill>
+```
+
+## Output Format
+
+```markdown
+## tabs
+
+- **Type**: tabs
+- **Props Count**: 15
+
+| Name | Type | Label | Description | Default/Options |
+|------|------|-------|-------------|------------------|
+| type | common | - | Common property: type | - |
+| fieldDecoratorId | common | - | Common property: fieldDecoratorId | - |
+| label | string | 组件显示名称 | 组件显示名称 | - |
+| tabPosition | string | 标签位置 | 标签位置 | top, left, right, bottom |
+| ... |
 ```
 
 ## Supported Components
 
 ### Layout
-- div - Container component
-- tabs - Tab component
-- row/col - Grid layout
-- collapse - Collapsible panel
+- div, tabs, row, col, collapse
 
 ### Form Components
-- input - Text input
-- textarea - Multi-line text
-- number - Number input
-- select - Dropdown select
-- radio - Radio group
-- checkbox - Checkbox
-- switch - Toggle switch
-- date - Date picker
-- upload - File upload
-- cascader - Cascading select
-- treeSelect - Tree select
+- input, textarea, number, select, radio, checkbox, switch, date, upload, cascader, treeSelect
 
 ### Display Components
-- text - Display text
-- rate - Rating component
-- progress - Progress bar
-- table - Table display
-- img - Image display
+- text, rate, progress, table, img
 
 ### Special Components
-- form - Form container
-- formItem - Form field
-- formList - Dynamic form list
-- subForm - Sub form
-
-## Output Format
-
-```
-=== div ===
-Type: div
-Props (14):
-  - type (common property)
-  - fieldDecoratorId (common property)
-  - renderId (common property)
-  - css: string
-    Label: CSS样式
-    Description: CSS样式
-  - style: string
-    Label: 组件样式
-    Description: 组件样式
-  - display: boolean
-    Label: 是否显示组件
-    Description: 是否显示组件
-  ...
-```
+- form, formItem, formList, subForm
