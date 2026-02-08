@@ -4,14 +4,14 @@
  * Get component properties information based on type
  */
 
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import path from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 直接 import 编译后的数据文件
-const REFERENCES_PATH = path.join(__dirname, '../references/fieldsProps.ts');
+// 使用 pathToFileURL 确保跨平台兼容
+const REFERENCES_PATH = pathToFileURL(path.join(__dirname, '../references/fieldsProps.ts')).href;
 
 /**
  * 解析组件属性为可序列化格式
