@@ -40,44 +40,67 @@ async function* parseStream(
     for (const line of lines) {
       if (line.startsWith('data: ')) {
         const data = line.slice(6);
-        if (data === '[DONE]') {
-          // 输出剩余的普通文本
-          if (skillBuffer.trim()) {
-            yield { type: 'content', data: skillBuffer };
+        
+        // 检查并处理 [DONE] 前的 skill 标签
+        const processSkillTags = (text: string): { content: string; skills: Array<{name: string; args: string}> => {
+          const skills: Array<{name: string; args: string}> = [];
+          const regex = /<skill:(\w+)>([^<]*)<\/skill>/g;
+          let match;
+          let result = text;
+          
+          while ((match = regex.exec(result)) !== null) {
+            skills.push({
+              name: match[1],
+              args: match[2].trim(),
+            });
           }
+          
+          // 移除所有 skill 标签
+          result = result.replace(/<skill:\w+>[^<]*<\/skill>/g, '');
+          
+          return { content: result, skills };
+        };
+
+        if (data === '[DONE]') {
+          // 处理剩余的 skill 标签
+          const { content, skills } = processSkillTags(skillBuffer);
+          
+          // 输出普通文本
+          if (content.trim()) {
+            yield { type: 'content', data: content };
+          }
+          
+          // 发送技能调用
+          for (const skill of skills) {
+            yield { type: 'skill_call', data: skill };
+          }
+          
           return;
         }
+        
         try {
           const json = JSON.parse(data);
-
-          // 提取文本内容
           const content = json.choices?.[0]?.delta?.content;
           
-          // 检测 skill 调用标记
           if (content) {
             skillBuffer += content;
             
             // 检查是否包含完整的 skill 标签
-            const skillMatch = skillBuffer.match(/<skill:(\w+)>([^<]*)<\/skill>/);
-            if (skillMatch) {
-              // 输出 skill 标签之前的内容
-              const beforeMatch = skillBuffer.substring(0, skillMatch.index);
-              if (beforeMatch.trim()) {
-                yield { type: 'content', data: beforeMatch };
+            if (skillBuffer.includes('</skill>')) {
+              const { content: plainContent, skills } = processSkillTags(skillBuffer);
+              
+              // 输出 skill 标签之前的普通文本
+              if (plainContent.trim()) {
+                yield { type: 'content', data: plainContent };
               }
               
-              // 发送技能调用通知
-              yield {
-                type: 'skill_call',
-                data: {
-                  name: skillMatch[1],
-                  args: skillMatch[2].trim(),
-                },
-              };
+              // 发送技能调用
+              for (const skill of skills) {
+                yield { type: 'skill_call', data: skill };
+              }
               
-              // 清空 buffer，只保留 skill 标签之后的内容
-              const afterMatch = skillBuffer.substring(skillMatch.index + skillMatch[0].length);
-              skillBuffer = afterMatch;
+              // 清空 buffer
+              skillBuffer = '';
             }
           }
 
