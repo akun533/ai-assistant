@@ -4,25 +4,14 @@
  * Gets current weather using wttr.in (no API key required)
  */
 
-import https from 'https';
-
-interface WeatherOptions {
-  format?: 'json' | 'text';
-}
-
-interface WeatherResult {
-  success: boolean;
-  output: string;
-  error?: string;
-}
+const https = require('https');
 
 /**
  * 获取天气数据
  */
-async function getWeather(location: string, options: WeatherOptions = {}): Promise<WeatherResult> {
-  const format = options.format || 'text';
-  
+function getWeather(location, options = {}) {
   return new Promise((resolve) => {
+    const format = options.format || 'text';
     const url = `https://wttr.in/${encodeURIComponent(location)}?format=${format === 'json' ? 'j1' : '%C+%t+%w+%m'}`;
     
     https.get(url, (res) => {
@@ -66,7 +55,7 @@ async function getWeather(location: string, options: WeatherOptions = {}): Promi
 /**
  * 格式化 JSON 天气数据
  */
-function formatWeatherJson(weather: any): string {
+function formatWeatherJson(weather) {
   const current = weather.current_condition?.[0];
   if (!current) {
     return JSON.stringify(weather, null, 2);
@@ -75,20 +64,20 @@ function formatWeatherJson(weather: any): string {
   return `
 Weather Report for ${weather.nearest_area?.[0]?.areaName?.[0]?.value || 'Unknown'}
 
-🌡️ Temperature: ${current.temp_C}°C (${current.temp_F}°F)
-💧 Humidity: ${current.humidity}%
-🌬️ Wind: ${current.windspeed} km/h ${current.winddir16point}
-☁️ Weather: ${current.weatherDesc?.[0]?.value || 'Unknown'}
-🌅 Feels Like: ${current.FeelsLikeC}°C
+Temperature: ${current.temp_C}°C (${current.temp_F}°F)
+Humidity: ${current.humidity}%
+Wind: ${current.windspeed} km/h ${current.winddir16point}
+Weather: ${current.weatherDesc?.[0]?.value || 'Unknown'}
+Feels Like: ${current.FeelsLikeC}°C
 `;
 }
 
 /**
  * 解析命令行参数
  */
-function parseArgs(args: string[]): { location: string; options: WeatherOptions } {
+function parseArgs(args) {
   let location = '';
-  const options: WeatherOptions = {};
+  const options = {};
 
   for (const arg of args) {
     if (arg.startsWith('--format=')) {
@@ -119,7 +108,7 @@ Usage:
 
 Options:
   --format=json    Output in JSON format
-  --format=text   Output in text format (default)
+  --format=text    Output in text format (default)
 
 Examples:
   weather Beijing
@@ -136,7 +125,7 @@ Examples:
     process.exit(1);
   }
 
-  console.log(`🌍 Fetching weather for: ${location}`);
+  console.log(`Fetching weather for: ${location}`);
   
   const result = await getWeather(location, options);
 
