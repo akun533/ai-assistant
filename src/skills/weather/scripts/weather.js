@@ -4,7 +4,7 @@
  * Gets current weather using wttr.in (no API key required)
  */
 
-const https = require('https');
+import https from 'https';
 
 /**
  * 获取天气数据
