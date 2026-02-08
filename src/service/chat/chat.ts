@@ -140,11 +140,15 @@ export default class Chat {
           currentSessionId,
           request.context,
         );
+        
+        // 追加 Skills 提示词
+        const skillsPrompt = this.skillManager.generateSkillsPrompt();
+        
         messages.unshift({
           role: 'system',
-          content: enhancedSystemPrompt,
+          content: enhancedSystemPrompt + skillsPrompt,
         });
-        console.log(`✅ 使用系统提示词`);
+        console.log(`✅ 使用系统提示词（含 Skills）`);
       }
 
       console.log('🔑 使用 API 密钥:', apiKey ? `${apiKey.substring(0, 10)}...` : '未提供');
