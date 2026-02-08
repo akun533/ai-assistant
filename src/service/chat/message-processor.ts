@@ -519,20 +519,12 @@ export class MessageProcessor {
           // 执行工具调用（统一处理 MCP 和 Skill）
           for (const toolCall of validToolCalls) {
             const functionName = toolCall.function.name;
-            const functionArgs = toolCall.function.arguments 
-              ? JSON.parse(toolCall.function.arguments) 
-              : {};
+            const functionArgs = toolCall.function.arguments ? JSON.parse(toolCall.function.arguments) : {};
             const toolCallId = toolCall.id;
 
             console.log(`🔧 调用工具: ${functionName} (id: ${toolCallId})`);
 
-            const toolResult = await this.handleToolCall(
-              functionName,
-              functionArgs,
-              context,
-              toolCallId,
-            );
-
+            const toolResult = await this.handleToolCall(functionName, functionArgs, context, toolCallId);
             currentMessages.push(toolResult);
           }
 

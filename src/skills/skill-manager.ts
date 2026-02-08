@@ -35,6 +35,7 @@ interface SkillTool {
       type: 'object';
       properties: Record<string, any>;
       required: string[];
+      additionalProperties: boolean;
     };
   };
 }
@@ -100,12 +101,12 @@ export class SkillManager {
 
     if (fs.existsSync(scriptsPath)) {
       const scripts = fs.readdirSync(scriptsPath);
-      
+
       for (const script of scripts) {
         const scriptPath = path.join(scriptsPath, script);
         const ext = path.extname(script);
         const baseName = path.basename(script, ext);
-        
+
         if (ext === '.js' || ext === '.mjs') {
           jsScript = script;
         } else if (ext === '.sh') {
@@ -157,7 +158,7 @@ export class SkillManager {
   async getSkillTools(): Promise<SkillTool[]> {
     // 确保 skills 已加载
     await this.ensureLoaded();
-    
+
     const tools: SkillTool[] = [];
 
     for (const skill of this.skills.values()) {
@@ -232,7 +233,7 @@ export class SkillManager {
    */
   generateSkillsPrompt(): string {
     const skills = this.getSkills();
-    
+
     if (skills.length === 0) {
       return '';
     }
@@ -283,9 +284,9 @@ export class SkillManager {
   async executeSkill(skillName: string, args: string): Promise<SkillResult> {
     // 确保 skills 已加载
     await this.ensureLoaded();
-    
+
     const skill = this.skills.get(skillName);
-    
+
     if (!skill) {
       return {
         success: false,
@@ -300,7 +301,7 @@ export class SkillManager {
     if (skill.scripts.js) {
       return this.executeJsScript(scriptsPath, skill.scripts.js, args);
     }
-    
+
     // 其次使用 Shell 脚本
     if (skill.scripts.shell) {
       return this.executeShellScript(scriptsPath, skill.scripts.shell, args);
@@ -316,16 +317,11 @@ export class SkillManager {
   /**
    * 执行 JS 脚本
    */
-  private async executeJsScript(
-    scriptsPath: string,
-    scriptFile: string,
-    args: string
-  ): Promise<SkillResult> {
-    return new Promise((resolve) => {
+  private async executeJsScript(scriptsPath: string, scriptFile: string, args: string): Promise<SkillResult> {
+    return new Promise(resolve => {
       const scriptPath = path.join(scriptsPath, scriptFile);
       // 使用 tsx 运行 TypeScript 脚本
-      const command = `tsx "${scriptPath}" ${args.replace(/"/g, '\\"')}`;
-
+      const command = `node ${scriptPath} ${args.replace(/"/g, '\\"')}`;
       exec(command, { maxBuffer: 10 * 1024 * 1024 }, (error, stdout, stderr) => {
         if (error) {
           resolve({
@@ -346,12 +342,8 @@ export class SkillManager {
   /**
    * 执行 Shell 脚本
    */
-  private async executeShellScript(
-    scriptsPath: string,
-    scriptFile: string,
-    args: string
-  ): Promise<SkillResult> {
-    return new Promise((resolve) => {
+  private async executeShellScript(scriptsPath: string, scriptFile: string, args: string): Promise<SkillResult> {
+    return new Promise(resolve => {
       const scriptPath = path.join(scriptsPath, scriptFile);
       const command = `bash "${scriptPath}" ${args.replace(/"/g, '\\"')}`;
 
@@ -377,7 +369,7 @@ export class SkillManager {
    */
   async processSkillCalls(content: string): Promise<string> {
     const calls = this.parseSkillCalls(content);
-    
+
     if (calls.length === 0) {
       return content;
     }
@@ -387,21 +379,15 @@ export class SkillManager {
     for (const call of calls) {
       console.log(`⚡ 执行 skill: ${call.skill} ${call.args}`);
       const result = await this.executeSkill(call.skill, call.args);
-      
+
       if (result.success) {
         // 替换 skill 标签为执行结果
         const skillTag = `<skill:${call.skill}>${call.args}</skill>`;
-        processedContent = processedContent.replace(
-          skillTag,
-          `\n【执行结果】${call.skill}:\n${result.output}\n`
-        );
+        processedContent = processedContent.replace(skillTag, `\n【执行结果】${call.skill}:\n${result.output}\n`);
       } else {
         // 替换为错误信息
         const skillTag = `<skill:${call.skill}>${call.args}</skill>`;
-        processedContent = processedContent.replace(
-          skillTag,
-          `\n【执行失败】${call.skill}: ${result.error}\n`
-        );
+        processedContent = processedContent.replace(skillTag, `\n【执行失败】${call.skill}: ${result.error}\n`);
       }
     }
 

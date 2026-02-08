@@ -36,17 +36,3 @@ Get component properties information for form builder components.
 | tabPosition | string | 标签位置 | 标签位置 | top, left, right, bottom |
 | ... |
 ```
-
-## Supported Components
-
-### Layout
-- div, tabs, row, col, collapse
-
-### Form Components
-- input, textarea, number, select, radio, checkbox, switch, date, upload, cascader, treeSelect
-
-### Display Components
-- text, rate, progress, table, img
-
-### Special Components
-- form, formItem, formList, subForm
