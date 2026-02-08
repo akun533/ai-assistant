@@ -400,10 +400,33 @@ export default {
               try {
                 const parsed = JSON.parse(data);
                 const content = parsed.choices?.[0]?.delta?.content;
-                if (content) {
+                
+                // 处理 FC_SKILL 标记
+                if (content && content.startsWith('[FC_SKILL]')) {
+                  try {
+                    const skillData = JSON.parse(content.replace('[FC_SKILL]', ''));
+                    if (skillData.status === 'loading') {
+                      // 显示技能调用提示
+                      const tip = `🔄 正在查询${skillData.args || skillData.name}...`;
+                      aiMessage.content += `\n${tip}\n`;
+                      aiMessage.skillLoading = skillData.name;
+                    } else if (skillData.status === 'end' && skillData.result) {
+                      // 技能执行完成，移除提示标记
+                      aiMessage.content = aiMessage.content.replace(
+                        /\n🔄 正在查询.*?\.\.\.\n/,
+                        ''
+                      );
+                      // 追加技能结果
+                      aiMessage.content += `\n${skillData.result}\n`;
+                    }
+                  } catch (e) {
+                    // 解析失败当作普通文本
+                    aiMessage.content += content;
+                  }
+                } else if (content) {
                   aiMessage.content += content;
-                  this.$forceUpdate();
                 }
+                this.$forceUpdate();
               } catch (e) {
                 // 忽略解析错误
               }

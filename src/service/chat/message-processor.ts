@@ -19,14 +19,15 @@ interface ToolCallResult {
 }
 
 /**
- * 解析流式响应（支持工具调用提取）
+ * 解析流式响应（支持工具调用和技能调用提取）
  */
 async function* parseStream(
   response: ReadableStream,
-): AsyncGenerator<{ type: 'content' | 'tool_calls'; data: any }, void> {
+): AsyncGenerator<{ type: 'content' | 'tool_calls' | 'skill_call'; data: any }, void> {
   const reader = response.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
+  let skillBuffer = '';
 
   while (true) {
     const { done, value } = await reader.read();
@@ -40,6 +41,19 @@ async function* parseStream(
       if (line.startsWith('data: ')) {
         const data = line.slice(6);
         if (data === '[DONE]') {
+          // 检查最后是否技能调用未闭合
+          const skillMatch = skillBuffer.match(/<skill:(\w+)>([^<]*)<\/skill>/);
+          if (skillMatch) {
+            yield {
+              type: 'skill_call',
+              data: {
+                name: skillMatch[1],
+                args: skillMatch[2].trim(),
+                status: 'detected',
+              },
+            };
+            skillBuffer = '';
+          }
           return;
         }
         try {
@@ -47,8 +61,36 @@ async function* parseStream(
 
           // 提取文本内容
           const content = json.choices?.[0]?.delta?.content;
+          
+          // 检测 skill 调用标记
           if (content) {
-            yield { type: 'content', data: content };
+            skillBuffer += content;
+            
+            // 检查是否包含完整的 skill 标签
+            const skillMatch = skillBuffer.match(/<skill:(\w+)>([^<]*)<\/skill>/);
+            if (skillMatch) {
+              // 发送技能调用通知
+              yield {
+                type: 'skill_call',
+                data: {
+                  name: skillMatch[1],
+                  args: skillMatch[2].trim(),
+                  status: 'detected',
+                },
+              };
+              // 清空 buffer
+              const beforeMatch = skillBuffer.substring(0, skillMatch.index);
+              const afterMatch = skillBuffer.substring(skillMatch.index + skillMatch[0].length);
+              skillBuffer = beforeMatch + afterMatch;
+            }
+
+            // 输出普通文本
+            if (skillBuffer) {
+              yield { type: 'content', data: skillBuffer };
+              skillBuffer = '';
+            } else {
+              yield { type: 'content', data: content };
+            }
           }
 
           // 提取工具调用
@@ -316,22 +358,6 @@ export class MessageProcessor {
   /**
    * 解析 Skill 调用
    */
-  private parseSkillCalls(content: string): Array<{ skill: string; args: string; rawTag: string }> {
-    const calls: Array<{ skill: string; args: string; rawTag: string }> = [];
-    const regex = /<skill:(\w+)>(.*?)<\/skill>/gs;
-    let match;
-
-    while ((match = regex.exec(content)) !== null) {
-      calls.push({
-        skill: match[1],
-        args: match[2].trim(),
-        rawTag: match[0],
-      });
-    }
-
-    return calls;
-  }
-
   /**
    * 处理 Skill 调用
    */
@@ -415,6 +441,7 @@ export class MessageProcessor {
         const toolCalls: any[] = [];
 
         // 解析流式响应
+        let pendingSkills: string[] = [];
         for await (const chunk of parseStream(response)) {
           if (chunk.type === 'content') {
             fullContent += chunk.data;
@@ -441,6 +468,21 @@ export class MessageProcessor {
                 toolCalls[index].function.arguments += deltaToolCall.function.arguments;
               }
             }
+          } else if (chunk.type === 'skill_call') {
+            // 检测到技能调用，发送状态标记给前端
+            const skillData = chunk.data;
+            console.log(`⚡ 检测到 Skill 调用: ${skillData.name} ${skillData.args}`);
+            yield `[FC_SKILL]{"name":"${skillData.name}","args":"${skillData.args}","status":"loading"}`;
+            
+            // 执行技能
+            const skillResult = await this.handleSkillCall(skillData.name, skillData.args);
+            yield `[FC_SKILL]{"name":"${skillData.name}","status":"end","result":${JSON.stringify(skillResult)}}`;
+            
+            // 将技能结果添加到对话历史
+            currentMessages.push({
+              role: 'user',
+              content: skillResult,
+            });
           }
         }
 
@@ -476,32 +518,6 @@ export class MessageProcessor {
             );
 
             currentMessages.push(toolResult);
-          }
-
-          round++;
-          continue;
-        }
-
-        // 检查是否有 Skill 调用
-        const skillCalls = this.parseSkillCalls(fullContent);
-        
-        if (skillCalls.length > 0) {
-          console.log(`📦 检测到 ${skillCalls.length} 个 Skill 调用`);
-
-          // 添加 assistant 消息
-          currentMessages.push({
-            role: 'assistant',
-            content: fullContent,
-          });
-
-          // 执行 Skill 调用
-          for (const call of skillCalls) {
-            const skillResult = await this.handleSkillCall(call.skill, call.args);
-            
-            currentMessages.push({
-              role: 'user',
-              content: skillResult,
-            });
           }
 
           round++;
