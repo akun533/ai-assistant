@@ -11,8 +11,8 @@ import https from 'https';
  */
 function getWeather(location, options = {}) {
   return new Promise((resolve) => {
-    const format = options.format || 'text';
-    const url = `https://wttr.in/${encodeURIComponent(location)}?format=${format === 'json' ? 'j1' : '%C+%t+%w+%m'}`;
+    // 默认使用 JSON 格式获取结构化数据
+    const url = `https://wttr.in/${encodeURIComponent(location)}?format=j1`;
     
     https.get(url, (res) => {
       let data = '';
@@ -23,15 +23,11 @@ function getWeather(location, options = {}) {
       
       res.on('end', () => {
         if (res.statusCode === 200) {
-          if (format === 'json') {
-            try {
-              const weather = JSON.parse(data);
-              const output = formatWeatherJson(weather);
-              resolve({ success: true, output });
-            } catch (e) {
-              resolve({ success: true, output: data });
-            }
-          } else {
+          try {
+            const weather = JSON.parse(data);
+            const output = formatWeatherJson(weather);
+            resolve({ success: true, output });
+          } catch (e) {
             resolve({ success: true, output: data });
           }
         } else {
@@ -80,12 +76,7 @@ function parseArgs(args) {
   const options = {};
 
   for (const arg of args) {
-    if (arg.startsWith('--format=')) {
-      const format = arg.split('=')[1];
-      if (format === 'json' || format === 'text') {
-        options.format = format;
-      }
-    } else if (!arg.startsWith('-')) {
+    if (!arg.startsWith('-')) {
       location = arg;
     }
   }
@@ -104,16 +95,12 @@ async function main() {
 Weather Skill - Get current weather
 
 Usage:
-  weather <location> [options]
-
-Options:
-  --format=json    Output in JSON format
-  --format=text    Output in text format (default)
+  weather <location>
 
 Examples:
   weather Beijing
-  weather Shanghai --format=json
-  weather "New York" --format=text
+  weather Shanghai
+  weather "New York"
 `);
     process.exit(0);
   }
@@ -125,8 +112,6 @@ Examples:
     process.exit(1);
   }
 
-  console.log(`Fetching weather for: ${location}`);
-  
   const result = await getWeather(location, options);
 
   if (result.success) {
