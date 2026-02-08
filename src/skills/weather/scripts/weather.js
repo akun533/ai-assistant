@@ -57,15 +57,13 @@ function formatWeatherJson(weather) {
     return JSON.stringify(weather, null, 2);
   }
 
-  return `
-Weather Report for ${weather.nearest_area?.[0]?.areaName?.[0]?.value || 'Unknown'}
+  return `Weather Report for ${weather.nearest_area?.[0]?.areaName?.[0]?.value || 'Unknown'}
 
 Temperature: ${current.temp_C}°C (${current.temp_F}°F)
 Humidity: ${current.humidity}%
 Wind: ${current.windspeed} km/h ${current.winddir16point}
 Weather: ${current.weatherDesc?.[0]?.value || 'Unknown'}
-Feels Like: ${current.FeelsLikeC}°C
-`;
+Feels Like: ${current.FeelsLikeC}°C`;
 }
 
 /**
