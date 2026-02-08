@@ -14,7 +14,7 @@ import { SkillManager } from '../../skills/skill-manager.js';
  * 工具调用结果
  */
 interface ToolCallResult {
-  role: 'user';
+  role: 'tool';
   content: string;
   tool_call_id?: string;
 }
@@ -347,13 +347,13 @@ export class MessageProcessor {
       
       if (result.success) {
         return {
-          role: 'user',
+          role: 'tool',
           content: result.output.trim(),
           tool_call_id: `skill_${skillName}_${Date.now()}`,
         };
       } else {
         return {
-          role: 'user',
+          role: 'tool',
           content: `Skill 执行失败: ${result.error}`,
           tool_call_id: `skill_${skillName}_${Date.now()}`,
         };
@@ -361,7 +361,7 @@ export class MessageProcessor {
     } catch (error) {
       console.error(`❌ Skill 调用异常:`, error);
       return {
-        role: 'user',
+        role: 'tool',
         content: `Skill 执行错误: ${error instanceof Error ? error.message : String(error)}`,
         tool_call_id: `skill_${skillName}_${Date.now()}`,
       };
@@ -397,14 +397,14 @@ export class MessageProcessor {
       const toolTitle = this.getToolTitle(toolName);
 
       return {
-        role: 'user',
+        role: 'tool',
         content: `工具 "${toolTitle || toolName}" 执行结果:\n\n${JSON.stringify(result, null, 2)}`,
         tool_call_id: `call_${toolName}_${Date.now()}`,
       };
     } catch (error: any) {
       console.error(`❌ 工具调用失败: ${toolName}`, error);
       return {
-        role: 'user',
+        role: 'tool',
         content: `工具 "${toolName}" 执行失败: ${error.message}`,
         tool_call_id: `call_${toolName}_${Date.now()}`,
       };
