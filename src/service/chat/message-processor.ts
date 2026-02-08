@@ -1,6 +1,6 @@
 /**
  * 消息处理器
- * 负责消息流的处理、工具调用、Skill调用、递归处理等核心逻辑
+ * 负责消息流的处理、工具调用（包含 MCP 工具和 Skill 工具）、递归处理等核心逻辑
  */
 
 import { AgentManager } from '../agents/agent-manager.js';
@@ -8,6 +8,7 @@ import { AgentMessage, AgentTool, AgentType } from '../agent/index.js';
 import { ToolRegistry } from '../mcp/tools.js';
 import type { ToolArgs } from '../../types/index.js';
 import { recognizeImage } from '../ocr/ocr.js';
+import { SkillManager } from '../../skills/skill-manager.js';
 
 /**
  * 工具调用结果
@@ -19,15 +20,14 @@ interface ToolCallResult {
 }
 
 /**
- * 解析流式响应（支持工具调用和技能调用提取）
+ * 解析流式响应
  */
 async function* parseStream(
   response: ReadableStream,
-): AsyncGenerator<{ type: 'content' | 'tool_calls' | 'skill_call'; data: any }, void> {
+): AsyncGenerator<{ type: 'content' | 'tool_calls'; data: any }, void> {
   const reader = response.getReader();
   const decoder = new TextDecoder();
   let buffer = '';
-  let skillBuffer = '';
 
   while (true) {
     const { done, value } = await reader.read();
@@ -40,68 +40,16 @@ async function* parseStream(
     for (const line of lines) {
       if (line.startsWith('data: ')) {
         const data = line.slice(6);
-        
-        // 检查并处理 [DONE] 前的 skill 标签
-        const processSkillTags = (text: string): { content: string; skills: Array<{name: string; args: string}> => {
-          const skills: Array<{name: string; args: string}> = [];
-          const regex = /<skill:(\w+)>([^<]*)<\/skill>/g;
-          let match;
-          let result = text;
-          
-          while ((match = regex.exec(result)) !== null) {
-            skills.push({
-              name: match[1],
-              args: match[2].trim(),
-            });
-          }
-          
-          // 移除所有 skill 标签
-          result = result.replace(/<skill:\w+>[^<]*<\/skill>/g, '');
-          
-          return { content: result, skills };
-        };
-
         if (data === '[DONE]') {
-          // 处理剩余的 skill 标签
-          const { content, skills } = processSkillTags(skillBuffer);
-          
-          // 输出普通文本
-          if (content.trim()) {
-            yield { type: 'content', data: content };
-          }
-          
-          // 发送技能调用
-          for (const skill of skills) {
-            yield { type: 'skill_call', data: skill };
-          }
-          
           return;
         }
-        
         try {
           const json = JSON.parse(data);
+
+          // 提取文本内容
           const content = json.choices?.[0]?.delta?.content;
-          
           if (content) {
-            skillBuffer += content;
-            
-            // 检查是否包含完整的 skill 标签
-            if (skillBuffer.includes('</skill>')) {
-              const { content: plainContent, skills } = processSkillTags(skillBuffer);
-              
-              // 输出 skill 标签之前的普通文本
-              if (plainContent.trim()) {
-                yield { type: 'content', data: plainContent };
-              }
-              
-              // 发送技能调用
-              for (const skill of skills) {
-                yield { type: 'skill_call', data: skill };
-              }
-              
-              // 清空 buffer
-              skillBuffer = '';
-            }
+            yield { type: 'content', data: content };
           }
 
           // 提取工具调用
@@ -319,6 +267,51 @@ export class MessageProcessor {
   }
 
   /**
+   * 获取所有工具定义（包含 MCP 工具和 Skill 工具）
+   */
+  async getAllTools(uiFramework?: string): Promise<AgentTool[]> {
+    const [mcpTools, skillTools] = await Promise.all([
+      this.getMCPTools(uiFramework),
+      this.getSkillTools(),
+    ]);
+
+    // Skill 工具名称加前缀以区分
+    const prefixedSkillTools: AgentTool[] = skillTools.map(tool => ({
+      type: 'function',
+      function: {
+        name: `skill_${tool.function.name}`,
+        description: `[Skill] ${tool.function.description}`,
+        parameters: {
+          type: 'object',
+          properties: {
+            args: {
+              type: 'string',
+              description: tool.function.parameters.properties.args?.description || '传递给脚本的参数',
+            },
+          },
+          required: ['args'],
+          additionalProperties: false,
+        },
+      },
+    }));
+
+    return [...mcpTools, ...prefixedSkillTools];
+  }
+
+  /**
+   * 获取 Skill 工具定义
+   */
+  private async getSkillTools(): Promise<AgentTool[]> {
+    try {
+      const skillManager = new SkillManager();
+      return await skillManager.getSkillTools();
+    } catch (error) {
+      console.error('获取 Skill 工具失败:', error);
+      return [];
+    }
+  }
+
+  /**
    * 获取工具标题
    */
   private getToolTitle(name: string, uiFramework?: string): string | undefined {
@@ -331,7 +324,52 @@ export class MessageProcessor {
   }
 
   /**
-   * 处理工具调用
+   * 检查是否是 Skill 工具调用
+   */
+  private isSkillTool(toolName: string): boolean {
+    return toolName.startsWith('skill_');
+  }
+
+  /**
+   * 执行 Skill 工具调用
+   */
+  private async handleSkillToolCall(
+    skillName: string,
+    args: string,
+  ): Promise<ToolCallResult> {
+    try {
+      const { SkillManager } = await import('../../skills/skill-manager.js');
+      const skillManager = new SkillManager();
+      
+      console.log(`⚡ 执行 Skill: ${skillName} ${args}`);
+      
+      const result = await skillManager.executeSkill(skillName, args);
+      
+      if (result.success) {
+        return {
+          role: 'user',
+          content: result.output.trim(),
+          tool_call_id: `skill_${skillName}_${Date.now()}`,
+        };
+      } else {
+        return {
+          role: 'user',
+          content: `Skill 执行失败: ${result.error}`,
+          tool_call_id: `skill_${skillName}_${Date.now()}`,
+        };
+      }
+    } catch (error) {
+      console.error(`❌ Skill 调用异常:`, error);
+      return {
+        role: 'user',
+        content: `Skill 执行错误: ${error instanceof Error ? error.message : String(error)}`,
+        tool_call_id: `skill_${skillName}_${Date.now()}`,
+      };
+    }
+  }
+
+  /**
+   * 处理工具调用（支持 MCP 工具和 Skill 工具）
    */
   private async handleToolCall(
     toolName: string,
@@ -339,6 +377,14 @@ export class MessageProcessor {
     context: Record<string, any>,
     uiFramework?: string,
   ): Promise<ToolCallResult> {
+    // 检查是否是 Skill 工具
+    if (this.isSkillTool(toolName)) {
+      const skillName = toolName.replace('skill_', '');
+      const args = arguments_?.args || '';
+      return this.handleSkillToolCall(skillName, args);
+    }
+
+    // MCP 工具调用
     try {
       const handler = this.toolRegistry.getToolHandler(toolName, uiFramework);
       if (!handler) {
@@ -367,33 +413,7 @@ export class MessageProcessor {
   }
 
   /**
-   * 解析 Skill 调用
-   */
-  /**
-   * 处理 Skill 调用
-   */
-  private async handleSkillCall(skillName: string, args: string): Promise<string> {
-    try {
-      const { SkillManager } = await import('../../skills/skill-manager.js');
-      const skillManager = new SkillManager();
-      
-      console.log(`⚡ 执行 Skill: ${skillName} ${args}`);
-      
-      const result = await skillManager.executeSkill(skillName, args);
-      
-      if (result.success) {
-        return result.output.trim();
-      } else {
-        return `⚠️ ${result.error}`;
-      }
-    } catch (error) {
-      console.error(`❌ Skill 调用异常:`, error);
-      return `❌ ${error instanceof Error ? error.message : String(error)}`;
-    }
-  }
-
-  /**
-   * 处理流式聊天（支持 MCP 工具调用和 Skill 调用）
+   * 处理流式聊天（统一处理 MCP 工具和 Skill 工具）
    */
   async *processChatStream(
     messages: AgentMessage[],
@@ -452,7 +472,6 @@ export class MessageProcessor {
         const toolCalls: any[] = [];
 
         // 解析流式响应
-        let pendingSkills: string[] = [];
         for await (const chunk of parseStream(response)) {
           if (chunk.type === 'content') {
             fullContent += chunk.data;
@@ -479,21 +498,6 @@ export class MessageProcessor {
                 toolCalls[index].function.arguments += deltaToolCall.function.arguments;
               }
             }
-          } else if (chunk.type === 'skill_call') {
-            // 检测到技能调用，发送状态标记给前端
-            const skillData = chunk.data;
-            console.log(`⚡ 检测到 Skill 调用: ${skillData.name} ${skillData.args}`);
-            yield `[FC_SKILL]{"name":"${skillData.name}","args":"${skillData.args}","status":"loading"}`;
-            
-            // 执行技能
-            const skillResult = await this.handleSkillCall(skillData.name, skillData.args);
-            yield `[FC_SKILL]{"name":"${skillData.name}","status":"end","result":${JSON.stringify(skillResult)}}`;
-            
-            // 将技能结果添加到对话历史
-            currentMessages.push({
-              role: 'user',
-              content: skillResult,
-            });
           }
         }
 
@@ -512,7 +516,7 @@ export class MessageProcessor {
             tool_calls: validToolCalls,
           });
 
-          // 执行工具调用
+          // 执行工具调用（统一处理 MCP 和 Skill）
           for (const toolCall of validToolCalls) {
             const functionName = toolCall.function.name;
             const functionArgs = toolCall.function.arguments 

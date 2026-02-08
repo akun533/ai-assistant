@@ -160,21 +160,24 @@ export class SkillManager {
     for (const skill of this.skills.values()) {
       // 解析 SKILL.md 中的参数信息
       const argsInfo = this.parseSkillArgs(skill.description);
+      const description = this.extractDescription(skill.description);
 
       tools.push({
         type: 'function',
         function: {
           name: skill.name,
-          description: this.extractDescription(skill.description),
+          description: `${description}。使用方式: <skill:${skill.name}>参数</skill:${skill.name}>`,
           parameters: {
             type: 'object',
             properties: argsInfo.properties,
             required: argsInfo.required,
+            additionalProperties: false,
           },
         },
       });
     }
 
+    console.log(`✅ 成功获取 ${tools.length} 个 Skill 工具定义`);
     return tools;
   }
 
