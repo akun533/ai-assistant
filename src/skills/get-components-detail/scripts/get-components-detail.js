@@ -4,126 +4,80 @@
  * Get component properties information based on type
  */
 
-import fs from 'fs';
+import { fileURLToPath } from 'url';
 import path from 'path';
 
-const REFERENCES_PATH = path.join(process.cwd(), 'src/skills/get-components-detail/references/fieldsProps.ts');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// 直接 import 编译后的数据文件
+const REFERENCES_PATH = path.join(__dirname, '../references/fieldsProps.ts');
 
 /**
- * 解析 fieldsProps.ts 文件，提取组件信息
+ * 解析组件属性为可序列化格式
  */
-function parseFieldsProps() {
-  if (!fs.existsSync(REFERENCES_PATH)) {
-    return {};
-  }
+function parsePropDefinition(prop) {
+  const result = {
+    name: prop.name,
+    type: prop.type || 'string',
+    label: prop.label || '-',
+    description: prop.description || '-',
+  };
 
-  const content = fs.readFileSync(REFERENCES_PATH, 'utf-8');
-
-  const componentsMatch = content.match(/const ComponentsProps:Record<string, ComponentProp>=\s*\{/s);
-  
-  if (!componentsMatch) {
-    return { components: {} };
-  }
-
-  const startIndex = componentsMatch.index + componentsMatch[0].length;
-  let braceCount = 1;
-  let endIndex = startIndex;
-  
-  for (let i = startIndex; i < content.length; i++) {
-    if (content[i] === '{') braceCount++;
-    if (content[i] === '}') braceCount--;
-    if (braceCount === 0) {
-      endIndex = i + 1;
-      break;
+  // 处理 defaultValue
+  if (prop.defaultValue !== undefined) {
+    try {
+      result.default = typeof prop.defaultValue === 'object' 
+        ? JSON.stringify(prop.defaultValue) 
+        : prop.defaultValue;
+    } catch (e) {
+      result.default = String(prop.defaultValue);
     }
   }
 
-  const componentsContent = content.substring(startIndex, endIndex);
-  const components = {};
-  
-  let i = 0;
-  while (i < componentsContent.length) {
-    const nameMatch = componentsContent.matchAt(i, /(\w+):\s*\{/);
-    if (!nameMatch) break;
-    
-    const componentName = nameMatch[1];
-    const nameEndIndex = nameMatch.index + nameMatch[0].length;
-    
-    braceCount = 1;
-    let componentEndIndex = nameEndIndex;
-    
-    for (let j = nameEndIndex; j < componentsContent.length; j++) {
-      if (componentsContent[j] === '{') braceCount++;
-      if (componentsContent[j] === '}') braceCount--;
-      if (braceCount === 0) {
-        componentEndIndex = j + 1;
-        i = j + 1;
-        break;
+  // 处理 options
+  if (prop.options && Array.isArray(prop.options)) {
+    result.options = prop.options.map(opt => {
+      if (typeof opt === 'object' && opt !== null) {
+        return opt.label || opt.value || String(opt);
       }
-    }
-    
-    const componentBody = componentsContent.substring(nameEndIndex, componentEndIndex - 1);
-    
-    const typeMatch = componentBody.match(/type:\s*['"]([^'"]+)['"]/);
-    const props = [];
-    const propsMatch = componentBody.match(/props:\s*\[([\s\S]*?)\]/);
-    
-    if (propsMatch) {
-      const propsContent = propsMatch[1];
-      
-      const commonPropRegex = /CommonProps\.(\w+)/g;
-      let match;
-      
-      while ((match = commonPropRegex.exec(propsContent)) !== null) {
-        props.push({
-          _ref: match[1],
-          _type: 'common',
-        });
-      }
-      
-      const inlineRegex = /\{[\s\S]*?name:\s*['"]([^'"]+)['"][\s\S]*?label:\s*['"]([^'"]*)['"][\s\S]*?type:\s*['"]([^'"]*)['"]([\s\S]*?)\}/g;
-      let inlineMatch;
-      
-      while ((inlineMatch = inlineRegex.exec(propsContent)) !== null) {
-        const propDef = {
-          name: inlineMatch[1],
-          label: inlineMatch[2],
-          type: inlineMatch[3],
-        };
-        
-        const extra = inlineMatch[4];
-        const descMatch = extra.match(/description:\s*['"]([^'"]*)['"]/);
-        const requiredMatch = extra.match(/required:\s*(true|false)/);
-        const defaultMatch = extra.match(/defaultValue:\s*(\{[^}]*\}|[^,}]+)/);
-        const optionsMatch = extra.match(/options:\s*(\[[\s\S]*?\])/);
-        
-        if (descMatch) propDef.description = descMatch[1];
-        if (requiredMatch) propDef.required = requiredMatch[1] === 'true';
-        if (defaultMatch) {
-          try {
-            propDef.default = JSON.parse(defaultMatch[1]);
-          } catch (e) {
-            propDef.default = defaultMatch[1].trim();
-          }
-        }
-        if (optionsMatch) {
-          try {
-            const opts = JSON.parse(optionsMatch[1].replace(/(\w+):/g, '"$1":'));
-            propDef.options = opts.map(o => o.label || o.value || o);
-          } catch (e) {}
-        }
-        
-        props.push(propDef);
-      }
-    }
-    
-    components[componentName] = {
-      type: typeMatch ? typeMatch[1] : componentName,
-      props: props,
-    };
+      return String(opt);
+    });
   }
 
-  return { components };
+  return result;
+}
+
+/**
+ * 获取组件详细信息
+ */
+function getComponentDetail(ComponentsProps, type) {
+  const component = ComponentsProps[type];
+  
+  if (!component) {
+    return null;
+  }
+
+  const props = [];
+  
+  for (const prop of component.props || []) {
+    // CommonProps 引用
+    if (typeof prop === 'object' && prop._ref) {
+      props.push({
+        name: prop._ref,
+        type: 'common',
+        label: '-',
+        description: `Common property: ${prop._ref}`,
+      });
+    } else if (typeof prop === 'object') {
+      props.push(parsePropDefinition(prop));
+    }
+  }
+
+  return {
+    type: component.type || type,
+    props: props,
+  };
 }
 
 /**
@@ -132,28 +86,21 @@ function parseFieldsProps() {
 function generatePropsTable(props) {
   if (props.length === 0) return 'No props available.';
   
-  const rows = [];
-  
-  for (const prop of props) {
-    if (prop._type === 'common') {
-      rows.push([prop._ref, 'common', '-', `Common property: ${prop._ref}`, '-']);
-    } else {
-      const defaultStr = prop.default !== undefined 
-        ? JSON.stringify(prop.default).slice(0, 30) 
-        : '-';
-      const optionsStr = prop.options 
-        ? prop.options.join(', ').slice(0, 50) 
-        : '-';
-      
-      rows.push([
-        prop.name,
-        prop.type || '-',
-        prop.label || '-',
-        prop.description || '-',
-        optionsStr !== '-' ? optionsStr : defaultStr,
-      ]);
+  const rows = props.map(prop => {
+    if (prop.type === 'common') {
+      return [prop.name, 'common', '-', prop.description, '-'];
     }
-  }
+    const optionsOrDefault = prop.options 
+      ? prop.options.join(', ')
+      : (prop.default || '-');
+    return [
+      prop.name,
+      prop.type || '-',
+      prop.label || '-',
+      prop.description || '-',
+      optionsOrDefault,
+    ];
+  });
   
   return `| Name | Type | Label | Description | Default/Options |
 |------|------|-------|-------------|------------------|
@@ -188,17 +135,27 @@ Examples:
     process.exit(1);
   }
 
-  const { components } = parseFieldsProps();
-  
-  if (Object.keys(components).length === 0) {
-    console.error('Error: Failed to parse components data');
+  // 直接 import TypeScript 文件
+  let ComponentsProps;
+  try {
+    const mod = await import(REFERENCES_PATH);
+    ComponentsProps = mod.default || mod.ComponentsProps;
+  } catch (error) {
+    console.error('Error: Failed to import components data:', error.message);
     process.exit(1);
   }
+  
+  if (!ComponentsProps || Object.keys(ComponentsProps).length === 0) {
+    console.error('Error: Components data is empty');
+    process.exit(1);
+  }
+
+  console.log(`Found ${Object.keys(ComponentsProps).length} components\n`);
 
   let output = '';
   
   for (const type of types) {
-    const component = components[type];
+    const component = getComponentDetail(ComponentsProps, type);
     
     if (!component) {
       output += `\n## ${type}\n\n**Error: Component not found**\n`;

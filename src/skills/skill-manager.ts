@@ -323,7 +323,8 @@ export class SkillManager {
   ): Promise<SkillResult> {
     return new Promise((resolve) => {
       const scriptPath = path.join(scriptsPath, scriptFile);
-      const command = `node "${scriptPath}" ${args.replace(/"/g, '\\"')}`;
+      // 使用 tsx 运行 TypeScript 脚本
+      const command = `tsx "${scriptPath}" ${args.replace(/"/g, '\\"')}`;
 
       exec(command, { maxBuffer: 10 * 1024 * 1024 }, (error, stdout, stderr) => {
         if (error) {
